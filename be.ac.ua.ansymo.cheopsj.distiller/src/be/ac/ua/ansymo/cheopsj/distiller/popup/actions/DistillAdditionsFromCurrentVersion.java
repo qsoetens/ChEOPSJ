@@ -41,6 +41,7 @@ import be.ac.ua.ansymo.cheopsj.changerecorders.FieldRecorder;
 import be.ac.ua.ansymo.cheopsj.changerecorders.MethodInvocationRecorder;
 import be.ac.ua.ansymo.cheopsj.changerecorders.MethodRecorder;
 import be.ac.ua.ansymo.cheopsj.changerecorders.PackageRecorder;
+import be.ac.ua.ansymo.cheopsj.distiller.asts.MIVisitor;
 import be.ac.ua.ansymo.cheopsj.model.ModelManager;
 import be.ac.ua.ansymo.cheopsj.model.changes.Add;
 
@@ -318,26 +319,4 @@ public class DistillAdditionsFromCurrentVersion implements IObjectActionDelegate
 		// TODO Auto-generated method stub
 
 	}
-
-
-	private class MIVisitor extends ASTVisitor {
-		private List<MethodInvocation> invocations = new ArrayList<MethodInvocation>();
-
-		@Override
-		public boolean visit(EnumDeclaration node){
-			//Ignore Enum's
-			return false;
-		}
-		
-		@Override
-		public boolean visit(MethodInvocation node) {
-			invocations.add(node);
-			return true;
-		}
-
-		public List<MethodInvocation> getMethodInvocations() {
-			return invocations;			
-		}
-	}
-
 }
