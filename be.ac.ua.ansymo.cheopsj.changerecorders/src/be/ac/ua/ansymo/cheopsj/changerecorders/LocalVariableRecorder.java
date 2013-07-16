@@ -24,8 +24,8 @@ import org.eclipse.jdt.core.dom.VariableDeclaration;
 import org.eclipse.jdt.core.dom.VariableDeclarationExpression;
 import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
 import org.eclipse.jdt.core.dom.VariableDeclarationStatement;
-import org.evolizer.changedistiller.model.classifiers.java.JavaEntityType;
-import org.evolizer.changedistiller.model.entities.SourceCodeEntity;
+import ch.uzh.ifi.seal.changedistiller.model.classifiers.java.JavaEntityType;
+import ch.uzh.ifi.seal.changedistiller.model.entities.SourceCodeEntity;
 
 import be.ac.ua.ansymo.cheopsj.model.ModelManager;
 import be.ac.ua.ansymo.cheopsj.model.ModelManagerChange;
@@ -127,13 +127,11 @@ public class LocalVariableRecorder extends StatementRecorder {
 
 	public LocalVariableRecorder(ILocalVariable element) {
 		this();
-		//TODO 
 	}
 	
 	public LocalVariableRecorder(SourceCodeEntity entity){
 		this();
 		if(entity.getType().equals(JavaEntityType.VARIABLE_DECLARATION_STATEMENT)){
-			//TODO 
 		}
 	}
 

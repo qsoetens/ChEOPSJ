@@ -85,7 +85,7 @@ public class FamixAttribute extends FamixStructuralEntity {
 			icon = JavaUI.getSharedImages().getImage(ISharedImages.IMG_FIELD_DEFAULT);
 		}
 
-		// TODO decorate icon with Abstract, static final, .... decorators
+		// XXX decorate icon with Abstract, static final, .... decorators
 		return icon;
 
 	}

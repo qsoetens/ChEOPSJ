@@ -110,13 +110,11 @@ public class ZestChangeViewLabelProvider extends LabelProvider implements IConne
 
 	@Override
 	public Color getHighlightColor(Object rel) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public int getLineWidth(Object rel) {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 

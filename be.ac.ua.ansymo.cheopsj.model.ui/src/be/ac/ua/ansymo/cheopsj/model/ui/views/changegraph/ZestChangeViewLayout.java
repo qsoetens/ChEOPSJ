@@ -189,7 +189,6 @@ public class ZestChangeViewLayout extends AbstractLayoutAlgorithm {
 					this.internalAsynchronous, this.internalContinuous);
 
 		} catch (InvalidLayoutConfiguration e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -267,7 +266,6 @@ public class ZestChangeViewLayout extends AbstractLayoutAlgorithm {
 	 */
 	@Override
 	protected int getTotalNumberOfLayoutSteps() {
-		// TODO Auto-generated method stub
 		return 4;
 	}
 

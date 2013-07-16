@@ -208,7 +208,7 @@ public class DistillChangesTest {
 		check(changes, "Addition", "package1.Base.h", "First commit", "Attribute");
 		check(changes, "Addition", "package1.Base.add", "First commit", "Method");
 		check(changes, "Addition", "package1.Base.doubleIt", "Second commit", "Method");
-		// TODO: fix this bug: adding invocations inside a new method are not found.
+		// FIXME: fix this bug: adding invocations inside a new method are not found.
 		check(changes, "Addition", "package1.Base.doubleIt{package1.Base.add}", "", "Invocation");
 		checkSecondRevision(changes);
 		checkInitialRevision(changes);	
@@ -528,11 +528,11 @@ public class DistillChangesTest {
 	 **/
 	private void checkSecondRevision(List<IChange> changes) {
 		check(changes, "Removal", "package1.Main.shared : int", "Second commit", "Attribute");
-		// TODO: fix this bug: removing invocations in a new method have no intent.
+		// FIXME: fix this bug: removing invocations in a new method have no intent.
 		check(changes, "Removal", "package1.Main.stupidMethod{println}", "", "Invocation");
 		check(changes, "Removal", "package1.Main.stupidMethod", "Second commit", "Method");
 		check(changes, "Addition", "package1.Main.run", "Second commit", "Method");
-		// TODO: fix this bug: adding invocations of a new method have no intent.
+		// FIXME: fix this bug: adding invocations of a new method have no intent.
 		check(changes, "Addition", "package1.Main.main{package1.Main.run}", "", "Invocation");
 	}
 	

@@ -21,7 +21,7 @@ public abstract class FamixObject extends Subject {
 	 */
 	private static final long serialVersionUID = -8612301559130783370L;
 
-	// TODO add sourceAnchor where is the actual source code that this
+	// XXX add sourceAnchor where is the actual source code that this
 	// FamixObject is representing? Typically: filename + begin and end lines
 	private String CommentsAt;
 

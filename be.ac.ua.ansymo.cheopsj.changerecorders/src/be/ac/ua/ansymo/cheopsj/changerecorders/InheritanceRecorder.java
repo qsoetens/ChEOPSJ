@@ -33,20 +33,17 @@ public class InheritanceRecorder extends AbstractEntityRecorder {
 			supertypename = ((IType)element).getSuperclassName();
 			interfaces = ((IType)element).getSuperInterfaceNames();
 		} catch (JavaModelException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 	
 	@Override
 	protected void createAndLinkFamixElement() {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	protected void createAndLinkChange(AtomicChange change) {
-		// TODO Auto-generated method stub
 		
 	}
 

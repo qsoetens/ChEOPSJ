@@ -1,7 +1,7 @@
 package be.ac.ua.ansymo.cheopsj.changerecorders.mock;
 
-import org.evolizer.changedistiller.model.classifiers.EntityType;
-import org.evolizer.changedistiller.model.entities.SourceCodeEntity;
+import ch.uzh.ifi.seal.changedistiller.model.classifiers.EntityType;
+import ch.uzh.ifi.seal.changedistiller.model.entities.SourceCodeEntity;
 import static org.mockito.Mockito.*;
 
 public class MockSourceCodeEntity {

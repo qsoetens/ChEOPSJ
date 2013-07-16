@@ -5,9 +5,9 @@ import java.io.File;
 import java.io.FileWriter;
 import java.util.List;
 
-import org.evolizer.changedistiller.ChangeDistiller;
-import org.evolizer.changedistiller.distilling.FileDistiller;
-import org.evolizer.changedistiller.model.entities.SourceCodeChange;
+import ch.uzh.ifi.seal.changedistiller.ChangeDistiller;
+import ch.uzh.ifi.seal.changedistiller.distilling.FileDistiller;
+import ch.uzh.ifi.seal.changedistiller.model.entities.SourceCodeChange;
 
 public class ChangeDistillerProxy {
 	private final String LEFT_FILE_NAME = "__LEFT_FILE.java";
@@ -42,8 +42,8 @@ public class ChangeDistillerProxy {
 	public void performDistilling() {
 		try{
 			changeDistiller.extractClassifiedSourceCodeChanges(oldFile, newFile);
-		}catch(IllegalArgumentException e){
-			//ignore
+		}catch(Exception e){
+			System.err.println("Warning: error while change distilling. " + e.getMessage());
 		}
 	}
 	

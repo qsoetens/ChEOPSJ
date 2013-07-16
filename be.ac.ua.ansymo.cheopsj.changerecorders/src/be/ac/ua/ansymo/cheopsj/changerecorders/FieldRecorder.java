@@ -28,7 +28,7 @@ import org.eclipse.jdt.core.dom.SimpleType;
 import org.eclipse.jdt.core.dom.Type;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
-import org.evolizer.changedistiller.model.entities.SourceCodeEntity;
+import ch.uzh.ifi.seal.changedistiller.model.entities.SourceCodeEntity;
 
 import be.ac.ua.ansymo.cheopsj.model.ModelManager;
 import be.ac.ua.ansymo.cheopsj.model.ModelManagerChange;
@@ -70,7 +70,6 @@ public class FieldRecorder extends AbstractEntityRecorder {
 		try {
 			flags = field.getFlags();
 		} catch (JavaModelException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -114,7 +113,7 @@ public class FieldRecorder extends AbstractEntityRecorder {
 				ContainingClass = manager.getFamixClass(parentUniqueName);
 			}
 		}
-		flags = entity.getModifiers(); //TODO fix this, this is not right		
+		flags = entity.getModifiers(); //FIXME fix this, this is not right		
 		
 		String declaredClassName = "";
 		//TODO what's the declared class name?
@@ -126,8 +125,8 @@ public class FieldRecorder extends AbstractEntityRecorder {
 		try {
 			String typesignature = field.getTypeSignature();
 			declaredClassName = Signature.getSignatureSimpleName(typesignature);
-			// TODO find out if nested class? and deal with it!
-			// TODO deal with primitive types
+			// XXX find out if nested class? and deal with it!
+			// XXX deal with primitive types
 
 			// type package to be found in import statmenets OR in the same
 			// package!!!
@@ -136,7 +135,7 @@ public class FieldRecorder extends AbstractEntityRecorder {
 			IImportDeclaration[] imports = cu.getImports();
 			for (IImportDeclaration imp : imports) {
 				if (imp.isOnDemand()) {
-					// TODO CRAP FUCKING WILDCARDS IN IMPORT DECLARATIONS!!!!
+					// FIXME CRAP FUCKING WILDCARDS IN IMPORT DECLARATIONS!!!!
 					// need to deal with this
 				} else {
 					if (imp.getElementName().endsWith(declaredClassName)) {

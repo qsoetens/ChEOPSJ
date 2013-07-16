@@ -103,7 +103,7 @@ public class ChangeExtractorAdditions {
 		CompilationUnit cu = ChangeExtractor.getASTFromString(contents);
 		List<?> types = cu.types();
 		if(types.get(0) instanceof TypeDeclaration){
-			//TODO are there any more types in this list?
+			//XXX are there any more types in this list?
 			TypeDeclaration bigType = (TypeDeclaration) types.get(0);
 
 			PackageDeclaration pack = cu.getPackage();

@@ -13,7 +13,7 @@ package be.ac.ua.ansymo.cheopsj.changerecorders;
 
 import org.eclipse.jdt.core.dom.IMethodBinding;
 import org.eclipse.jdt.core.dom.MethodInvocation;
-import org.evolizer.changedistiller.model.entities.SourceCodeEntity;
+import ch.uzh.ifi.seal.changedistiller.model.entities.SourceCodeEntity;
 
 import be.ac.ua.ansymo.cheopsj.model.ModelManager;
 import be.ac.ua.ansymo.cheopsj.model.ModelManagerChange;
@@ -110,7 +110,6 @@ public class MethodInvocationRecorder extends StatementRecorder {
 	public MethodInvocationRecorder(SourceCodeEntity entity){
 		this();
 		entity.getUniqueName();
-		//TODO
 	}
 
 	/**
@@ -141,7 +140,7 @@ public class MethodInvocationRecorder extends StatementRecorder {
 			} else if (famixVar instanceof FamixAttribute) {
 				type = ((FamixAttribute) famixVar).getDeclaredClass();
 			}
-			// TODO handle primitive types!!!
+			// XXX handle primitive types!!!
 		}
 		String methodName;
 		if(type != null){

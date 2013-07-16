@@ -102,7 +102,7 @@ public class FamixMethod extends FamixBehaviouralEntity {
 			icon = JavaUI.getSharedImages().getImage(ISharedImages.IMG_OBJS_DEFAULT);
 		}
 
-		// TODO decorate icon with Abstract, static final, .... decorators
+		// XXX decorate icon with Abstract, static final, .... decorators
 		return icon;
 	}
 

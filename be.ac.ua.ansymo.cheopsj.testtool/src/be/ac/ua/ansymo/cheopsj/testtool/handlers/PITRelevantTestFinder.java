@@ -235,7 +235,7 @@ public class PITRelevantTestFinder {
 	}
 
 
-	//TODO Fix
+	//XXX Fix
 	public static void printToAntPITBuildConfiguration() throws IOException{
 		for (String sourceClass : relevantTests.keySet()) {
 			if(!sourceClass.endsWith("Test")){

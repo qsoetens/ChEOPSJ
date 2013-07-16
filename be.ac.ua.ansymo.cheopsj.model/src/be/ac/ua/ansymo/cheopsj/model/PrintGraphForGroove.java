@@ -71,7 +71,6 @@ public class PrintGraphForGroove {
 			printEndOfGrooveGraph(out);
 			out.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -92,7 +91,6 @@ public class PrintGraphForGroove {
 			printEdgeInGrooveGraph(out, change.getID(), timestampID, "timestamp");
 		}
 		catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -154,7 +152,6 @@ public class PrintGraphForGroove {
 			}
 		}
 		catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

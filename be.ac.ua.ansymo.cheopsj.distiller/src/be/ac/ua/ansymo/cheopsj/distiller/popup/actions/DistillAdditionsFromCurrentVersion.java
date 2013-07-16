@@ -149,7 +149,6 @@ public class DistillAdditionsFromCurrentVersion implements IObjectActionDelegate
 
 
 	private void makeLocalVarAdditions(IPackageFragment[] packages) throws JavaModelException {
-		// TODO Auto-generated method stub
 
 	}
 
@@ -310,13 +309,11 @@ public class DistillAdditionsFromCurrentVersion implements IObjectActionDelegate
 
 	@Override
 	public void selectionChanged(IAction action, ISelection selection) {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void setActivePart(IAction action, IWorkbenchPart targetPart) {
-		// TODO Auto-generated method stub
 
 	}
 }

@@ -72,10 +72,8 @@ public class CompilationUnitHistory {
 			out.close();
 
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -108,6 +106,8 @@ public class CompilationUnitHistory {
 
 			parser.setSource(str.toString().toCharArray());
 			cu = (CompilationUnit) parser.createAST(null);
+			
+			br.close();
 		} catch (UnsupportedEncodingException e) {
 		} catch (IOException e) {
 		}

@@ -3,8 +3,8 @@ package be.ac.ua.ansymo.cheopsj.distiller.changeextractor;
 
 import java.util.Date;
 import java.util.List;
-import org.evolizer.changedistiller.model.entities.SourceCodeChange;
-import org.evolizer.changedistiller.model.entities.SourceCodeEntity;
+import ch.uzh.ifi.seal.changedistiller.model.entities.SourceCodeChange;
+import ch.uzh.ifi.seal.changedistiller.model.entities.SourceCodeEntity;
 import be.ac.ua.ansymo.cheopsj.changerecorders.ClassRecorder;
 import be.ac.ua.ansymo.cheopsj.changerecorders.MethodRecorder;
 import be.ac.ua.ansymo.cheopsj.changerecorders.FieldRecorder;

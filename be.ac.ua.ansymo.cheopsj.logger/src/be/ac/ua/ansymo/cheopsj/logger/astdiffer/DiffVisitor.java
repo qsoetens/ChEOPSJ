@@ -18,6 +18,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.ListUtils;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.ASTVisitor;
+import org.eclipse.jdt.core.dom.ConstructorInvocation;
 import org.eclipse.jdt.core.dom.FieldDeclaration;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.MethodInvocation;
@@ -62,9 +63,7 @@ public class DiffVisitor extends ASTVisitor {
 	public void beginSecondAST() {
 		firstAST = false;
 	}
-
-	// TODO also need to use ConstructorInvocation and SuperMethodInvocation
-	// and/or SuperConstructorInvocation
+	
 	/**
 	 * {@inheritDoc}
 	 */

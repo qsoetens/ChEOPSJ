@@ -22,7 +22,7 @@ import org.eclipse.jdt.core.dom.FieldDeclaration;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.PackageDeclaration;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
-import org.evolizer.changedistiller.model.entities.SourceCodeEntity;
+import ch.uzh.ifi.seal.changedistiller.model.entities.SourceCodeEntity;
 
 import be.ac.ua.ansymo.cheopsj.model.ModelManager;
 import be.ac.ua.ansymo.cheopsj.model.ModelManagerChange;
@@ -64,7 +64,6 @@ public class MethodRecorder extends AbstractEntityRecorder {
 		try {
 			flags = method.getFlags();
 		} catch (JavaModelException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -164,13 +163,12 @@ public class MethodRecorder extends AbstractEntityRecorder {
 			parent.addMethod(famixMethod);
 		}
 
-		/*TODO Fix this too!
+		/*XXX Fix this too!
 		 * try {
 		 
 			FamixClass returnType = manager.getFamixClass(element.getReturnType());
 			famixMethod.setDeclaredReturnClass(returnType);
 		} catch (JavaModelException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}*/
 	}

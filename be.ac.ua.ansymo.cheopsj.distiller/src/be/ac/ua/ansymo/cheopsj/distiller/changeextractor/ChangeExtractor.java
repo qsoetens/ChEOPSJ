@@ -15,7 +15,7 @@ import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.MethodInvocation;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.eclipse.jdt.core.dom.VariableDeclaration;
-import org.evolizer.changedistiller.model.entities.SourceCodeChange;
+import ch.uzh.ifi.seal.changedistiller.model.entities.SourceCodeChange;
 import org.tmatesoft.svn.core.SVNLogEntryPath;
 
 import be.ac.ua.ansymo.cheopsj.changerecorders.MethodInvocationRecorder;
