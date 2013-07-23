@@ -43,6 +43,7 @@ public class SVNLogEntryHandler extends LogEntryHandler implements
 		this.date = entry.getDate();
 		this.user = entry.getAuthor();
 		
+		@SuppressWarnings("unchecked")
 		Map <String, SVNLogEntryPath> changes = entry.getChangedPaths();
 		if (changes != null) {
 			Iterator <Entry <String, SVNLogEntryPath>> it = changes.entrySet().iterator();

@@ -22,20 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.core.resources.IWorkspaceRoot;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.jdt.core.ICompilationUnit;
-import org.eclipse.jdt.core.IJavaProject;
-import org.eclipse.jdt.core.IMethod;
-import org.eclipse.jdt.core.IPackageFragment;
-import org.eclipse.jdt.core.IPackageFragmentRoot;
-import org.eclipse.jdt.core.IType;
-import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
-import org.eclipse.jdt.junit.launcher.JUnitLaunchShortcut;
-import org.eclipse.jface.viewers.StructuredSelection;
 
 import be.ac.ua.ansymo.cheopsj.model.changes.Add;
 import be.ac.ua.ansymo.cheopsj.model.changes.AtomicChange;
@@ -53,7 +40,7 @@ import be.ac.ua.ansymo.cheopsj.model.famix.FamixMethod;
 public class PITRelevantTestFinder {
 
 	// private static Collection<String> relevantTests;
-	private static List<?> selection;
+	//private static List<?> selection;
 	private static Collection<String> tests;
 	private static Map<String, Collection<String>> relevantTests;
 	private static List<String> methodsAnalysed;
@@ -65,7 +52,7 @@ public class PITRelevantTestFinder {
 	 */
 	public static void findTests(List<?> selectedChanges) {
 
-		selection = selectedChanges;
+		//selection = selectedChanges;
 
 		relevantTests = new HashMap<String, Collection<String>>();
 		for (Object obj : selectedChanges) {
@@ -104,7 +91,7 @@ public class PITRelevantTestFinder {
 	 * @return
 	 * @throws JavaModelException
 	 */
-	private static IMethod findMethod(String testCase, String testMethodName) throws JavaModelException {
+	/*private static IMethod findMethod(String testCase, String testMethodName) throws JavaModelException {
 		IWorkspace workspace = ResourcesPlugin.getWorkspace();
 		IWorkspaceRoot root = workspace.getRoot();
 		IProject[] projects = root.getProjects();
@@ -130,7 +117,7 @@ public class PITRelevantTestFinder {
 
 		}
 		return null;
-	}
+	}*/
 
 	private static void findRelevantTests(AtomicChange addition) {
 		if(addition != null){

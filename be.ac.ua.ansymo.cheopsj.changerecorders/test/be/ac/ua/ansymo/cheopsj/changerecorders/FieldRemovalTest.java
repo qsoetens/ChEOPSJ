@@ -46,7 +46,7 @@ public class FieldRemovalTest {
 	private AtomicChange field2add;
 	private AtomicChange field3add;
 	
-	
+	@SuppressWarnings("unchecked")
 	@Before
 	public void setUp(){
 		manager = ModelManager.getInstance();

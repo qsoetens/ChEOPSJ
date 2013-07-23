@@ -10,6 +10,7 @@
  ******************************************************************************/
 package be.ac.ua.ansymo.cheopsj.changerecorders;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.jdt.core.ICompilationUnit;
@@ -169,7 +170,13 @@ public class FieldRecorder extends AbstractEntityRecorder {
 			
 			//THEN Search for fully qualified classname in import statments
 			CompilationUnit cu = (CompilationUnit)field.getRoot();
-			List<ImportDeclaration> imports = cu.imports();
+			
+			List<?> temp = cu.imports();
+			List<ImportDeclaration> imports = new ArrayList<ImportDeclaration>();
+			for(Object t : temp){
+				imports.add((ImportDeclaration)t);
+			}
+			
 			for(ImportDeclaration imp : imports){
 				Name impname = imp.getName();
 				if(impname.getFullyQualifiedName().endsWith(declaredClassName)){

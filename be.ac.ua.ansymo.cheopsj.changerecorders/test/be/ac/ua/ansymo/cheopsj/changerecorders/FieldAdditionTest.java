@@ -58,7 +58,7 @@ public class FieldAdditionTest {
 	private AtomicChange declaredclassadd;
 	private AtomicChange classadd;
 
-
+	@SuppressWarnings("unchecked")
 	@Before
 	public void setUp(){
 		manager = ModelManager.getInstance();

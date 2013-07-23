@@ -11,6 +11,7 @@
 
 package be.ac.ua.ansymo.cheopsj.changerecorders;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.jdt.core.ILocalVariable;
@@ -24,8 +25,6 @@ import org.eclipse.jdt.core.dom.VariableDeclaration;
 import org.eclipse.jdt.core.dom.VariableDeclarationExpression;
 import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
 import org.eclipse.jdt.core.dom.VariableDeclarationStatement;
-import ch.uzh.ifi.seal.changedistiller.model.classifiers.java.JavaEntityType;
-import ch.uzh.ifi.seal.changedistiller.model.entities.SourceCodeEntity;
 
 import be.ac.ua.ansymo.cheopsj.model.ModelManager;
 import be.ac.ua.ansymo.cheopsj.model.ModelManagerChange;
@@ -37,6 +36,8 @@ import be.ac.ua.ansymo.cheopsj.model.changes.Subject;
 import be.ac.ua.ansymo.cheopsj.model.famix.FamixClass;
 import be.ac.ua.ansymo.cheopsj.model.famix.FamixLocalVariable;
 import be.ac.ua.ansymo.cheopsj.model.famix.FamixMethod;
+import ch.uzh.ifi.seal.changedistiller.model.classifiers.java.JavaEntityType;
+import ch.uzh.ifi.seal.changedistiller.model.entities.SourceCodeEntity;
 
 /**
  * @author quinten
@@ -52,7 +53,7 @@ public class LocalVariableRecorder extends StatementRecorder {
     private FamixMethod containingMethod;
     private FamixLocalVariable variable;
     private FamixClass declaredClass;
-    private String name = "";
+   // private String name = "";
 	
     private LocalVariableRecorder(){
     	manager = ModelManager.getInstance();
@@ -63,7 +64,7 @@ public class LocalVariableRecorder extends StatementRecorder {
 	public LocalVariableRecorder(VariableDeclaration node){
 		this();
 		uniquename = node.getName().getFullyQualifiedName();
-		name = node.getName().getIdentifier();
+		//name = node.getName().getIdentifier();
 		containingMethodName = getContainingMethod(node);
 		uniquename = containingMethodName + '{' + uniquename + '}';
 		
@@ -78,7 +79,7 @@ public class LocalVariableRecorder extends StatementRecorder {
 			SingleVariableDeclaration sd =  (SingleVariableDeclaration)node;
 			return findDeclaredClass(sd.getType());
 		}else if(node instanceof VariableDeclarationFragment){
-			VariableDeclarationFragment df = (VariableDeclarationFragment)node;
+			//VariableDeclarationFragment df = (VariableDeclarationFragment)node;
 			if (node.getParent() instanceof VariableDeclarationExpression){
 				return findDeclaredClass(((VariableDeclarationExpression)node.getParent()).getType());
 			}else if (node.getParent() instanceof VariableDeclarationStatement){
@@ -97,7 +98,13 @@ public class LocalVariableRecorder extends StatementRecorder {
 			
 			//THEN Search for fully qualified classname in import statments
 			CompilationUnit cu = (CompilationUnit)type.getRoot();
-			List<ImportDeclaration> imports = cu.imports();
+			
+			List<?> temp = cu.imports();
+			List<ImportDeclaration> imports = new ArrayList<ImportDeclaration>();
+			for(Object t : temp){
+				imports.add((ImportDeclaration)t);
+			}
+			
 			for(ImportDeclaration imp : imports){
 				Name impname = imp.getName();
 				if(impname.getFullyQualifiedName().endsWith(declaredClassName)){

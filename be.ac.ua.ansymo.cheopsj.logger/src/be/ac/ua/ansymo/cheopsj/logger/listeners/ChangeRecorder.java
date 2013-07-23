@@ -12,9 +12,7 @@ package be.ac.ua.ansymo.cheopsj.logger.listeners;
 
 import java.util.Collection;
 
-import org.eclipse.jdt.core.ElementChangedEvent;
 import org.eclipse.jdt.core.ICompilationUnit;
-import org.eclipse.jdt.core.IElementChangedListener;
 import org.eclipse.jdt.core.IField;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IJavaElementDelta;
@@ -22,7 +20,6 @@ import org.eclipse.jdt.core.ILocalVariable;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IType;
-import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.CompilationUnit;
@@ -32,14 +29,12 @@ import org.eclipse.jdt.core.dom.VariableDeclaration;
 import be.ac.ua.ansymo.cheopsj.changerecorders.ClassRecorder;
 import be.ac.ua.ansymo.cheopsj.changerecorders.FieldRecorder;
 import be.ac.ua.ansymo.cheopsj.changerecorders.InheritanceRecorder;
-import be.ac.ua.ansymo.cheopsj.changerecorders.LocalVariableRecorder;
 import be.ac.ua.ansymo.cheopsj.changerecorders.MethodInvocationRecorder;
 import be.ac.ua.ansymo.cheopsj.changerecorders.MethodRecorder;
 import be.ac.ua.ansymo.cheopsj.changerecorders.PackageRecorder;
 import be.ac.ua.ansymo.cheopsj.logger.astdiffer.ASTComparator;
 import be.ac.ua.ansymo.cheopsj.logger.util.CompilationUnitHistory;
 import be.ac.ua.ansymo.cheopsj.model.changes.Add;
-import be.ac.ua.ansymo.cheopsj.model.changes.AtomicChange;
 import be.ac.ua.ansymo.cheopsj.model.changes.IChange;
 import be.ac.ua.ansymo.cheopsj.model.changes.Remove;
 

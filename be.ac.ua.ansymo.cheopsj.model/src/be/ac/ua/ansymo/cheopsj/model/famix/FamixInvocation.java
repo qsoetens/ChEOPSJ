@@ -10,8 +10,6 @@
  ******************************************************************************/
 package be.ac.ua.ansymo.cheopsj.model.famix;
 
-import java.util.ArrayList;
-import java.util.List;
 
 public class FamixInvocation extends FamixAssociation {
 

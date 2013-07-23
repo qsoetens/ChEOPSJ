@@ -12,7 +12,6 @@ package be.ac.ua.ansymo.cheopsj.model.changes;
 
 import be.ac.ua.ansymo.cheopsj.model.famix.FamixAssociation;
 import be.ac.ua.ansymo.cheopsj.model.famix.FamixEntity;
-import be.ac.ua.ansymo.cheopsj.model.famix.FamixInvocation;
 
 public class AtomicChange extends Change {
 

@@ -18,8 +18,6 @@ import org.eclipse.ui.part.ViewPart;
 import org.eclipse.zest.core.viewers.GraphViewer;
 import org.eclipse.zest.layouts.LayoutAlgorithm;
 import org.eclipse.zest.layouts.LayoutStyles;
-import org.eclipse.zest.layouts.algorithms.TreeLayoutAlgorithm;
-
 import be.ac.ua.ansymo.cheopsj.model.ModelManager;
 
 public class ZestChangeView extends ViewPart {

@@ -39,6 +39,7 @@ public class ClassRemovalTest {
 		recorder1.storeChange(addition);
 	}
 
+	@SuppressWarnings("unchecked")
 	private ClassRecorder createRecorderFromDeclaration() {
 		AST ast = AST.newAST(AST.JLS3);
 		CompilationUnit cu = ast.newCompilationUnit();

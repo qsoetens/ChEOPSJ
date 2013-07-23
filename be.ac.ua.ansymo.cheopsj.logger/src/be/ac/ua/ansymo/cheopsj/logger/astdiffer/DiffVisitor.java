@@ -14,13 +14,9 @@ package be.ac.ua.ansymo.cheopsj.logger.astdiffer;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.ListUtils;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.ASTVisitor;
-import org.eclipse.jdt.core.dom.ConstructorInvocation;
 import org.eclipse.jdt.core.dom.FieldDeclaration;
-import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.MethodInvocation;
 import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
 import org.eclipse.jdt.core.dom.VariableDeclaration;
@@ -105,7 +101,6 @@ public class DiffVisitor extends ASTVisitor {
 		CalculateAddedAndRemovedVariableDeclarations();
 	}
 
-	@SuppressWarnings("unchecked")
 	private void CalculateAddedAndRemovedMethodInvocations() {
 		//Compare oldSuperClasses with newSuperClasses to see which was added and which was removed.
 		/*Collection<MethodInvocation> intersection = 

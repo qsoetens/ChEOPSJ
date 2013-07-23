@@ -2,10 +2,7 @@ package be.ac.ua.ansymo.cheopsj.distiller.changeextractor;
 
 import java.util.Collection;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTNode;
@@ -15,8 +12,6 @@ import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.MethodInvocation;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.eclipse.jdt.core.dom.VariableDeclaration;
-import ch.uzh.ifi.seal.changedistiller.model.entities.SourceCodeChange;
-import org.tmatesoft.svn.core.SVNLogEntryPath;
 
 import be.ac.ua.ansymo.cheopsj.changerecorders.MethodInvocationRecorder;
 import be.ac.ua.ansymo.cheopsj.distiller.asts.ASTHelper;
@@ -27,6 +22,7 @@ import be.ac.ua.ansymo.cheopsj.logger.astdiffer.ASTComparator;
 import be.ac.ua.ansymo.cheopsj.model.changes.Add;
 import be.ac.ua.ansymo.cheopsj.model.changes.IChange;
 import be.ac.ua.ansymo.cheopsj.model.changes.Remove;
+import ch.uzh.ifi.seal.changedistiller.model.entities.SourceCodeChange;
 
 public class ChangeExtractor {
 

@@ -23,8 +23,6 @@ import org.eclipse.zest.core.widgets.ZestStyles;
 import be.ac.ua.ansymo.cheopsj.model.changes.AtomicChange;
 import be.ac.ua.ansymo.cheopsj.model.famix.FamixAssociation;
 import be.ac.ua.ansymo.cheopsj.model.famix.FamixEntity;
-import be.ac.ua.ansymo.cheopsj.model.famix.FamixInheritanceDefinition;
-import be.ac.ua.ansymo.cheopsj.model.famix.FamixInvocation;
 import be.ac.ua.ansymo.cheopsj.model.famix.FamixObject;
 
 

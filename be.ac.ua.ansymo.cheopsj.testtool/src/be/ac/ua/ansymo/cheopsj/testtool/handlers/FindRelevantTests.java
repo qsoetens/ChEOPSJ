@@ -12,7 +12,6 @@
 
 package be.ac.ua.ansymo.cheopsj.testtool.handlers;
 
-import java.io.IOException;
 import java.util.List;
 
 import org.eclipse.core.commands.AbstractHandler;

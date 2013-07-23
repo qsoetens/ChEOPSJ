@@ -47,6 +47,7 @@ public class ClassAndPackageRemovalTest {
 		classrem = new Remove();
 	}
 
+	@SuppressWarnings("unchecked")
 	private void createRecorderFromDeclaration() {
 		AST ast = AST.newAST(AST.JLS3);
 		CompilationUnit cu = ast.newCompilationUnit();

@@ -23,13 +23,6 @@
                label="Distill Changes"
                menubarPath="DistillerFromSVN.menu2/group">
          </action>
-         <action
-               class="be.ac.ua.ansymo.cheopsj.distiller.popup.actions.DistillAdditionsFromCurrentVersion"
-               enablesFor="1"
-               id="DistillerFromSVN.action4"
-               label="Distill Additions"
-               menubarPath="DistillerFromSVN.menu2/group">
-         </action>
       </objectContribution>
       <objectContribution
             objectClass="org.eclipse.jdt.core.IJavaProject"
@@ -48,13 +41,6 @@
                menubarPath="DistillerFromSVN.menu/group"
                enablesFor="1"
                id="DistillerFromSVN.action1">
-         </action>
-         <action
-               class="be.ac.ua.ansymo.cheopsj.distiller.popup.actions.DistillAdditionsFromCurrentVersion"
-               enablesFor="1"
-               id="DistillerFromSVN.action3"
-               label="Distill Additions"
-               menubarPath="DistillerFromSVN.menu/group">
          </action>
       </objectContribution>
       

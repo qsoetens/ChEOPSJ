@@ -55,6 +55,7 @@ public class ClassAdditionTest {
 		managerChange = ModelManagerChange.getInstance();
 	}
 
+	@SuppressWarnings("unchecked")
 	private ClassRecorder createRecorderFromDeclaration() {
 		AST ast = AST.newAST(AST.JLS3);
 		CompilationUnit cu = ast.newCompilationUnit();
@@ -99,6 +100,7 @@ public class ClassAdditionTest {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	@Test
 	public void test0b(){
 		AST ast = AST.newAST(AST.JLS3);
@@ -241,6 +243,7 @@ public class ClassAdditionTest {
 		assertTrue(packadd.getStructuralDependees().contains(add));
 	}
 
+	@SuppressWarnings("unchecked")
 	@Test
 	public void test3(){
 		AtomicChange parentAdd = new Add();

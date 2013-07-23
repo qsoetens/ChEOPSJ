@@ -10,12 +10,6 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jdt.core.IJavaProject;
-import org.eclipse.jdt.core.dom.AST;
-import org.eclipse.jdt.core.dom.ASTNode;
-import org.eclipse.jdt.core.dom.ASTParser;
-import org.eclipse.jdt.core.dom.CompilationUnit;
-import org.eclipse.jdt.core.dom.MethodInvocation;
-import org.eclipse.jdt.core.dom.VariableDeclaration;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
@@ -30,17 +24,11 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 
-import be.ac.ua.ansymo.cheopsj.changerecorders.MethodInvocationRecorder;
-import be.ac.ua.ansymo.cheopsj.distiller.cd.ChangeDistillerProxy;
 import be.ac.ua.ansymo.cheopsj.distiller.changeextractor.ChangeExtractor;
 import be.ac.ua.ansymo.cheopsj.distiller.connection.Connector;
 import be.ac.ua.ansymo.cheopsj.distiller.connection.ConnectorFactory;
 import be.ac.ua.ansymo.cheopsj.distiller.connection.LogEntryHandler;
 import be.ac.ua.ansymo.cheopsj.distiller.connection.LogEntryHandler.Change;
-import be.ac.ua.ansymo.cheopsj.logger.astdiffer.ASTComparator;
-import be.ac.ua.ansymo.cheopsj.model.changes.Add;
-import be.ac.ua.ansymo.cheopsj.model.changes.IChange;
-import be.ac.ua.ansymo.cheopsj.model.changes.Remove;
 
 
 public class DistillChanges implements IObjectActionDelegate {
@@ -176,14 +164,14 @@ public class DistillChanges implements IObjectActionDelegate {
 		}
 	}
 	
-	private void storeChange(ASTNode node, IChange change) {
+	/*private void storeChange(ASTNode node, IChange change) {
 		if (node instanceof MethodInvocation) {
 			new MethodInvocationRecorder((MethodInvocation) node).storeChange(change);
 		}else if (node instanceof VariableDeclaration){
 			//This is to get changes to other local vars.
 			//new LocalVariableRecorder((VariableDeclaration) node).storeChange(change);
 		}
-	}
+	}*/
 
 	@Override
 	public void setActivePart(IAction action, IWorkbenchPart targetPart) {
