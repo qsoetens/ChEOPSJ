@@ -179,6 +179,13 @@ public class FieldRemovalTest {
 	
 	@Test
 	public void test2b(){
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		Remove field1rem = new Remove();
 		recorder1.storeChange(field1rem);
 				

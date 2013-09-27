@@ -28,9 +28,11 @@ import org.eclipse.jdt.core.dom.PackageDeclaration;
 import org.eclipse.jdt.core.dom.PrimitiveType;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
+
 import ch.uzh.ifi.seal.changedistiller.ChangeDistiller;
 import ch.uzh.ifi.seal.changedistiller.distilling.FileDistiller;
 import ch.uzh.ifi.seal.changedistiller.model.entities.SourceCodeChange;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -38,7 +40,9 @@ import org.junit.Test;
 import be.ac.ua.ansymo.cheopsj.model.ModelManager;
 import be.ac.ua.ansymo.cheopsj.model.changes.Add;
 import be.ac.ua.ansymo.cheopsj.model.changes.AtomicChange;
+import be.ac.ua.ansymo.cheopsj.model.famix.FamixClass;
 import be.ac.ua.ansymo.cheopsj.model.famix.FamixEntity;
+import be.ac.ua.ansymo.cheopsj.model.famix.FamixPackage;
 
 public class FieldAdditionTest {
 
@@ -142,7 +146,7 @@ public class FieldAdditionTest {
 			String fieldValue = (String) uniqueNameField.get(recorder1);
 			assertEquals(packname+"."+classname+"."+intfieldname, fieldValue);
 
-			Field parentField = FieldRecorder.class.getDeclaredField("parent");
+			Field parentField = FieldRecorder.class.getDeclaredField("ContainingClass");
 			parentField.setAccessible(true);
 			FamixEntity fieldValue2 = (FamixEntity)parentField.get(recorder1);
 			assertEquals(packname+"."+classname,fieldValue2.getUniqueName());
@@ -165,7 +169,7 @@ public class FieldAdditionTest {
 			String fieldValue = (String) uniqueNameField.get(recorder2);
 			assertEquals(packname+"."+classname+"."+fieldname, fieldValue);
 
-			Field parentField = FieldRecorder.class.getDeclaredField("parent");
+			Field parentField = FieldRecorder.class.getDeclaredField("ContainingClass");
 			parentField.setAccessible(true);
 			FamixEntity fieldValue2 = (FamixEntity)parentField.get(recorder2);
 			assertEquals(packname+"."+classname,fieldValue2.getUniqueName());
@@ -188,7 +192,7 @@ public class FieldAdditionTest {
 			String fieldValue = (String) uniqueNameField.get(recorder3);
 			assertEquals(packname+"."+classname+"."+field3Name, fieldValue);
 
-			Field parentField = FieldRecorder.class.getDeclaredField("parent");
+			Field parentField = FieldRecorder.class.getDeclaredField("ContainingClass");
 			parentField.setAccessible(true);
 			FamixEntity fieldValue2 = (FamixEntity)parentField.get(recorder3);
 			assertEquals(packname+"."+classname,fieldValue2.getUniqueName());
@@ -249,39 +253,26 @@ public class FieldAdditionTest {
 
 	@Test
 	public void test0e(){
-		/*try {
-			FieldRecorder rec = new FieldRecorder(MockSourceCodeEntity.getMockFieldEntity(fieldname), MockSourceCodeEntity.getMockTypeEntity(packname+"."+classname));
-
-			Field uniqueNameField = FieldRecorder.class.getDeclaredField("uniquename");
-			uniqueNameField.setAccessible(true);
-			String fieldValue = (String) uniqueNameField.get(rec);
-			assertEquals(fieldValue, fieldname);
-
-			Field parentField = FieldRecorder.class.getDeclaredField("parent");
-			parentField.setAccessible(true);
-			FamixEntity fieldValue2 = (FamixEntity)parentField.get(rec);
-			assertEquals(packname+"."+classname, fieldValue2.getUniqueName());
-		} catch (SecurityException e) {
-			e.printStackTrace();
-			fail();
-		} catch (IllegalArgumentException e) {
-			e.printStackTrace();
-			fail();
-		} catch (NoSuchFieldException e) {
-			e.printStackTrace();
-			fail();
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-			fail();
-		}*/
-
 		FileDistiller distiller = ChangeDistiller.createFileDistiller(ChangeDistiller.Language.JAVA);
 
-		File left = new File("/Users/quinten/Desktop/CHEOPSWorkspace/be.ac.ua.ansymo.cheopsj.changerecorders/testfiles/ClassA.java");
-		File right = new File("/Users/quinten/Desktop/CHEOPSWorkspace/be.ac.ua.ansymo.cheopsj.changerecorders/testfiles/ClassAb.java"); 
+		File left = new File("/Users/qsoetens/git/ChEOPSJ/be.ac.ua.ansymo.cheopsj.changerecorders/testfiles/ClassA.java");
+		File right = new File("/Users/qsoetens/git/ChEOPSJ/be.ac.ua.ansymo.cheopsj.changerecorders/testfiles/ClassAb.java"); 
 
 		distiller.extractClassifiedSourceCodeChanges(left, right);
 		List<SourceCodeChange> changes = distiller.getSourceCodeChanges();
+		
+		
+		FamixPackage famixPack = new FamixPackage();
+		famixPack.setUniqueName("be.ac.ua.test.pack");
+		famixPack.setName("pack");	
+		manager.addFamixElement(famixPack);
+		
+		FamixClass famixClass = new FamixClass();
+		famixClass.setUniqueName("be.ac.ua.test.pack.ClassA");
+		famixClass.setBelongsToPackage(famixPack);
+		(famixPack).addClass(famixClass);
+		famixClass.setName("ClassA");
+		manager.addFamixElement(famixClass);
 
 		assertEquals(1, changes.size());
 		FieldRecorder rec = new FieldRecorder(changes.get(0).getChangedEntity(),changes.get(0).getParentEntity());
@@ -289,9 +280,9 @@ public class FieldAdditionTest {
 			Field uniqueNameField = FieldRecorder.class.getDeclaredField("uniquename");
 			uniqueNameField.setAccessible(true);
 			String fieldValue = (String) uniqueNameField.get(rec);
-			assertEquals("field",fieldValue);
+			assertEquals("be.ac.ua.test.pack.ClassA.field",fieldValue);
 
-			Field parentField = FieldRecorder.class.getDeclaredField("parent");
+			Field parentField = FieldRecorder.class.getDeclaredField("ContainingClass");
 			parentField.setAccessible(true);
 			FamixEntity fieldValue2 = (FamixEntity)parentField.get(rec);
 			assertEquals("be.ac.ua.test.pack.ClassA", fieldValue2.getUniqueName());

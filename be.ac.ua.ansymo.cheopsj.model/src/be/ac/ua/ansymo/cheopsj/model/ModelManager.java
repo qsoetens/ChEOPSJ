@@ -53,6 +53,9 @@ public class ModelManager implements Serializable{
 
 	private Map<String, FamixClass> famixClassesMap;
 	private Map<String, FamixMethod> famixMethodsMap;
+	private Map<String, List<FamixMethod>> famixMethodsWithName;
+	
+	
 	private Map<String, FamixAttribute> famixFieldsMap;
 
 	private Map<String, FamixInvocation> famixInvocationsMap;
@@ -69,6 +72,9 @@ public class ModelManager implements Serializable{
 		famixPackagesMap = new HashMap<String, FamixPackage>();
 		famixClassesMap = new HashMap<String, FamixClass>();
 		famixMethodsMap = new HashMap<String, FamixMethod>();
+		
+		famixMethodsWithName = new HashMap<String, List<FamixMethod>>();
+		
 		famixFieldsMap = new HashMap<String, FamixAttribute>();
 		famixInvocationsMap = new HashMap<String, FamixInvocation>();
 		famixVariablesMap = new HashMap<String, FamixLocalVariable>();
@@ -100,6 +106,9 @@ public class ModelManager implements Serializable{
 			famixClassesMap.put(((FamixClass) fe).getUniqueName(), (FamixClass) fe);
 		} else if (fe instanceof FamixMethod) {
 			famixMethodsMap.put(((FamixMethod) fe).getUniqueName(), (FamixMethod) fe);
+			
+			
+			
 		} else if (fe instanceof FamixAttribute) {
 			famixFieldsMap.put(((FamixAttribute) fe).getUniqueName(), (FamixAttribute) fe);
 		} else if (fe instanceof FamixInvocation) {
@@ -283,6 +292,10 @@ public class ModelManager implements Serializable{
 	 * @param identifier
 	 */
 	public FamixMethod getFamixMethodWithName(String identifier) {
+		
+		return famixMethodsMap.get(identifier);
+		
+		/*
 		for (Subject fo : famixEntities) {
 			if (fo instanceof FamixMethod) {
 				if (((FamixMethod) fo).getUniqueName().equals(identifier)) {
@@ -291,7 +304,7 @@ public class ModelManager implements Serializable{
 			}
 		}
 
-		return null;
+		return null;*/
 
 	}
 	

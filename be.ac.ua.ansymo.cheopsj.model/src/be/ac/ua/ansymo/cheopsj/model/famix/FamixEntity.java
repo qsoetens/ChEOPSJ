@@ -21,14 +21,7 @@ public abstract class FamixEntity extends FamixObject {
 	//private String name;
 	private String uniqueName;
 	private String name;
-	
-	
-	/*public String getName() {
-		return name;
-	}
-	public void setName(String name) {
-		this.name = name;
-	}*/
+		
 	public String getUniqueName() {
 		return uniqueName;
 	}

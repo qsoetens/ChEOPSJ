@@ -106,10 +106,13 @@ public class FieldRecorder extends AbstractEntityRecorder {
 		if(entity.getType().isField()){
 			uniquename = entity.getUniqueName();
 			
-			int j = uniquename.lastIndexOf('.');
-			name = uniquename.substring(j,uniquename.length());
+			int i = uniquename.indexOf(' ');
+			uniquename = uniquename.substring(0,i);
 			
-			if(parentEntity.getType().isType()){
+			int j = uniquename.lastIndexOf('.');
+			name = uniquename.substring(j+1,uniquename.length());
+			
+			if(parentEntity.getType().isClass()){
 				String parentUniqueName = parentEntity.getUniqueName();
 				ContainingClass = manager.getFamixClass(parentUniqueName);
 			}
