@@ -11,10 +11,13 @@
 
 package be.ac.ua.ansymo.cheopsj.changerecorders;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.jdt.core.dom.IMethodBinding;
 import org.eclipse.jdt.core.dom.MethodInvocation;
-import ch.uzh.ifi.seal.changedistiller.model.entities.SourceCodeEntity;
 
+import ch.uzh.ifi.seal.changedistiller.model.entities.SourceCodeEntity;
 import be.ac.ua.ansymo.cheopsj.model.ModelManager;
 import be.ac.ua.ansymo.cheopsj.model.ModelManagerChange;
 import be.ac.ua.ansymo.cheopsj.model.changes.Add;
@@ -37,7 +40,8 @@ public class MethodInvocationRecorder extends StatementRecorder {
 	private ModelManagerChange managerChange;
 	private FamixInvocation famixInvocation;
 	private FamixMethod invokedby;
-	private FamixMethod calledmethod;
+	//private FamixMethod calledmethod;
+	private List<FamixMethod> calledMethodCandidates;
 
 	private String calledMethodName;
 
@@ -48,6 +52,7 @@ public class MethodInvocationRecorder extends StatementRecorder {
 	private MethodInvocationRecorder(){
 		manager = ModelManager.getInstance();
 		managerChange = ModelManagerChange.getInstance();
+		calledMethodCandidates = new ArrayList<FamixMethod>();
 	}
 
 	/**
@@ -64,7 +69,7 @@ public class MethodInvocationRecorder extends StatementRecorder {
 		if(invokedby == null)
 			return;
 
-		//This only works when logging changes!!! 
+		/*//This only works when logging changes!!! 
 		IMethodBinding binding = node.resolveMethodBinding();
 		if(binding != null){
 			calledMethodName = binding.getName();
@@ -92,10 +97,21 @@ public class MethodInvocationRecorder extends StatementRecorder {
 				
 			}
 
+		}*/
+		
+		calledMethodName = node.getName().getIdentifier();
+		if(manager.famixMethodWithNameExists(calledMethodName)){
+			calledMethodCandidates = manager.getFamixMethodsWithName(calledMethodName);
+		}else{
+			FamixMethod calledmethod = new FamixMethod();
+			calledmethod.setUniqueName(invokedby.getBelongsToClass().getUniqueName() + '.' + calledMethodName);
+			calledmethod.setIsDummy(true);
+			manager.addFamixElement(calledmethod);
+			calledMethodCandidates.add(calledmethod);
 		}
 	}
 	
-	public void getOrAddCalledMethod() {
+	/*public void getOrAddCalledMethod() {
 		
 		if(manager.famixMethodExists(calledMethodName)){
 			calledmethod = manager.getFamixMethod(calledMethodName);
@@ -105,7 +121,7 @@ public class MethodInvocationRecorder extends StatementRecorder {
 			calledmethod.setIsDummy(true);
 			manager.addFamixElement(calledmethod);
 		}
-	}
+	}*/
 
 	public MethodInvocationRecorder(SourceCodeEntity entity){
 		this();
@@ -116,7 +132,7 @@ public class MethodInvocationRecorder extends StatementRecorder {
 	 * @param localVarOrField
 	 * @return
 	 */
-	private FamixMethod findMethodInType(String localVarOrField, String invokedMethodName) {
+	/*private FamixMethod findMethodInType(String localVarOrField, String invokedMethodName) {
 
 		Subject famixVar = null;
 
@@ -152,7 +168,7 @@ public class MethodInvocationRecorder extends StatementRecorder {
 		}
 
 
-	}
+	}*/
 
 
 	/*
@@ -170,7 +186,7 @@ public class MethodInvocationRecorder extends StatementRecorder {
 			invokedby = manager.getFamixMethod(containingMethodName);
 		} //invokedby should exist
 
-		getOrAddCalledMethod();
+		//getOrAddCalledMethod();
 
 		stringrepresentation = invokedby.getUniqueName() + '{' + calledMethodName + '}';
 
@@ -178,11 +194,13 @@ public class MethodInvocationRecorder extends StatementRecorder {
 		if (!manager.famixInvocationExists(stringrepresentation)) {
 			famixInvocation = new FamixInvocation();
 			famixInvocation.setStringRepresentation(stringrepresentation);
-			//calledmethod = manager.getFamixMethod(calledMethodName);
-			//invokedby = manager.getFamixMethod(containingMethodName);
-
-			famixInvocation.setCandidate(calledmethod);
-			calledmethod.addInvokedBy(famixInvocation);
+			
+			for(FamixMethod calledmethod: calledMethodCandidates){
+				famixInvocation.addCandidate(calledmethod);
+				calledmethod.addInvokedBy(famixInvocation);
+			}
+			//famixInvocation.setCandidate(calledmethod);
+			//calledmethod.addInvokedBy(famixInvocation);
 
 			famixInvocation.setInvokedBy(invokedby);
 			invokedby.addInvocation(famixInvocation);
@@ -220,12 +238,21 @@ public class MethodInvocationRecorder extends StatementRecorder {
 	 */
 	private void setStructuralDependencies(AtomicChange change, FamixInvocation subject) {
 		if (change instanceof Add) {
-			if(calledmethod != null){
+			
+			if(!calledMethodCandidates.isEmpty()){
+				for(FamixMethod candidate : calledMethodCandidates){
+					Change calledMethodChange = candidate.getLatestAddition();
+					if (calledMethodChange != null) {
+						change.addStructuralDependency(calledMethodChange);
+					}
+				}
+			}
+			/*if(calledmethod != null){
 				Change calledMethodChange = calledmethod.getLatestAddition();
 				if (calledMethodChange != null) {
 					change.addStructuralDependency(calledMethodChange);
 				}
-			}
+			}*/
 			if (invokedby != null) {
 				Change invokedByChange = invokedby.getLatestAddition();
 				if (invokedByChange != null) {

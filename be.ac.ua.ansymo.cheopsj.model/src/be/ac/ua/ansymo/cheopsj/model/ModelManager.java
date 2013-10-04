@@ -53,9 +53,9 @@ public class ModelManager implements Serializable{
 
 	private Map<String, FamixClass> famixClassesMap;
 	private Map<String, FamixMethod> famixMethodsMap;
-	private Map<String, List<FamixMethod>> famixMethodsWithName;
-	
-	
+	private Map<String, List<FamixMethod>> famixMethodListMap;
+
+
 	private Map<String, FamixAttribute> famixFieldsMap;
 
 	private Map<String, FamixInvocation> famixInvocationsMap;
@@ -72,9 +72,9 @@ public class ModelManager implements Serializable{
 		famixPackagesMap = new HashMap<String, FamixPackage>();
 		famixClassesMap = new HashMap<String, FamixClass>();
 		famixMethodsMap = new HashMap<String, FamixMethod>();
-		
-		famixMethodsWithName = new HashMap<String, List<FamixMethod>>();
-		
+
+		famixMethodListMap = new HashMap<String, List<FamixMethod>>();
+
 		famixFieldsMap = new HashMap<String, FamixAttribute>();
 		famixInvocationsMap = new HashMap<String, FamixInvocation>();
 		famixVariablesMap = new HashMap<String, FamixLocalVariable>();
@@ -106,9 +106,13 @@ public class ModelManager implements Serializable{
 			famixClassesMap.put(((FamixClass) fe).getUniqueName(), (FamixClass) fe);
 		} else if (fe instanceof FamixMethod) {
 			famixMethodsMap.put(((FamixMethod) fe).getUniqueName(), (FamixMethod) fe);
-			
-			
-			
+			//FIX NULLPOINTEREXCEPTION HERE!!!
+			if(!famixMethodListMap.containsKey(((FamixMethod) fe).getName())){
+				famixMethodListMap.put(((FamixMethod) fe).getName(), new ArrayList<FamixMethod>());	
+			}
+			famixMethodListMap.get(((FamixMethod) fe).getName()).add((FamixMethod) fe);
+
+
 		} else if (fe instanceof FamixAttribute) {
 			famixFieldsMap.put(((FamixAttribute) fe).getUniqueName(), (FamixAttribute) fe);
 		} else if (fe instanceof FamixInvocation) {
@@ -199,7 +203,7 @@ public class ModelManager implements Serializable{
 		// CheopsjLog.logInfo("Loading Model");
 		File file = getModelFile();
 		if(file.exists()){
-			
+
 			FileInputStream fis = null;
 			ObjectInputStream in = null;
 			try {
@@ -218,16 +222,16 @@ public class ModelManager implements Serializable{
 							new IChange[getModelManagerChange().getChanges().size()]));
 		}
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	private void loadFamixEntities(ObjectInputStream in) {
 		try {
 			List<IChange> changes = getModelManagerChange().getChanges();
 			changes = (List<IChange>) in.readObject();
 			getModelManagerChange().setChanges(changes);
-			
+
 			famixEntities = (List<Subject>) in.readObject();
-			
+
 			famixPackagesMap = (Map<String, FamixPackage>) in.readObject();
 			famixClassesMap = (Map<String, FamixClass>) in.readObject();
 			famixMethodsMap = (Map<String, FamixMethod>) in.readObject();
@@ -245,7 +249,7 @@ public class ModelManager implements Serializable{
 	private File getModelFile() {
 		return Activator.getDefault().getStateLocation().append("changemodel.ser").toFile();
 	}
-	
+
 	public Map<String, FamixPackage> getFamixPackagesMap() {
 		return famixPackagesMap;
 	}
@@ -257,44 +261,44 @@ public class ModelManager implements Serializable{
 	public Map<String, FamixMethod> getFamixMethodsMap() {
 		return famixMethodsMap;
 	}
-	
+
 	public List<Subject> getFamixEntities() {
 		return famixEntities;
 	}
-	
+
 	public Map<String, FamixAttribute> getFamixFieldsMap() {
 		return famixFieldsMap;
 	}
-	
+
 	public Map<String, FamixLocalVariable> getFamixVariablesMap() {
 		return famixVariablesMap;
 	}
-	
+
 	public Map<String, FamixInvocation> getFamixInvocationsMap() {
 		return famixInvocationsMap;
 	}
-	
+
 	public ModelManagerListeners getModelManagerListeners() {
 		return ModelManagerListeners.getInstance();
 	}
-	
+
 	public ModelManagerChange getModelManagerChange() {
 		return ModelManagerChange.getInstance();
 	}
-	
+
 	// /////////////////////////////////////////////////////////////////////////
 	//
 	// Searching the Maps for specific FamixEntities
 	//
 	// /////////////////////////////////////////////////////////////////////////
 
-	/**
+	/*/**
 	 * @param identifier
 	 */
-	public FamixMethod getFamixMethodWithName(String identifier) {
-		
+	/*public FamixMethod getFamixMethodWithName(String identifier) {
+
 		return famixMethodsMap.get(identifier);
-		
+
 		/*
 		for (Subject fo : famixEntities) {
 			if (fo instanceof FamixMethod) {
@@ -306,8 +310,21 @@ public class ModelManager implements Serializable{
 
 		return null;*/
 
+	//}
+
+
+	public List<FamixMethod> getFamixMethodsWithName(String calledMethodName) {
+		if(famixMethodListMap.containsKey(calledMethodName))
+			return famixMethodListMap.get(calledMethodName);
+		else
+			return new ArrayList<FamixMethod>();
 	}
-	
+
+	public boolean famixMethodWithNameExists(String name){
+		return famixMethodListMap.containsKey(name);
+	}
+
+
 	/**
 	 * @param elementName
 	 * @return

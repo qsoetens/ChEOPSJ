@@ -10,6 +10,9 @@
  ******************************************************************************/
 package be.ac.ua.ansymo.cheopsj.model.famix;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class FamixInvocation extends FamixAssociation {
 
@@ -23,7 +26,7 @@ public class FamixInvocation extends FamixAssociation {
 	 */
 	private FamixBehaviouralEntity invokedBy = null;
 
-	//private List<FamixBehaviouralEntity> candidates = new ArrayList<FamixBehaviouralEntity>();
+	private List<FamixBehaviouralEntity> candidates = new ArrayList<FamixBehaviouralEntity>();
 	private FamixBehaviouralEntity candidate = null;
 
 	/**
@@ -48,13 +51,13 @@ public class FamixInvocation extends FamixAssociation {
 		this.invokedBy = invokedBy;
 	}
 
-	/*public List<FamixBehaviouralEntity> getCandidates() {
+	public List<FamixBehaviouralEntity> getCandidates() {
 		return candidates;
 	}
 
 	public void addCandidate(FamixBehaviouralEntity candidate) {
 		this.candidates.add(candidate);
-	}*/
+	}
 	
 	public FamixBehaviouralEntity getCandidate() {
 		return candidate;
