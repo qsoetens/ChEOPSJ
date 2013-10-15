@@ -1,5 +1,6 @@
 /*
  * Copyright 2009 University of Zurich, Switzerland
+ * Copyright 2013 Quinten Soetens - Adapted from org.evolizer.core.hibernate
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,10 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package hibernate.session.internal;
 
-import hibernate.HibernatePlugin;
-import hibernate.session.SessionHandler;
+import hibernate.HibernateException;
 import hibernate.session.api.ISession;
 
 import java.io.Serializable;
@@ -51,28 +52,7 @@ public class SessionImpl implements ISession {
     private Transaction fTransaction;
 
     /**
-     * Constructor. Not intended to be called by clients directly. Use
-     * {@link SessionFactory#getEvolizerSession(String, String, String, String, String)} instead.
-     * 
-     * @param dbUrl
-     *            database host (e.g. <code>mysql://localhost:3306/evolizer_test</code>)
-     * @param dbDialect
-     *            database dialect (e.g. <code>org.hibernate.dialect.MySQLDialect</code>)
-     * @param dbDriverName
-     *            jdbc-compliant database driver (e.g. <code>com.mysql.jdbc.Driver</code>)
-     * @param dbUser
-     *            database username
-     * @param dbPasswd
-     *            database password for dbUser
-     * @throws Exception 
-     */
-    public SessionImpl(String dbUrl, String dbDialect, String dbDriverName, String dbUser, String dbPasswd) throws Exception {
-
-        configureDataBaseConnection(dbUrl, dbDialect, dbDriverName, dbUser, dbPasswd);
-    }
-
-    /**
-     * Instantiates a new Evolizer session.
+     * Instantiates a new session.
      * 
      * @param session
      *            the hibernate session
@@ -239,67 +219,21 @@ public class SessionImpl implements ISession {
         try {
             return (T) query.uniqueResult();
         } catch (NonUniqueResultException e) {
-            Exception ex = new Exception("Non unique result for uniqueResult query");
+            Exception ex = new HibernateException("Non unique result for uniqueResult query");
             throw ex;
-        }
-    }
-
-    /**
-     * Creates and stores the configuration for the Hibernate-session based on the passed parameters. Furthermore, it
-     * queries all <code>org.evolizer.hibernate.modelProvider</code> extensions for annotated classes.
-     * 
-     * @param dbUrl
-     *            database host (e.g. <code>mysql://localhost:3306/evolizer_test</code>)
-     * @param dbDialect
-     *            database dialect (e.g. <code>org.hibernate.dialect.MySQLDialect</code>)
-     * @param dbDriverName
-     *            jdbc-compliant database driver (e.g. <code>com.mysql.jdbc.Driver</code>)
-     * @param dbUser
-     *            database username
-     * @param dbPasswd
-     *            database password for dbUser
-     * @throws Exception 
-     * @deprecated Method has been moved to
-     *             {@link SessionHandler#configureDataBaseConnection(String, String, String, String, String)}
-     */
-    @Deprecated
-    private void configureDataBaseConnection(
-            String dbUrl,
-            String dbDialect,
-            String dbDriverName,
-            String dbUser,
-            String dbPasswd) throws Exception {
-
-        fHibernateAnnotationConfig = new AnnotationConfiguration();
-
-        fHibernateAnnotationConfig.setProperty("hibernate.connection.url", "jdbc:" + dbUrl);
-        fHibernateAnnotationConfig.setProperty("hibernate.connection.username", dbUser);
-        fHibernateAnnotationConfig.setProperty("hibernate.connection.password", dbPasswd);
-        fHibernateAnnotationConfig.setProperty("hibernate.dialect", dbDialect);
-        fHibernateAnnotationConfig.setProperty("hibernate.connection.driver_class", dbDriverName);
-
-        fHibernateAnnotationConfig.setProperty("hibernate.jdbc.batch_size", "25");
-        fHibernateAnnotationConfig.setProperty("hibernate.cache.use_second_level_cache", "false");
-
-        // fHibernateAnnotationConfig.setProperty("hibernate.show_sql", "true");
-
-        List<Class<?>> annotatedClasses = HibernatePlugin.getDefault().gatherModels();
-        for (Class<?> annotatedClass : annotatedClasses) {
-            fHibernateAnnotationConfig.addAnnotatedClass(annotatedClass);
-
         }
     }
 
     private void assertTransactionIsNotActive() throws Exception {
         if (fTransaction != null) {
-            Exception ex = new Exception("A Transaction is already active.");
+            Exception ex = new HibernateException("A Transaction is already active.");
             throw ex;
         }
     }
 
     private void assertSessionIsOpen() throws Exception {
         if (!isOpen()) {
-            Exception ex = new Exception("Session is not open.");
+            Exception ex = new HibernateException("Session is not open.");
             throw ex;
         }
     }

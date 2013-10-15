@@ -1,5 +1,6 @@
 /*
  * Copyright 2009 University of Zurich, Switzerland
+ * Copyright 2013 Quinten Soetens - Adapted from org.evolizer.core.hibernate
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,17 +16,9 @@
  */
 package hibernate;
 
-import hibernate.model.api.IModelProvider;
-
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
 
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.IExtension;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
 import org.osgi.framework.BundleContext;
 
@@ -39,7 +32,7 @@ public class HibernatePlugin extends Plugin {
     /**
      * The plug-in ID
      */
-    public static final String PLUGIN_ID = "org.evolizer.core.hibernate";
+    public static final String PLUGIN_ID = "hibernate";
 
     // The shared instance
     private static HibernatePlugin sPlugin;
@@ -77,46 +70,6 @@ public class HibernatePlugin extends Plugin {
         return HibernatePlugin.sPlugin;
     }
 
-    /**
-     * Queries all model providers and returns ejb3-annotated classes.
-     * 
-     * @return A list containing classes that are annotated with ejb3-tags for Hibernate mapping.
-     * @throws Exception 
-     */
-    public List<Class<?>> gatherModels() throws Exception {
-        List<Class<?>> annotatedClasses = new ArrayList<Class<?>>();
-
-        // Iterate over all extensions and gather classes that are hibernate annotated
-        IExtension[] extensions =
-                Platform.getExtensionRegistry().getExtensionPoint(HibernatePlugin.PLUGIN_ID, "modelProvider")
-                        .getExtensions();
-        for (IExtension element : extensions) {
-            IConfigurationElement[] configElements = element.getConfigurationElements();
-            for (IConfigurationElement configElement : configElements) {
-                try {
-                    IModelProvider provider =
-                            (IModelProvider) configElement.createExecutableExtension("class");
-                    // Throws CoreException if executable could not be created
-                    Class<?>[] classes = provider.getAnnotatedClasses();
-
-                    for (Class<?> element1 : classes) {
-                        annotatedClasses.add(element1);
-                    }
-
-
-                } catch (CoreException exception) {
-                    String message =
-                            "Could not create executable extension from " + configElement.getContributor() + ". "
-                                    + exception.getMessage();
-
-
-                    throw new Exception(message);
-                }
-            }
-        }
-
-        return annotatedClasses;
-    }
 
     /**
      * Opens a file located within the plugin-bundle.

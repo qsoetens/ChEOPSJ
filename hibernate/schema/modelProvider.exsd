@@ -1,9 +1,9 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!-- Schema file written by PDE -->
-<schema targetNamespace="org.evolizer.hibernate">
+<schema targetNamespace="hibernate">
 <annotation>
       <appInfo>
-         <meta.schema plugin="org.evolizer.hibernate" id="modelProvider" name="Evolizer Model Provider"/>
+         <meta.schema plugin="hibernate" id="modelProvider" name="Model Provider"/>
       </appInfo>
       <documentation>
          [Enter description of this extension point.]
@@ -57,7 +57,7 @@
                   
                </documentation>
                <appInfo>
-                  <meta.attribute kind="java" basedOn="org.evolizer.hibernate.model.api.IEvolizerModelProvider"/>
+                  <meta.attribute kind="java" basedOn="hibernate.model.api.IModelProvider"/>
                </appInfo>
             </annotation>
          </attribute>

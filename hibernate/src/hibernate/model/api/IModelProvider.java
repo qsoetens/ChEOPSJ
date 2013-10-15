@@ -1,5 +1,6 @@
 /*
  * Copyright 2009 University of Zurich, Switzerland
+ * Copyright 2013 Quinten Soetens - Adapted from org.evolizer.core.hibernate
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +17,7 @@
 package hibernate.model.api;
 
 /**
- * Plug-ins that intend to provide model entities have to extend the <code>org.evolizer.hibernate.modelProvider</code>
+ * Plug-ins that intend to provide model entities have to extend the <code>hibernate.modelProvider</code>
  * extension point and provide a class that implements this interface.
  * 
  * @author wuersch
@@ -28,6 +29,5 @@ public interface IModelProvider {
      * 
      * @return an array containing hibernate/ejb3 annotated classes.
      */
-    // TODO: IEvolizerModelEntity?
     public Class<?>[] getAnnotatedClasses();
 }

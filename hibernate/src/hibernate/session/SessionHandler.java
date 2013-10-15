@@ -1,5 +1,6 @@
 /*
  * Copyright 2009 University of Zurich, Switzerland
+ * Copyright 2013 Quinten Soetens - Adapted from org.evolizer.core.hibernate
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,9 +14,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package hibernate.session;
 
 import hibernate.DBProperties;
+import hibernate.HibernateException;
 import hibernate.HibernatePlugin;
 import hibernate.model.api.IModelEntity;
 import hibernate.model.api.IModelProvider;
@@ -26,7 +29,6 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
@@ -35,37 +37,19 @@ import org.hibernate.MappingException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.AnnotationConfiguration;
-import org.hibernate.tool.hbm2ddl.SchemaExport;
-import org.hibernate.tool.hbm2ddl.SchemaUpdate;
 
-/**
- * Handling of multiple Hibernate sessions using the ThreadLocal sessions. Multiple Hibernate Sessions are managed by
- * keeping a map of database url to session factory. There are two usage patterns to obtain a session.
- * <ol>
- * <li>Via the Evolizer project properties for Eclipse Evolizer plugins. Using the properties, the current session of
- * the corresponding session factory is obtained. No precedent initialization of the session factory is needed.</li>
- * <li>Manually by providing the session database url as string. In this case the session factory needs to be
- * initialized before.</li>
- * </ol>
- * Some suggestions: According to some articles on the Internet it is suggested to use one session per view. It does not
- * make sense to open and close sessions for each database access. You simply will get dozens of Hibernate exceptions,
- * e.g., because of lazy loading. Therefore, the session should be opened when the view is created and closed when the
- * view is closed.
- * 
- * @author pinzger
- */
 public final class SessionHandler {
      /**
      * Default Hibernate dialect
      */
-    private static final String DEFAULT_DIALECT = "org.hibernate.dialect.MySQLDialect";
+    private static final String DEFAULT_DIALECT = DBProperties.dbDialect;
     /**
      * Default Hibernate database driver
      */
-    private static final String DEFAULT_DRIVER = "com.mysql.jdbc.Driver";
+    private static final String DEFAULT_DRIVER = DBProperties.dbDriverName;
 
     /**
-     * Singleton of EvolizerSessionHandler
+     * Singleton of SessionHandler
      */
     private static SessionHandler sSessionHandler;
 
@@ -102,8 +86,7 @@ public final class SessionHandler {
      * been initialized.
      * 
      * @param dbUrl
-     *            URL of the database in the form of <code>dbHost/dbName</code>, e.g.,
-     *            <code>mysql://localhost:3306/evolizer_test</code>
+     *            URL of the database in the form of <code>dbHost/dbName</code>
      * @return the current Hibernate session.
      * @throws Exception
      *             if the {@link ISession} could not been initialized/obtained
@@ -119,7 +102,7 @@ public final class SessionHandler {
                 session = new SessionImpl(hibernateSession);
                 fSessionMap.put(dbUrl, session);
             } else {
-                throw new Exception("Evolizer session factory for '" + dbUrl + "' has not been initialized.");
+                throw new HibernateException("Session factory for '" + dbUrl + "' has not been initialized.");
             }
 
         }
@@ -129,14 +112,11 @@ public final class SessionHandler {
     /**
      * Obtains the Hibernate configuration from the project properties, initializes the Hibernate session factory and
      * returns the current Hibernate session.
-     * 
-     * @param project
-     *            the Eclipse project containing Evolizer properties.
      * @return the current Hibernate session.
      * @throws Exception
      *             if the {@link ISession} could not been initialized/obtained
      */
-    public ISession getCurrentSession(IProject project) throws Exception {
+    public ISession getCurrentSession() throws Exception {
         ISession session = null;
 
         try {
@@ -220,126 +200,6 @@ public final class SessionHandler {
     }
 
     /**
-     * Creates the schema for the given project.
-     * 
-     * @param project
-     *            the project
-     * @throws Exception
-     *             the evolizer exception
-     */
-    public void createSchema(IProject project) throws Exception {
-        SchemaExport exporter = new SchemaExport(configureDataBaseConnection(project));
-        exporter.create(false, true);
-    }
-
-    /**
-     * Update schema.
-     * 
-     * @param project
-     *            the project
-     * @throws Exception
-     *             if this method fails. Reasons include:
-     *             <ul>
-     *             <li>The project does not exist.</li>
-     *             <li>The project is not local.</li>
-     *             <li>The project is a project that is not open.</li>
-     *             </ul>
-     */
-    public void updateSchema(IProject project) throws Exception {
-        SchemaUpdate updater = new SchemaUpdate(configureDataBaseConnection(project));
-        updater.execute(false, true);
-    }
-
-    /**
-     * Drop schema for the given project.
-     * 
-     * @param project
-     *            the project
-     * @throws Exception
-     *             if this method fails. Reasons include:
-     *             <ul>
-     *             <li>The project does not exist.</li>
-     *             <li>The project is not local.</li>
-     *             <li>The project is a project that is not open.</li>
-     *             </ul>
-     */
-    public void dropSchema(IProject project) throws Exception {
-        SchemaExport exporter = new SchemaExport(configureDataBaseConnection(project));
-        exporter.drop(false, true);
-    }
-
-    /**
-     * Creates the database schema based on the o/r mappings (e.g. the Hibernate/ejb3-annotations). Can only be executed
-     * when session is closed.
-     * 
-     * @param dbUrl
-     *            the db url
-     * @param dbDialect
-     *            the db dialect
-     * @param dbDriverName
-     *            the db driver name
-     * @param dbUser
-     *            the db user
-     * @param dbPassword
-     *            the db password
-     * @throws Exception
-     *             if error occurs during o/r mapping
-     */
-    public void createSchema(String dbUrl, String dbDialect, String dbDriverName, String dbUser, String dbPassword)
-            throws Exception {
-        SchemaExport exporter =
-                new SchemaExport(configureDataBaseConnection(dbUrl, dbDialect, dbDriverName, dbUser, dbPassword));
-        exporter.create(false, true);
-    }
-
-    /**
-     * Updates a database schema based on the o/r mappings (e.g. the Hibernate/ejb3-annotations). Can only be executed
-     * when session is closed.
-     * 
-     * @param dbUrl
-     *            the db url
-     * @param dbDialect
-     *            the db dialect
-     * @param dbDriverName
-     *            the db driver name
-     * @param dbUser
-     *            the db user
-     * @param dbPassword
-     *            the db password
-     * @throws Exception
-     *             the evolizer exception
-     */
-    public void updateSchema(String dbUrl, String dbDialect, String dbDriverName, String dbUser, String dbPassword)
-            throws Exception {
-        SchemaUpdate updater =
-                new SchemaUpdate(configureDataBaseConnection(dbUrl, dbDialect, dbDriverName, dbUser, dbPassword));
-        updater.execute(false, true);
-    }
-
-    /**
-     * Drops the database schema. Can only be executed when session is closed.
-     * 
-     * @param dbUrl
-     *            the db url
-     * @param dbDialect
-     *            the db dialect
-     * @param dbDriverName
-     *            the db driver name
-     * @param dbUser
-     *            the db user
-     * @param dbPassword
-     *            the db password
-     * @throws Exception
-     *             when the mapping could not be generated.
-     */
-    public void dropSchema(String dbUrl, String dbDialect, String dbDriverName, String dbUser, String dbPassword)
-            throws Exception {
-        SchemaExport exporter =
-                new SchemaExport(configureDataBaseConnection(dbUrl, dbDialect, dbDriverName, dbUser, dbPassword));
-        exporter.drop(false, true);
-    }
-
-    /**
      * Creates the Hinbernate configuration based on the given parameters and the list of annotated classes.
      * 
      * @param dbUrl
@@ -363,10 +223,12 @@ public final class SessionHandler {
             String dbUser,
             String dbPassword) throws Exception {
 
-        AnnotationConfiguration configuration = new AnnotationConfiguration();
+        AnnotationConfiguration configuration;
 
         try {
-            configuration.setProperty("hibernate.connection.url", "jdbc:" + dbUrl);
+        	configuration = new AnnotationConfiguration();
+
+        	configuration.setProperty("hibernate.connection.url", "jdbc:" + dbUrl);
             configuration.setProperty("hibernate.connection.username", dbUser);
             configuration.setProperty("hibernate.connection.password", dbPassword);
 
@@ -397,39 +259,7 @@ public final class SessionHandler {
                 // "' to configuration.");
             }
         } catch (MappingException e) {
-            throw new Exception(e);
-        }
-
-        return configuration;
-    }
-
-    /**
-     * Creates the Hibernate configuration for the given Eclipse project. Hibernate properties are obtained from the
-     * project's Evolizer properties.
-     * 
-     * @param project
-     *            the Eclipse project holding the Evolizer properties.
-     * @return the Hinberate configuration.
-     * @throws Exception
-     *             if this method fails. Reasons include:
-     *             <ul>
-     *             <li>The project does not exist.</li>
-     *             <li>The project is not local.</li>
-     *             <li>The project is a project that is not open.</li>
-     *             </ul>
-     */
-    private AnnotationConfiguration configureDataBaseConnection(IProject project) throws Exception {
-        AnnotationConfiguration configuration = null;
-
-        try {
-            String dbUrl = DBProperties.dbUrl;
-            String dbUser = DBProperties.dbUser;
-            String dbPassword = DBProperties.dbPassword;
-
-            configuration = configureDataBaseConnection(dbUrl, "", "", dbUser, dbPassword);
-
-        } catch (CoreException e) {
-            throw new Exception(e);
+            throw new HibernateException(e);
         }
 
         return configuration;
@@ -460,8 +290,8 @@ public final class SessionHandler {
                         if (isModelEntity(clazz)) {
                             annotatedClasses.add(clazz);
                         } else {
-                            throw new Exception(clazz.getSimpleName()
-                                    + " does not implement IEvolizerModelEntity.");
+                            throw new HibernateException(clazz.getSimpleName()
+                                    + " does not implement IModelEntity.");
                         }
                     }
 
@@ -471,7 +301,7 @@ public final class SessionHandler {
                                     + exception.getMessage();
 
 
-                    throw new Exception("Error while initializing log properties.", exception);
+                    throw new HibernateException(message);
                 }
             }
         }

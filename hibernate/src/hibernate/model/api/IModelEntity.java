@@ -1,5 +1,6 @@
 /*
  * Copyright 2009 University of Zurich, Switzerland
+ * Copyright 2013 Quinten Soetens - Adapted from org.evolizer.core.hibernate
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,8 +17,8 @@
 package hibernate.model.api;
 
 /**
- * All domain objects of Evolizer should implement this interface to ensure that future visualizations and tools are
- * able to represent Evolizer data in a meaningful way.
+ * All domain objects should implement this interface to ensure that future visualizations and tools are
+ * able to represent data in a meaningful way.
  * 
  * @author wuersch
  */

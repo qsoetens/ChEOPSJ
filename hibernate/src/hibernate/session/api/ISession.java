@@ -1,5 +1,6 @@
 /*
  * Copyright 2009 University of Zurich, Switzerland
+ * Copyright 2013 Quinten Soetens - Adapted from org.evolizer.core.hibernate
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,6 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package hibernate.session.api;
 
 import java.io.Serializable;
@@ -41,7 +43,7 @@ public interface ISession {
      * <p>
      * Has to invoke flush before closing the session to ensure that now exception/dataloss occurs.
      * 
-     * @throws EvolizerRuntimeException
+     * @throws HibernateException
      *             if session is not open.
      */
     public abstract void close() throws Exception;
@@ -49,7 +51,7 @@ public interface ISession {
     /**
      * Flushes the session.
      * 
-     * @throws EvolizerRuntimeException
+     * @throws HibernateException
      *             if session is not open.
      */
     public abstract void flush() throws Exception;
@@ -57,7 +59,7 @@ public interface ISession {
     /**
      * Clears the session.
      * 
-     * @throws EvolizerRuntimeException
+     * @throws HibernateException
      *             if session is not open.
      */
     public abstract void clear() throws Exception;
@@ -67,7 +69,7 @@ public interface ISession {
      * 
      * @param saveableObject
      *            an instance of a Hibernate/ejb3-annotated class.
-     * @throws EvolizerRuntimeException
+     * @throws HibernateException
      *             if session is not open.
      */
     public abstract void saveObject(Object saveableObject) throws Exception;
@@ -77,7 +79,7 @@ public interface ISession {
      * 
      * @param object
      *            the object
-     * @throws EvolizerRuntimeException
+     * @throws HibernateException
      *             if session is not open.
      */
     public abstract void saveOrUpdate(Object object) throws Exception;
@@ -87,7 +89,7 @@ public interface ISession {
      * 
      * @param object
      *            an instance of a Hibernate/ejb3-annotated class.
-     * @throws EvolizerRuntimeException
+     * @throws HibernateException
      *             if session is not open.
      */
     public abstract void delete(Object object) throws Exception;
@@ -102,7 +104,7 @@ public interface ISession {
      * @param type
      *            the type
      * @return a list of objects of the type <code>T</code> that match the query
-     * @throws EvolizerRuntimeException
+     * @throws HibernateException
      *             if session is not open.
      */
     public abstract <T> List<T> query(String hqlQuery, Class<T> type) throws Exception;
@@ -120,7 +122,7 @@ public interface ISession {
      * @param type
      *            the type
      * @return a list of objects of the type <code>T</code> that match the query
-     * @throws EvolizerRuntimeException
+     * @throws HibernateException
      *             if session is not open.
      */
     public <T> List<T> query(String hqlQuery, Class<T> type, int maxResults) throws Exception;
@@ -135,7 +137,7 @@ public interface ISession {
      * @param id
      *            the id
      * @return the object.
-     * @throws EvolizerRuntimeException
+     * @throws HibernateException
      *             if session is not open.
      */
     public <T> T load(Class<T> clazz, Long id) throws Exception;
@@ -146,7 +148,7 @@ public interface ISession {
      * <p>
      * Invokers eventually have to call {@link #endTransaction()}.
      * 
-     * @throws EvolizerRuntimeException
+     * @throws HibernateException
      *             if session is not open or transaction already active.
      */
     public abstract void startTransaction() throws Exception;
@@ -154,7 +156,7 @@ public interface ISession {
     /**
      * Commits the transaction.
      * 
-     * @throws EvolizerRuntimeException
+     * @throws HibernateException
      *             if session is not open or no transaction is active
      */
     public abstract void endTransaction() throws Exception;
@@ -162,7 +164,7 @@ public interface ISession {
     /**
      * Rolls back the active transaction.
      * 
-     * @throws EvolizerRuntimeException
+     * @throws HibernateException
      *             if session is not open or no transaction is active
      */
     public abstract void rollbackTransaction() throws Exception;
@@ -178,7 +180,7 @@ public interface ISession {
      *            the type
      * @return the result
      * @throws Exception 
-     * @throws EvolizerRuntimeException
+     * @throws HibernateException
      *             if session is not open or more than one result was found.
      */
     public abstract <T> T uniqueResult(String hqlQuery, Class<T> type) throws Exception;
@@ -188,7 +190,7 @@ public interface ISession {
      * 
      * @param object
      *            the object
-     * @throws EvolizerRuntimeException
+     * @throws HibernateException
      *             if session is not open.
      */
     public abstract void update(Object object) throws Exception;
@@ -201,7 +203,7 @@ public interface ISession {
      * @param object
      *            the object
      * @return the object
-     * @throws EvolizerRuntimeException
+     * @throws HibernateException
      *             if session is not open.
      */
     public abstract Object merge(Object object) throws Exception;
@@ -217,7 +219,7 @@ public interface ISession {
      *            expected type
      * @return the persistent instance of the given entity class with the given identifier, or <code>null</code> if
      *         there is no such persistent instance.
-     * @throws EvolizerRuntimeException
+     * @throws HibernateException
      *             if session is not open.
      */
     public abstract <T> T get(Class<T> clazz, Serializable id) throws Exception;
