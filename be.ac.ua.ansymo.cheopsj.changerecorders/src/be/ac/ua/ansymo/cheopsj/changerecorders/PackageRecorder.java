@@ -34,14 +34,10 @@ import be.ac.ua.ansymo.cheopsj.model.famix.FamixPackage;
 public class PackageRecorder extends AbstractEntityRecorder {
 	private FamixPackage famixPackage; //the package to which we link a change
 	private FamixPackage parent; //the super package
-	private ModelManager manager; //the model manager
-	private ModelManagerChange managerChange;
 	private String uniqueName; //the unique name of our package
 	private String name = "";
 
 	private PackageRecorder(){
-		manager = ModelManager.getInstance();
-		managerChange = ModelManagerChange.getInstance();
 	}
 
 	/**
@@ -145,14 +141,14 @@ public class PackageRecorder extends AbstractEntityRecorder {
 	protected void setStructuralDependencies(AtomicChange change, Subject subject) {
 		if (change instanceof Add) {
 			if (parent != null) {
-				Change parentChange = parent.getLatestAddition();
+				Change parentChange = managerChange.getLastestAddition(parent); 
 				if (parentChange != null) {
 					change.addStructuralDependency(parentChange);
 				}else{
 					linkToParentAdditions((FamixPackage)subject);		
 				}
 			}
-			Remove removalChange = subject.getLatestRemoval();
+			Remove removalChange = managerChange.getLatestRemoval(subject); 
 			if (removalChange != null) {
 				change.addStructuralDependency(removalChange);
 			}
@@ -165,7 +161,7 @@ public class PackageRecorder extends AbstractEntityRecorder {
 			setDependenciesToContainingClasses(change, subject);
 
 			// set dependency to addition of this entity
-			AtomicChange additionChange = subject.getLatestAddition();
+			AtomicChange additionChange = managerChange.getLastestAddition(subject); 
 			if (additionChange != null) {
 				change.addStructuralDependency(additionChange);
 			}
@@ -177,7 +173,7 @@ public class PackageRecorder extends AbstractEntityRecorder {
 		Collection<FamixPackage> subpacks = ((FamixPackage)subject).getPackages();
 		if (!subpacks.isEmpty()) {
 			for(FamixPackage child: subpacks){
-				Change childChange = child.getLatestRemoval();
+				Change childChange = managerChange.getLatestRemoval(child); 
 				if (childChange != null) {
 					change.addStructuralDependency(childChange);
 				}else{
@@ -192,7 +188,7 @@ public class PackageRecorder extends AbstractEntityRecorder {
 		Collection<FamixClass> classes = ((FamixPackage)subject).getClasses();
 		if(!classes.isEmpty()){
 			for(FamixClass child: classes){
-				Change childChange = child.getLatestRemoval();
+				Change childChange = managerChange.getLatestRemoval(child);
 				if (childChange != null) {
 					change.addStructuralDependency(childChange);
 				}else{
@@ -201,7 +197,7 @@ public class PackageRecorder extends AbstractEntityRecorder {
 					classrem.setChangeSubject(child);
 					change.addStructuralDependency(classrem);
 
-					classrem.addStructuralDependency(child.getLatestAddition());
+					classrem.addStructuralDependency(managerChange.getLastestAddition(child));
 
 					managerChange.addChange(classrem);
 					
@@ -212,17 +208,17 @@ public class PackageRecorder extends AbstractEntityRecorder {
 	}
 
 	private void linkToChildRemoves(FamixPackage pack) {
-		Remove packrem = pack.getLatestRemoval();
+		Remove packrem = managerChange.getLatestRemoval(pack);
 		Collection<FamixPackage> subPacks = pack.getPackages();
 
 		for(FamixPackage subpack: subPacks){
-			if(subpack.getLatestRemoval() == null){
+			if(managerChange.getLatestRemoval(subpack) == null){
 				Remove subpackrem = new Remove();
 				subpack.addChange(subpackrem);
 				subpackrem.setChangeSubject(subpack);
 				packrem.addStructuralDependency(subpackrem);
 
-				subpackrem.addStructuralDependency(subpack.getLatestAddition());
+				subpackrem.addStructuralDependency(managerChange.getLastestAddition(subpack));
 
 				managerChange.addChange(subpackrem);
 				linkToChildRemoves(subpack);
@@ -231,10 +227,10 @@ public class PackageRecorder extends AbstractEntityRecorder {
 	}
 
 	private void linkToParentAdditions(FamixPackage pack) {
-		AtomicChange packadd = pack.getLatestAddition();
+		AtomicChange packadd = managerChange.getLastestAddition(pack); 
 		FamixPackage superPack = pack.getBelongsToPackage();
 
-		if(superPack != null && superPack.getLatestAddition() == null){
+		if(superPack != null && managerChange.getLastestAddition(superPack) == null){
 			AtomicChange superpackadd = new Add();
 			superpackadd.setChangeSubject(superPack);
 			superPack.addChange(superpackadd);

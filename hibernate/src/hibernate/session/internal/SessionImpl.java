@@ -165,6 +165,22 @@ public class SessionImpl implements ISession {
         query.setMaxResults(maxResults);
         return query.list();
     }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public int query(String hqlQuery) throws Exception {
+    	assertSessionIsOpen();
+    	
+    	Query query = fHibernateSession.createQuery(hqlQuery);
+    	
+    	List<Long> l = query.list();
+    	
+    	
+		return l.get(0).intValue();
+	}
+    
+    
 
     /**
      * {@inheritDoc}
@@ -264,4 +280,9 @@ public class SessionImpl implements ISession {
     public Session getHibernateSession() {
         return fHibernateSession;
     }
+
+	public void clearDatabase() {
+		fHibernateSession.createSQLQuery("truncate table *").executeUpdate();		
+	}
+    
 }

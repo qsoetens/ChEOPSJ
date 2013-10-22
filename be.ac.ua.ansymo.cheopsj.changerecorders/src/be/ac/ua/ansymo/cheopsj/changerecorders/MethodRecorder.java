@@ -37,16 +37,12 @@ import be.ac.ua.ansymo.cheopsj.model.famix.FamixMethod;
 public class MethodRecorder extends AbstractEntityRecorder {
 	private FamixMethod famixMethod;
 	private FamixClass parent; // TODO is there something like a nested method inside another method?
-	private ModelManager manager;
-	private ModelManagerChange managerChange;
 	private String uniquename = ""; //TODO need to add parameters to unique naming
 	//TODO need to link method to return type
 	private int flags = 0;
 	private String name = "";
 	
 	private MethodRecorder(){
-		manager = ModelManager.getInstance();
-		managerChange = ModelManagerChange.getInstance();
 	}
 
 	public MethodRecorder(IMethod method) {
@@ -142,7 +138,7 @@ public class MethodRecorder extends AbstractEntityRecorder {
 			if (famixMethod.isDummy()) {
 				setMethodFlagsAndParent();
 				
-				famixMethod.setIsDummy(false);
+				famixMethod.setDummy(false);
 			} else {
 				parent = famixMethod.getBelongsToClass();
 			}
@@ -151,7 +147,7 @@ public class MethodRecorder extends AbstractEntityRecorder {
 
 	private void setMethodFlagsAndParent() {
 		if (uniquename.contains("test")) {
-			famixMethod.setIsTest(true);
+			famixMethod.setTest(true);
 		}
 		
 		famixMethod.setFlags(flags);
@@ -191,7 +187,7 @@ public class MethodRecorder extends AbstractEntityRecorder {
 		for (Change dependee : dependees) {
 			if (dependee instanceof Add) {
 				Subject changesubject = ((AtomicChange) dependee).getChangeSubject();
-				Change latestChange = changesubject.getLatestChange();
+				Change latestChange = managerChange.getLatestChange(changesubject); 
 				if (latestChange instanceof Add) {
 					// only remove if it wasn't removed yet
 

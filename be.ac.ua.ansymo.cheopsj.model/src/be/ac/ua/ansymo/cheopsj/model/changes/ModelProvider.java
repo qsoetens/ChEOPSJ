@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Quinten Soetens
+ * Copyright 2009 University of Zurich, Switzerland
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,17 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package be.ac.ua.ansymo.cheopsj.model.changes;
 
-package hibernate;
+import hibernate.model.api.IModelProvider;
 
-public class DBProperties {
-		public static String dbUrl = "hsqldb:file:" + getDBUrl();
-		public static String dbUser = "sa";
-		public static String dbPassword = "" ;
-		public static String dbDialect = "org.hibernate.dialect.HSQLDialect" ;
-		public static String dbDriverName = "org.hsqldb.jdbcDriver";
+/**
+ * The model provider for the change model classes.
+ * 
+ * @author qsoetens
+ */
+public class ModelProvider implements IModelProvider {
 
-		private static String getDBUrl(){
-			return HibernatePlugin.getDefault().getStateLocation().append("changemodel").toOSString();
-		}
+	/** 
+	 * {@inheritDoc}
+	 */
+	public Class<?>[] getAnnotatedClasses() {
+		Class<?>[] annotatedClasses = { 
+				Change.class,
+				AtomicChange.class,
+				Add.class,
+				Remove.class,
+				Modify.class,
+				Subject.class
+		};
+
+		return annotatedClasses;
+	}
+
 }

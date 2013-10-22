@@ -48,8 +48,8 @@ public class PackageRemovalTest {
 
 		FamixPackage pack = manager.getFamixPackage(p5);
 		assertEquals(2,pack.getAffectingChanges().size());
-		Remove rem = pack.getLatestRemoval();
-		AtomicChange add = pack.getLatestAddition();
+		Remove rem = managerChange.getLatestRemoval(pack);
+		AtomicChange add = managerChange.getLastestAddition(pack);
 
 		assertTrue(rem.getStructuralDependencies().contains(add));
 		assertTrue(add.getStructuralDependees().contains(rem));
@@ -68,19 +68,19 @@ public class PackageRemovalTest {
 		removalDependsOnChildRemoval(p4,p5);
 
 		FamixPackage pack = manager.getFamixPackage(p5);
-		Remove rem = pack.getLatestRemoval();
+		Remove rem = managerChange.getLatestRemoval(pack);
 		assertEquals(1, rem.getStructuralDependencies().size());
 	}
 
 	private void removalDependsOnChildRemoval(String name, String childname) {
 		FamixPackage pack = manager.getFamixPackage(name);
-		Remove rem = pack.getLatestRemoval();
+		Remove rem = managerChange.getLatestRemoval(pack);
 		assertFalse(rem.getStructuralDependencies().isEmpty());
 		FamixPackage pack2 = manager.getFamixPackage(childname);
-		Remove rem2 = pack2.getLatestRemoval();
+		Remove rem2 = managerChange.getLatestRemoval(pack2);
 		assertTrue(rem.getStructuralDependencies().contains(rem2));
 		
-		AtomicChange add = pack.getLatestAddition();
+		AtomicChange add = managerChange.getLastestAddition(pack);
 		assertTrue(rem.getStructuralDependencies().contains(add));
 	}
 	

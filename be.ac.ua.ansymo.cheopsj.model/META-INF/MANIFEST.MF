@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Model
-Bundle-SymbolicName: be.ac.ua.ansymo.cheopsj.model
+Bundle-SymbolicName: be.ac.ua.ansymo.cheopsj.model;singleton:=true
 Bundle-Version: 1.0.1
 Bundle-Activator: be.ac.ua.ansymo.cheopsj.model.Activator
 Require-Bundle: org.eclipse.ui,
@@ -14,3 +14,8 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: be.ac.ua.ansymo.cheopsj.model,
  be.ac.ua.ansymo.cheopsj.model.changes,
  be.ac.ua.ansymo.cheopsj.model.famix
+Import-Package: hibernate.model.api,
+ hibernate.session,
+ hibernate.session.api,
+ javax.persistence,
+ org.hibernate

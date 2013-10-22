@@ -11,6 +11,8 @@
 
 package be.ac.ua.ansymo.cheopsj.changerecorders;
 
+import be.ac.ua.ansymo.cheopsj.model.ModelManager;
+import be.ac.ua.ansymo.cheopsj.model.ModelManagerChange;
 import be.ac.ua.ansymo.cheopsj.model.changes.Add;
 import be.ac.ua.ansymo.cheopsj.model.changes.AtomicChange;
 import be.ac.ua.ansymo.cheopsj.model.changes.Change;
@@ -25,6 +27,14 @@ import be.ac.ua.ansymo.cheopsj.model.famix.FamixEntity;
  */
 public abstract class AbstractEntityRecorder {
 
+	protected ModelManager manager;
+	protected ModelManagerChange managerChange;
+	
+	public AbstractEntityRecorder(){
+		manager = ModelManager.getInstance();
+		managerChange = ModelManagerChange.getInstance();
+	}
+	
 	/**
 	 * @param change
 	 */
@@ -42,18 +52,18 @@ public abstract class AbstractEntityRecorder {
 		
 		if (change instanceof Add) {
 			if (parent != null) {
-				Change parentChange = parent.getLatestAddition();
+				Change parentChange = managerChange.getLastestAddition(parent); 
 				if (parentChange != null) {
 					change.addStructuralDependency(parentChange);
 				}//The parent of the class, be it a class or a package should already exist.
 			}
-			Remove removalChange = subject.getLatestRemoval();
+			Remove removalChange = managerChange.getLatestRemoval(subject); 
 			if (removalChange != null) {
 				change.addStructuralDependency(removalChange);
 			}
 		} else if (change instanceof Remove) {
 			// set dependency to addition of this entity
-			AtomicChange additionChange = subject.getLatestAddition();
+			AtomicChange additionChange = managerChange.getLastestAddition(subject);
 			if (additionChange != null) {
 				change.addStructuralDependency(additionChange);
 				

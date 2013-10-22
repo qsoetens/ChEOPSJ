@@ -10,10 +10,17 @@
  ******************************************************************************/
 package be.ac.ua.ansymo.cheopsj.model.changes;
 
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Transient;
+
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
-
+@Entity
 public class Modify extends AtomicChange {
 
 	/**
@@ -25,12 +32,13 @@ public class Modify extends AtomicChange {
 
 	public void apply(){ }
 
-	
+	@Transient
 	@Override
 	public String getChangeType() {
 		return "Modification";
 	}
 	
+	@Transient
 	@Override
 	public Image getIcon(){
 		return PlatformUI.getWorkbench().getSharedImages()

@@ -149,7 +149,6 @@ public final class SessionHandler {
      *             if the {@link ISession} could not been initialized/obtained
      */
     public void initSessionFactory(String dbUrl, String dbUser, String dbPassword) throws Exception {
-
         if (!fSessionFactoryMap.containsKey(dbUrl)) {
             AnnotationConfiguration configuration = configureDataBaseConnection(dbUrl, "", "", dbUser, dbPassword);
             fSessionFactoryMap.put(dbUrl, configuration.buildSessionFactory());
@@ -248,8 +247,8 @@ public final class SessionHandler {
             configuration.setProperty("hibernate.current_session_context_class", "thread");
             // configuration.setProperty("hibernate.current_session_context_class", "managed");
 
-            // fHibernateAnnotationConfig.setProperty("hibernate.show_sql", "true");
             configuration.setProperty("hibernate.show_sql", "true");
+            //configuration.setProperty("hibernate.hbm2ddl.auto", "create-drop");
             configuration.setProperty("hibernate.hbm2ddl.auto", "update");
 
             for (Class<?> annotatedClass : gatherModels()) {

@@ -46,15 +46,11 @@ public class FieldRecorder extends AbstractEntityRecorder {
 	private FamixClass ContainingClass;
 	private FamixClass declaredClass;
 	
-	private ModelManager manager;
-	private ModelManagerChange managerChange;
 	private String uniquename = "";
 	private int flags;
 	private String name = "";
 
 	private FieldRecorder(){
-		manager = ModelManager.getInstance();
-		managerChange = ModelManagerChange.getInstance();
 	}
 	
 	public FieldRecorder(IField field) {
@@ -272,7 +268,7 @@ public class FieldRecorder extends AbstractEntityRecorder {
 		else if (change instanceof Remove) {
 			// set dependency to addition of this entity
 			// Subject removedSubject = change.getChangeSubject();
-			AtomicChange additionChange = subject.getLatestAddition();
+			AtomicChange additionChange = managerChange.getLastestAddition(subject); 
 			if (additionChange != null) {
 				change.addStructuralDependency(additionChange);
 			}
@@ -282,17 +278,17 @@ public class FieldRecorder extends AbstractEntityRecorder {
 	private void setStructDepAdd(AtomicChange change, Subject subject) {
 		
 		if (ContainingClass != null) {
-			Change parentChange = ContainingClass.getLatestAddition();
+			Change parentChange = managerChange.getLastestAddition(ContainingClass);
 			if (parentChange != null) {
 				change.addStructuralDependency(parentChange);
 			}
 		}
-		Remove removalChange = subject.getLatestRemoval();
+		Remove removalChange = managerChange.getLatestRemoval(subject);
 		if (removalChange != null) {
 			change.addStructuralDependency(removalChange);
 		}
 		if (declaredClass != null) {
-			Change declChange = declaredClass.getLatestAddition();
+			Change declChange = managerChange.getLastestAddition(declaredClass); 
 			if (declChange != null) {
 				change.addStructuralDependency(declChange);
 			}

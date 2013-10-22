@@ -10,6 +10,9 @@
  ******************************************************************************/
 package be.ac.ua.ansymo.cheopsj.model.famix;
 
+import javax.persistence.Entity;
+import javax.persistence.Transient;
+
 import org.eclipse.swt.graphics.Image;
 
 public class FamixImplicitVariable extends FamixStructuralEntity {

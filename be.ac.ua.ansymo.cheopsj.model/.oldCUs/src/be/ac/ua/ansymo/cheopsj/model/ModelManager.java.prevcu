@@ -103,63 +103,6 @@ public class ModelManager implements Serializable {
     INSTANCE=new ModelManager();
     getModelManagerChange().clearModel();
   }
-  public void saveModel(){
-    File file=getModelFile();
-    FileOutputStream fos=null;
-    ObjectOutputStream out=null;
-    try {
-      fos=new FileOutputStream(file);
-      out=new ObjectOutputStream(fos);
-      out.writeObject(getModelManagerChange().getChanges());
-      out.writeObject(famixEntities);
-      out.writeObject(famixPackagesMap);
-      out.writeObject(famixClassesMap);
-      out.writeObject(famixMethodsMap);
-      out.writeObject(famixFieldsMap);
-      out.writeObject(famixInvocationsMap);
-      out.writeObject(famixVariablesMap);
-      out.close();
-    }
- catch (    IOException ex) {
-    }
-  }
-  public void loadModel(){
-    File file=getModelFile();
-    if (file.exists()) {
-      FileInputStream fis=null;
-      ObjectInputStream in=null;
-      try {
-        fis=new FileInputStream(file);
-        in=new ObjectInputStream(fis);
-        loadFamixEntities(in);
-        in.close();
-      }
- catch (      IOException ex) {
-      }
-      getModelManagerListeners().fireChangesAdded(getModelManagerChange().getChanges().toArray(new IChange[getModelManagerChange().getChanges().size()]));
-    }
-  }
-  @SuppressWarnings("unchecked") private void loadFamixEntities(  ObjectInputStream in){
-    try {
-      List<IChange> changes=getModelManagerChange().getChanges();
-      changes=(List<IChange>)in.readObject();
-      getModelManagerChange().setChanges(changes);
-      famixEntities=(List<Subject>)in.readObject();
-      famixPackagesMap=(Map<String,FamixPackage>)in.readObject();
-      famixClassesMap=(Map<String,FamixClass>)in.readObject();
-      famixMethodsMap=(Map<String,FamixMethod>)in.readObject();
-      famixFieldsMap=(Map<String,FamixAttribute>)in.readObject();
-      famixInvocationsMap=(Map<String,FamixInvocation>)in.readObject();
-      famixVariablesMap=(Map<String,FamixLocalVariable>)in.readObject();
-    }
- catch (    IOException ex) {
-    }
-catch (    ClassNotFoundException ex) {
-    }
-  }
-  private File getModelFile(){
-    return Activator.getDefault().getStateLocation().append("changemodel.ser").toFile();
-  }
   public Map<String,FamixPackage> getFamixPackagesMap(){
     return famixPackagesMap;
   }

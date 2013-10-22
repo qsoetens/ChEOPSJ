@@ -10,6 +10,10 @@
  ******************************************************************************/
 package be.ac.ua.ansymo.cheopsj.model.famix;
 
+import javax.persistence.Entity;
+import javax.persistence.Transient;
+
+@Entity
 public abstract class FamixArgument extends FamixObject {
 	
 	/**
@@ -21,6 +25,7 @@ public abstract class FamixArgument extends FamixObject {
 	
 	private int position;
 	
+	@Transient
 	public boolean isReceiver() {
 		return isReceiver;
 	}
@@ -29,6 +34,7 @@ public abstract class FamixArgument extends FamixObject {
 		this.isReceiver = isReceiver;
 	}
 	
+	@Transient
 	public int getPosition() {
 		return position;
 	}

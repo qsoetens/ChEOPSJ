@@ -37,18 +37,6 @@
         </command>
         <command
               categoryId="be.ac.ua.ansymo.cheopsj.commands.category"
-              description="Saves the changes to file"
-              id="be.ac.ua.ansymo.cheopsj.commands.saveState"
-              name="Save Changes">
-        </command>
-        <command
-              categoryId="be.ac.ua.ansymo.cheopsj.commands.category"
-              description="Load Changes from file"
-              id="be.ac.ua.ansymo.cheopsj.commands.loadState"
-              name="Load Changes">
-        </command>
-        <command
-              categoryId="be.ac.ua.ansymo.cheopsj.commands.category"
               description="Refreshes the Zest view"
               id="be.ac.ua.ansymo.cheopsj.commands.refreshZest"
               name="Refresh Zest">
@@ -71,14 +59,6 @@
         <handler
               class="be.ac.ua.ansymo.cheopsj.model.ui.handlers.OpenChangeViewHandler"
               commandId="be.ac.ua.ansymo.cheopsj.commands.openView">
-        </handler>
-        <handler
-              class="be.ac.ua.ansymo.cheopsj.model.ui.handlers.SaveStateHandler"
-              commandId="be.ac.ua.ansymo.cheopsj.commands.saveState">
-        </handler>
-        <handler
-              class="be.ac.ua.ansymo.cheopsj.model.ui.handlers.LoadStateHandler"
-              commandId="be.ac.ua.ansymo.cheopsj.commands.loadState">
         </handler>
         <handler
               class="be.ac.ua.ansymo.cheopsj.model.ui.handlers.RefreshHandler"
@@ -106,20 +86,6 @@
                     tooltip="Open the Change Inspector">
               </command>
            </toolbar>
-        </menuContribution>
-        <menuContribution
-              locationURI="toolbar:be.ac.ua.ansymo.cheopsj.model.ui.view.changeinspector.ChangeView?before=persistency">
-           <command
-                 commandId="be.ac.ua.ansymo.cheopsj.commands.saveState"
-                 icon="icons/export.gif"
-                 style="push">
-           </command>
-           <command
-                 commandId="be.ac.ua.ansymo.cheopsj.commands.loadState"
-                 icon="icons/import_wiz.gif"
-                 style="push">
-           </command>
-           
         </menuContribution>
         <menuContribution
               locationURI="toolbar:be.ac.ua.ansymo.cheopsj.model.ui.view.changegraph.ZestChangeView?before=additions">

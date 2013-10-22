@@ -10,6 +10,7 @@
  ******************************************************************************/
 package be.ac.ua.ansymo.cheopsj.model.famix;
 
+
 public class FamixProperty {
 
 /*
@@ -34,7 +35,6 @@ private String value = "";
 	 * @return Returns the belongsToObject.
 	 * 
 	 */
-	
 	public FamixObject getBelongsToObject()
 	{
 		return belongsToObject;
@@ -53,7 +53,6 @@ private String value = "";
 	}
 
 
-
 	public String getName() {
 		return name;
 	}
@@ -63,8 +62,6 @@ private String value = "";
 	public void setName(String name) {
 		this.name = name;
 	}
-
-
 
 	public String getValue() {
 		return value;

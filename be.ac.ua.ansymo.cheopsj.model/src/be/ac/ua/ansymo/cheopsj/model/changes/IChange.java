@@ -10,7 +10,7 @@
  ******************************************************************************/
 package be.ac.ua.ansymo.cheopsj.model.changes;
 
-import java.sql.Timestamp;
+import java.util.Date;
 
 import org.eclipse.core.runtime.IAdaptable;
 
@@ -22,7 +22,7 @@ public interface IChange extends IAdaptable {
 
 	public String getName();
 
-	public Timestamp getTimeStamp();
+	public Date getTimeStamp();
 
 	public String toString();
 
@@ -30,5 +30,5 @@ public interface IChange extends IAdaptable {
 	
 	public String getIntent();
 	
-	public String getID();
+	public String getUniqueID();
 }

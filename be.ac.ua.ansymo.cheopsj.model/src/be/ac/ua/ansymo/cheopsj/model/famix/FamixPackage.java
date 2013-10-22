@@ -14,10 +14,16 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
+import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Transient;
+
 import org.eclipse.jdt.ui.ISharedImages;
 import org.eclipse.jdt.ui.JavaUI;
 import org.eclipse.swt.graphics.Image;
 
+@Entity
 public class FamixPackage extends FamixEntity {
 
 	/**
@@ -57,77 +63,12 @@ public class FamixPackage extends FamixEntity {
 	 * @return Returns the classes.
 	 * 
 	 */
-
+	@OneToMany(
+			mappedBy="belongsToPackage",
+			targetEntity=be.ac.ua.ansymo.cheopsj.model.famix.FamixClass.class)
 	public Collection<FamixClass> getClasses()
 	{
 		return classes;
-	}
-
-	/**
-	 * Returns an iterator over the elements in this collection. 
-	 *
-	 * @return an <tt>Iterator</tt> over the elements in this collection
-	 * @see	java.util.Collection#iterator()
-	 * 
-	 */
-	public Iterator<FamixClass> classesIterator(){
-		return classes.iterator();
-	}
-
-	/**
-	 * Returns <tt>true</tt> if this collection contains no elements.
-	 *
-	 * @return <tt>true</tt> if this collection contains no elements
-	 * @see	java.util.Collection#isEmpty()
-	 *
-	 */
-	public boolean isClassesEmpty(){
-		return classes.isEmpty();
-	}
-
-	/**
-	 * Returns <tt>true</tt> if this collection contains the specified element. 
-	 *
-	 * @param element whose presence in this collection is to be tested.
-	 * @see	java.util.Collection#contains(Object)
-	 *
-	 */
-	public boolean containsClass(FamixClass clazz){
-		return this.classes.contains(clazz);
-	}
-
-	/**
-	 * Returns <tt>true</tt> if this collection contains all of the elements
-	 * in the specified collection.
-	 *
-	 * @param elements collection to be checked for containment in this collection.
-	 * @see	java.util.Collection#containsAll(Collection)
-	 *
-	 */
-	public boolean containsAllClasses(Collection<FamixClass> classes){
-		return this.classes.containsAll(classes);
-	}
-
-	/**
-	 * Returns the number of elements in this collection.
-	 *
-	 * @return the number of elements in this collection
-	 * @see	java.util.Collection#size()
-	 *
-	 */
-	public int classesSize(){
-		return classes.size();
-	}
-
-	/**
-	 * Returns all elements of this collection in an array.
-	 *
-	 * @return an array containing all of the elements in this collection
-	 * @see	java.util.Collection#toArray()
-	 *
-	 */
-	public FamixClass[] classesToArray(){
-		return classes.toArray(new FamixClass[classes.size()]);
 	}
 
 	/**
@@ -154,104 +95,17 @@ public class FamixPackage extends FamixEntity {
 	}
 
 	/**
-	 * Removes a single instance of the specified element from this
-	 * collection, if it is present (optional operation).
-	 *
-	 * @param element to be removed from this collection, if present.
-	 * @see	java.util.Collection#add(Object)
-	 *
-	 */
-	public boolean removeClass(FamixClass clazz){
-		return this.classes.remove(clazz);
-	}
-
-	/**
-	 * Removes all of the elements from this collection (optional operation).
-	 *
-	 * @see	java.util.Collection#clear()
-	 *
-	 */
-	public void clearClasses(){
-		this.classes.clear();
-	}
-
-	/**
 	 * Getter of the property <tt>famixPackage1</tt>
 	 *
 	 * @return Returns the famixPackage1.
 	 * 
 	 */
-
+	@OneToMany(
+			mappedBy="belongsToPackage",
+			targetEntity=be.ac.ua.ansymo.cheopsj.model.famix.FamixPackage.class)
 	public Collection<FamixPackage> getPackages()
 	{
 		return packages;
-	}
-
-	/**
-	 * Returns an iterator over the elements in this collection. 
-	 *
-	 * @return an <tt>Iterator</tt> over the elements in this collection
-	 * @see	java.util.Collection#iterator()
-	 * 
-	 */
-	public Iterator<FamixPackage> packagesIterator(){
-		return packages.iterator();
-	}
-
-	/**
-	 * Returns <tt>true</tt> if this collection contains no elements.
-	 *
-	 * @return <tt>true</tt> if this collection contains no elements
-	 * @see	java.util.Collection#isEmpty()
-	 *
-	 */
-	public boolean isPackagesEmpty(){
-		return packages.isEmpty();
-	}
-
-	/**
-	 * Returns <tt>true</tt> if this collection contains the specified element. 
-	 *
-	 * @param element whose presence in this collection is to be tested.
-	 * @see	java.util.Collection#contains(Object)
-	 *
-	 */
-	public boolean containsPackage(FamixPackage Package){
-		return this.packages.contains(Package);
-	}
-
-	/**
-	 * Returns <tt>true</tt> if this collection contains all of the elements
-	 * in the specified collection.
-	 *
-	 * @param elements collection to be checked for containment in this collection.
-	 * @see	java.util.Collection#containsAll(Collection)
-	 *
-	 */
-	public boolean containsAllPackages(Collection<FamixPackage> Packages){
-		return this.packages.containsAll(Packages);
-	}
-
-	/**
-	 * Returns the number of elements in this collection.
-	 *
-	 * @return the number of elements in this collection
-	 * @see	java.util.Collection#size()
-	 *
-	 */
-	public int packagesSize(){
-		return packages.size();
-	}
-
-	/**
-	 * Returns all elements of this collection in an array.
-	 *
-	 * @return an array containing all of the elements in this collection
-	 * @see	java.util.Collection#toArray()
-	 *
-	 */
-	public FamixPackage[] packagesToArray(){
-		return packages.toArray(new FamixPackage[packages.size()]);
 	}
 
 	/**
@@ -278,34 +132,13 @@ public class FamixPackage extends FamixEntity {
 	}
 
 	/**
-	 * Removes a single instance of the specified element from this
-	 * collection, if it is present (optional operation).
-	 *
-	 * @param element to be removed from this collection, if present.
-	 * @see	java.util.Collection#add(Object)
-	 *
-	 */
-	public boolean removePackage(FamixPackage Package){
-		return this.packages.remove(Package);
-	}
-
-	/**
-	 * Removes all of the elements from this collection (optional operation).
-	 *
-	 * @see	java.util.Collection#clear()
-	 *
-	 */
-	public void clearPackages(){
-		this.packages.clear();
-	}
-
-	/**
 	 * Getter of the property <tt>belongsToPackage</tt>
 	 *
 	 * @return Returns the belongsToPackage.
 	 * 
 	 */
-
+	@ManyToOne(
+			targetEntity=be.ac.ua.ansymo.cheopsj.model.famix.FamixPackage.class)
 	public FamixPackage getBelongsToPackage()
 	{
 		return belongsToPackage;
@@ -329,80 +162,10 @@ public class FamixPackage extends FamixEntity {
 	 * @return Returns the globalVariable.
 	 * 
 	 */
-
+	@Transient
 	public Collection<FamixGlobalVariable> getGlobalVariable()
 	{
 		return globalVariable;
-	}
-
-
-
-
-	/**
-	 * Returns an iterator over the elements in this collection. 
-	 *
-	 * @return an <tt>Iterator</tt> over the elements in this collection
-	 * @see	java.util.Collection#iterator()
-	 * 
-	 */
-	public Iterator<FamixGlobalVariable> globalVariableIterator(){
-		return globalVariable.iterator();
-	}
-
-	/**
-	 * Returns <tt>true</tt> if this collection contains no elements.
-	 *
-	 * @return <tt>true</tt> if this collection contains no elements
-	 * @see	java.util.Collection#isEmpty()
-	 *
-	 */
-	public boolean isGlobalVariableEmpty(){
-		return globalVariable.isEmpty();
-	}
-
-	/**
-	 * Returns <tt>true</tt> if this collection contains the specified element. 
-	 *
-	 * @param element whose presence in this collection is to be tested.
-	 * @see	java.util.Collection#contains(Object)
-	 *
-	 */
-	public boolean containsGlobalVariable(FamixGlobalVariable globalVariable){
-		return this.globalVariable.contains(globalVariable);
-	}
-
-	/**
-	 * Returns <tt>true</tt> if this collection contains all of the elements
-	 * in the specified collection.
-	 *
-	 * @param elements collection to be checked for containment in this collection.
-	 * @see	java.util.Collection#containsAll(Collection)
-	 *
-	 */
-	public boolean containsAllGlobalVariable(Collection<FamixGlobalVariable> globalVariable){
-		return this.globalVariable.containsAll(globalVariable);
-	}
-
-	/**
-	 * Returns the number of elements in this collection.
-	 *
-	 * @return the number of elements in this collection
-	 * @see	java.util.Collection#size()
-	 *
-	 */
-	public int globalVariableSize(){
-		return globalVariable.size();
-	}
-
-	/**
-	 * Returns all elements of this collection in an array.
-	 *
-	 * @return an array containing all of the elements in this collection
-	 * @see	java.util.Collection#toArray()
-	 *
-	 */
-	public FamixGlobalVariable[] globalVariableToArray(){
-		return globalVariable.toArray(new FamixGlobalVariable[globalVariable.size()]);
 	}
 
 	/**
@@ -428,29 +191,8 @@ public class FamixPackage extends FamixEntity {
 		return this.globalVariable.add(globalVariable);
 	}
 
-	/**
-	 * Removes a single instance of the specified element from this
-	 * collection, if it is present (optional operation).
-	 *
-	 * @param element to be removed from this collection, if present.
-	 * @see	java.util.Collection#add(Object)
-	 *
-	 */
-	public boolean removeGlobalVariable(FamixGlobalVariable globalVariable){
-		return this.globalVariable.remove(globalVariable);
-	}
-
-	/**
-	 * Removes all of the elements from this collection (optional operation).
-	 *
-	 * @see	java.util.Collection#clear()
-	 *
-	 */
-	public void clearGlobalVariable(){
-		this.globalVariable.clear();
-	}
-
 	@Override
+	@Transient
 	public String getFamixType() {
 		return "Package";
 	}
@@ -459,6 +201,7 @@ public class FamixPackage extends FamixEntity {
 	 * @see be.ac.ua.cheopsj.Model.Famix.FamixEntity#getIcon()
 	 */
 	@Override
+	@Transient
 	public Image getIcon() {
 		return JavaUI.getSharedImages().getImage(ISharedImages.IMG_OBJS_PACKAGE);
 	}

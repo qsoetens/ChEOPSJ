@@ -237,7 +237,8 @@ public class ClassAdditionTest {
 		recorder1.createAndLinkFamixElement();
 		recorder1.createAndLinkChange(add);
 		assertEquals(managerChange.getChanges().size(), 6); //5 for the packages + 1 for the class
-		AtomicChange packadd = ((FamixClass)add.getChangeSubject()).getBelongsToPackage().getLatestAddition();
+		FamixPackage pack = ((FamixClass)add.getChangeSubject()).getBelongsToPackage();
+		AtomicChange packadd = managerChange.getLastestAddition(pack); 
 		assertEquals(1,add.getStructuralDependencies().size());
 		assertTrue(add.getStructuralDependencies().contains(packadd));
 		assertTrue(packadd.getStructuralDependees().contains(add));
@@ -316,12 +317,12 @@ public class ClassAdditionTest {
 		assertEquals(3,clazz.getAffectingChanges().size());
 		assertEquals(2,secondAdd.getStructuralDependencies().size());
 		assertTrue(secondAdd.getStructuralDependencies().contains(rem));
-		assertTrue(secondAdd.getStructuralDependencies().contains(pack.getLatestAddition()));
+		assertTrue(secondAdd.getStructuralDependencies().contains(managerChange.getLastestAddition(pack)));
 
 		assertEquals(1,rem.getStructuralDependencies().size());
 		assertTrue(rem.getStructuralDependencies().contains(firstAdd));
 		assertEquals(1,firstAdd.getStructuralDependencies().size());
-		assertTrue(firstAdd.getStructuralDependencies().contains(pack.getLatestAddition()));
+		assertTrue(firstAdd.getStructuralDependencies().contains(managerChange.getLastestAddition(pack)));
 
 
 	}

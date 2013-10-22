@@ -62,9 +62,10 @@ public class ZestChangeViewContentProvider implements IGraphEntityContentProvide
 
 		Collection<Object> result = new ArrayList<Object>();
 		result.addAll(manager.getModelManagerChange().getChanges());
-		result.addAll(manager.getFamixElements());
+		Collection<Subject> famixelement = manager.getFamixElements();
+		result.addAll(famixelement);
 		
-		for(Subject elem : manager.getFamixElements()){
+		for(Subject elem : famixelement){
 			if(elem instanceof FamixBehaviouralEntity){
 				result.addAll(((FamixBehaviouralEntity) elem).getLocalVariables());
 			}
@@ -93,12 +94,12 @@ public class ZestChangeViewContentProvider implements IGraphEntityContentProvide
 			result.add(((FamixClass) entity).getBelongsToClass());
 		} else if (entity instanceof FamixMethod) {
 			result.add(((FamixMethod) entity).getBelongsToClass());
-			result.add(((FamixMethod) entity).getDeclaredReturnClass());
+			//result.add(((FamixMethod) entity).getDeclaredReturnClass());
 		} else if (entity instanceof FamixAttribute) {
 			result.add(((FamixAttribute) entity).getBelongsToClass());
 			result.add(((FamixAttribute) entity).getDeclaredClass());
 		} else if (entity instanceof FamixInvocation) {
-			result.add(((FamixInvocation) entity).getCandidate());
+			result.addAll(((FamixInvocation) entity).getCandidates());
 			result.add(((FamixInvocation) entity).getInvokedBy());
 		} else if (entity instanceof FamixLocalVariable) {
 			result.add(((FamixLocalVariable) entity).getDeclaredClass());

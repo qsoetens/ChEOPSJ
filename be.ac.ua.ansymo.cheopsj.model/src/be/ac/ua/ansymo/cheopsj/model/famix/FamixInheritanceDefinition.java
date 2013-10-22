@@ -10,6 +10,11 @@
  ******************************************************************************/
 package be.ac.ua.ansymo.cheopsj.model.famix;
 
+import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
+import javax.persistence.Transient;
+
+@Entity
 public class FamixInheritanceDefinition extends FamixAssociation {
 	/**
 	 * 
@@ -20,6 +25,7 @@ public class FamixInheritanceDefinition extends FamixAssociation {
 	private FamixClass superClass;
 	private FamixClass subClass;
 
+	@ManyToOne(targetEntity=be.ac.ua.ansymo.cheopsj.model.famix.FamixClass.class)
 	public FamixClass getSuperClass() {
 		return superClass;
 	}
@@ -28,6 +34,7 @@ public class FamixInheritanceDefinition extends FamixAssociation {
 		this.superClass = superClass;
 	}
 
+	@ManyToOne(targetEntity=be.ac.ua.ansymo.cheopsj.model.famix.FamixClass.class)
 	public FamixClass getSubClass() {
 		return subClass;
 	}
@@ -36,6 +43,7 @@ public class FamixInheritanceDefinition extends FamixAssociation {
 		this.subClass = subClass;
 	}
 
+	@Transient
 	@Override
 	public String getFamixType() {
 		return "Inheritance Definition";

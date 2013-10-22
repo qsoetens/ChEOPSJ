@@ -38,16 +38,13 @@ import be.ac.ua.ansymo.cheopsj.model.famix.FamixPackage;
 public class ClassRecorder extends AbstractEntityRecorder {
 	private FamixClass famixClass;
 	private FamixEntity parent;
-	private ModelManager manager;
-	private ModelManagerChange managerChange;
+	
 	private String uniqueName;
 	private int flags;
 	private String name = "";
 
 	private ClassRecorder(){
 		//get manager instance
-		manager = ModelManager.getInstance();
-		managerChange = ModelManagerChange.getInstance();
 	}
 
 	public ClassRecorder(IType element) {
@@ -199,7 +196,7 @@ public class ClassRecorder extends AbstractEntityRecorder {
 				//If it was a dummy, undummy it!
 				setClassFlagsAndParent(famixClass);
 				
-				famixClass.setIsDummy(false);
+				famixClass.setDummy(false);
 			}else{
 				parent = famixClass.getBelongsToPackage();
 			}
@@ -227,7 +224,7 @@ public class ClassRecorder extends AbstractEntityRecorder {
 	@Override
 	protected void createAndLinkChange(AtomicChange change) {
 		if(change instanceof Add){
-			Add a = famixClass.getLatestAddition();
+			Add a = managerChange.getLastestAddition(famixClass);
 			if(a != null && a.isDummy()){
 				change = a;
 				change.setDummy(false);
@@ -246,7 +243,8 @@ public class ClassRecorder extends AbstractEntityRecorder {
 		for (Change dependee : dependees) {
 			if (dependee instanceof Add) {
 				Subject changesubject = ((AtomicChange) dependee).getChangeSubject();
-				Change latestChange = changesubject.getLatestChange();
+				Change latestChange = managerChange.getLatestChange(changesubject);
+						
 				if (latestChange instanceof Add) {
 					// only remove if it wasn't removed yet
 

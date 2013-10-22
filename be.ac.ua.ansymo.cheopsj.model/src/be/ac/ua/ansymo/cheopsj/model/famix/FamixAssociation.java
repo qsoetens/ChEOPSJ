@@ -10,27 +10,32 @@
  ******************************************************************************/
 package be.ac.ua.ansymo.cheopsj.model.famix;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+
+@Entity
 public abstract class FamixAssociation extends FamixObject {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 8981682243360218998L;
-	private String stringrep;
+	private String stringRepresentation;
 
 	/**
 	 * @return the stringrep
 	 */
+	@Column(unique=true)
 	public String getStringRepresentation() {
-		return stringrep;
+		return stringRepresentation;
 	}
 
 	/**
 	 * @param stringrep
 	 *            the stringrep to set
 	 */
-	public void setStringRepresentation(String stringrep) {
-		this.stringrep = stringrep;
+	public void setStringRepresentation(String stringRepresentation) {
+		this.stringRepresentation = stringRepresentation;
 	}
 
 	//TODO find a way to uniquely represent an association?

@@ -25,6 +25,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.team.svn.core.SVNTeamPlugin;
 
+import be.ac.ua.ansymo.cheopsj.model.changes.Change;
 import be.ac.ua.ansymo.cheopsj.distiller.popup.actions.DistillChanges;
 import be.ac.ua.ansymo.cheopsj.logger.JavaProjectHelper;
 import be.ac.ua.ansymo.cheopsj.model.ModelManager;
@@ -112,7 +113,7 @@ public class DistillChangesTest {
 		callDistillChanges(this.project);
 		
 		// And now actually test that we have found the changes.
-		List<IChange> changes = ModelManagerChange.getInstance().getChanges();
+		List<Change> changes = ModelManagerChange.getInstance().getChanges();
 		checkInitialRevision(changes);
 	}
 	
@@ -131,7 +132,7 @@ public class DistillChangesTest {
 		callDistillChanges(this.project);
 		
 		// And now actually test that we have found the changes.
-		List<IChange> changes = ModelManagerChange.getInstance().getChanges();
+		List<Change> changes = ModelManagerChange.getInstance().getChanges();
 		checkSecondRevision(changes);
 		checkInitialRevision(changes);
 	}
@@ -202,7 +203,7 @@ public class DistillChangesTest {
 		callDistillChanges(this.project);
 		
 		// And now actually test that we have found the changes.
-		List<IChange> changes = ModelManagerChange.getInstance().getChanges();
+		List<Change> changes = ModelManagerChange.getInstance().getChanges();
 		check(changes, "Addition", "package1.Base", "First commit", "Class");
 		check(changes, "Addition", "package1.Base.w", "First commit", "Attribute");
 		check(changes, "Addition", "package1.Base.h", "First commit", "Attribute");
@@ -265,8 +266,8 @@ public class DistillChangesTest {
 		callDistillChanges(this.project);
 		
 		// And now actually test that we have found the changes.
-		List<IChange> changes = ModelManagerChange.getInstance().getChanges();
-		for (IChange change: changes) {
+		List<Change> changes = ModelManagerChange.getInstance().getChanges();
+		for (Change change: changes) {
 			System.out.println(change.getName());
 			System.out.println(change.getChangeType());
 			System.out.println(change.getFamixType());
@@ -311,7 +312,7 @@ public class DistillChangesTest {
 		}
 		
 		callDistillChanges(this.project);
-		List<IChange> changes = ModelManagerChange.getInstance().getChanges();
+		List<Change> changes = ModelManagerChange.getInstance().getChanges();
 		checkInitialRevision(changes);
 	}
 	
@@ -327,7 +328,7 @@ public class DistillChangesTest {
 		commit(this.clientManager, this.work_dir, "First commit");
 		generateSecondRevision(this.project);
 		callDistillChanges(this.project);
-		List<IChange> changes = ModelManagerChange.getInstance().getChanges();
+		List<Change> changes = ModelManagerChange.getInstance().getChanges();
 		checkInitialRevision(changes);
 	}
 	
@@ -347,7 +348,7 @@ public class DistillChangesTest {
 			generateInitialRevision(project);
 			callDistillChanges(project);
 			
-			List<IChange> changes = ModelManagerChange.getInstance().getChanges();
+			List<Change> changes = ModelManagerChange.getInstance().getChanges();
 			assertEquals(0, changes.size());
 		
 			project.delete(true, null);
@@ -508,7 +509,7 @@ public class DistillChangesTest {
 	 * This method will assert that the initial revision went correctly
 	 * 
 	 **/
-	private void checkInitialRevision(List<IChange> changes){
+	private void checkInitialRevision(List<Change> changes){
 		// We will now remove all expected changes one by one.
 		check(changes, "Addition", "package1", "First commit", "Package");
 		check(changes, "Addition", "package1.Main", "First commit", "Class");
@@ -526,7 +527,7 @@ public class DistillChangesTest {
 	 * This method will assert that the second revision went correctly
 	 * 
 	 **/
-	private void checkSecondRevision(List<IChange> changes) {
+	private void checkSecondRevision(List<Change> changes) {
 		check(changes, "Removal", "package1.Main.shared : int", "Second commit", "Attribute");
 		// FIXME: fix this bug: removing invocations in a new method have no intent.
 		check(changes, "Removal", "package1.Main.stupidMethod{println}", "", "Invocation");
@@ -548,8 +549,8 @@ public class DistillChangesTest {
 	 * @param famixType The famixtype of the change
 	 * 
 	 **/
-	private void check(List<IChange> changes, String type, String name, String intent, String famixType) {
-		for (IChange change: changes) {
+	private void check(List<Change> changes, String type, String name, String intent, String famixType) {
+		for (Change change: changes) {
 			if (change.getChangeType().equals(type) && 
 					change.getName().equals(name) && 
 					change.getIntent().equals(intent) &&

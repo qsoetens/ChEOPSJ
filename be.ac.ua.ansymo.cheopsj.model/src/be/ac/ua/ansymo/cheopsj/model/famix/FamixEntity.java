@@ -10,8 +10,13 @@
  ******************************************************************************/
 package be.ac.ua.ansymo.cheopsj.model.famix;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Transient;
+
 import org.eclipse.swt.graphics.Image;
 
+@Entity
 public abstract class FamixEntity extends FamixObject {
 	
 	/**
@@ -22,6 +27,7 @@ public abstract class FamixEntity extends FamixObject {
 	private String uniqueName;
 	private String name;
 		
+	@Column(unique=true)
 	public String getUniqueName() {
 		return uniqueName;
 	}
@@ -38,6 +44,7 @@ public abstract class FamixEntity extends FamixObject {
 			
 	}
 	
+	@Transient
 	abstract public Image getIcon();
 	
 	public void setName(String name){

@@ -48,16 +48,12 @@ public class LocalVariableRecorder extends StatementRecorder {
 	private String uniquename = "";
 	//private String typeuniquename = "";
 	
-    private ModelManager manager;
-    private ModelManagerChange managerChange;
     private FamixMethod containingMethod;
     private FamixLocalVariable variable;
     private FamixClass declaredClass;
    // private String name = "";
 	
     private LocalVariableRecorder(){
-    	manager = ModelManager.getInstance();
-    	managerChange = ModelManagerChange.getInstance();
     }
     
 	//TODO variables can hide one another if they have the same name, need to somehow encode the nesting depth or scope in the unique name!
@@ -123,7 +119,7 @@ public class LocalVariableRecorder extends StatementRecorder {
 			//If this class doesn't exist, make a dummy.
 			FamixClass clazz = new FamixClass();
 			clazz.setUniqueName(declaredClassName);
-			clazz.setIsDummy(true);
+			clazz.setDummy(true);
 			manager.addFamixElement(clazz);
 		}
 		
@@ -185,7 +181,7 @@ public class LocalVariableRecorder extends StatementRecorder {
 		else if (change instanceof Remove) {
 			// set dependency to addition of this entity
 			// Subject removedSubject = change.getChangeSubject();
-			AtomicChange additionChange = subject.getLatestAddition();
+			AtomicChange additionChange = managerChange.getLastestAddition(subject); 
 			if (additionChange != null) {
 				change.addStructuralDependency(additionChange);
 			}
@@ -196,7 +192,7 @@ public class LocalVariableRecorder extends StatementRecorder {
 		
 		//link to addition of containing method
 		if (containingMethod != null) {
-			Change parentChange = containingMethod.getLatestAddition();
+			Change parentChange = managerChange.getLastestAddition(containingMethod); 
 			if (parentChange != null) {
 				change.addStructuralDependency(parentChange);
 			}
@@ -207,7 +203,7 @@ public class LocalVariableRecorder extends StatementRecorder {
 			linkToAddition(change);
 		}
 		
-		Remove removalChange = subject.getLatestRemoval();
+		Remove removalChange = managerChange.getLatestRemoval(subject); 
 		if (removalChange != null) {
 			change.addStructuralDependency(removalChange);
 		}
@@ -215,7 +211,7 @@ public class LocalVariableRecorder extends StatementRecorder {
 	
 	//link to addition of declared type
 	private void linkToAddition(AtomicChange change) {
-		Change declaredClassChange = declaredClass.getLatestAddition();
+		Change declaredClassChange = managerChange.getLastestAddition(declaredClass); 
 		if(declaredClassChange != null){
 			change.addStructuralDependency(declaredClassChange);
 		}else{

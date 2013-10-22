@@ -61,11 +61,11 @@ public class PrintGraphForGroove {
 
 			for(IChange change : model.getModelManagerChange().getChanges()){
 				for(Change dep : ((AtomicChange)change).getStructuralDependencies()){
-					printEdgeInGrooveGraph(out, change.getID(), dep.getID(), "depends");
+					printEdgeInGrooveGraph(out, change.getUniqueID(), dep.getUniqueID(), "depends");
 				}
 
-				String subjectID = ((AtomicChange)change).getChangeSubject().getID();
-				printEdgeInGrooveGraph(out, change.getID(), subjectID, "subject");
+				String subjectID = ((AtomicChange)change).getChangeSubject().getUniqueID();
+				printEdgeInGrooveGraph(out, change.getUniqueID(), subjectID, "subject");
 			}
 
 			printEndOfGrooveGraph(out);
@@ -78,17 +78,17 @@ public class PrintGraphForGroove {
 	
 	private void printEdgesInGrooveChange(BufferedWriter out, IChange change) {
 		try {
-			printNodeInGrooveGraph(out, change.getID());
+			printNodeInGrooveGraph(out, change.getUniqueID());
 			if(change instanceof Add){
-				printEdgeInGrooveGraph(out, change.getID(), change.getID(), "type:Add");	
+				printEdgeInGrooveGraph(out, change.getUniqueID(), change.getUniqueID(), "type:Add");	
 			}else if(change instanceof Remove){
-				printEdgeInGrooveGraph(out, change.getID(), change.getID(), "type:Rem");
+				printEdgeInGrooveGraph(out, change.getUniqueID(), change.getUniqueID(), "type:Rem");
 			}
 	
-			String timestampID = change.getID() + "a0";
+			String timestampID = change.getUniqueID() + "a0";
 			printNodeInGrooveGraph(out, timestampID);
 			printEdgeInGrooveGraph(out, timestampID, timestampID, "int:"+change.getTimeStamp().getTime());
-			printEdgeInGrooveGraph(out, change.getID(), timestampID, "timestamp");
+			printEdgeInGrooveGraph(out, change.getUniqueID(), timestampID, "timestamp");
 		}
 		catch (IOException e) {
 			e.printStackTrace();
@@ -97,58 +97,62 @@ public class PrintGraphForGroove {
 	
 	private void printEdgesInGrooveFamix(Subject famix, BufferedWriter out) {
 		try {
-			printNodeInGrooveGraph(out, famix.getID());
+			printNodeInGrooveGraph(out, famix.getUniqueID());
 	
-			printEdgeInGrooveGraph(out, famix.getID(), famix.getID(), "type:"+famix.getFamixType());
+			printEdgeInGrooveGraph(out, famix.getUniqueID(), famix.getUniqueID(), "type:"+famix.getFamixType());
 	
 			//name ?
-			String nameID = famix.getID() + "a0";
+			String nameID = famix.getUniqueID() + "a0";
 			printNodeInGrooveGraph(out, nameID);
 			if(famix instanceof FamixEntity){
 				printEdgeInGrooveGraph(out, nameID, nameID, "string:&quot;"+((FamixEntity)famix).getName()+"&quot;");
 			}else if(famix instanceof FamixInvocation){
 				//printEdgeInGrooveGraph(out, nameID, nameID, "string:&quot;"+((FamixInvocation)famix).getStringRepresentation()+":&quot;");
 			}
-			printEdgeInGrooveGraph(out, famix.getID(), nameID, "name");
+			printEdgeInGrooveGraph(out, famix.getUniqueID(), nameID, "name");
 	
 			if (famix instanceof FamixPackage) {
 				FamixPackage belongsTo = ((FamixPackage) famix).getBelongsToPackage();
 				if(belongsTo != null)				
-					printEdgeInGrooveGraph(out, famix.getID(), belongsTo.getID(), "belongsTo");
+					printEdgeInGrooveGraph(out, famix.getUniqueID(), belongsTo.getUniqueID(), "belongsTo");
 			} else if (famix instanceof FamixClass) {
 				FamixPackage belongsTo = ((FamixClass) famix).getBelongsToPackage();
 				if(belongsTo != null)				
-					printEdgeInGrooveGraph(out, famix.getID(), belongsTo.getID(), "belongsTo");
+					printEdgeInGrooveGraph(out, famix.getUniqueID(), belongsTo.getUniqueID(), "belongsTo");
 				FamixClass belongsToClass = ((FamixClass) famix).getBelongsToClass();
 				if(belongsToClass != null)
-					printEdgeInGrooveGraph(out, famix.getID(), belongsToClass.getID(), "belongsTo");
+					printEdgeInGrooveGraph(out, famix.getUniqueID(), belongsToClass.getUniqueID(), "belongsTo");
 			} else if (famix instanceof FamixMethod) {
 				FamixClass belongsToClass = ((FamixMethod) famix).getBelongsToClass();
 				if(belongsToClass != null)
-					printEdgeInGrooveGraph(out, famix.getID(), belongsToClass.getID(), "belongsTo");
-				FamixClass returnClass = ((FamixMethod) famix).getDeclaredReturnClass();
-				if(returnClass != null)
-					printEdgeInGrooveGraph(out, famix.getID(), returnClass.getID(), "returnClass");
+					printEdgeInGrooveGraph(out, famix.getUniqueID(), belongsToClass.getUniqueID(), "belongsTo");
+//				FamixClass returnClass = ((FamixMethod) famix).getDeclaredReturnClass();
+//				if(returnClass != null)
+//					printEdgeInGrooveGraph(out, famix.getUniqueID(), returnClass.getUniqueID(), "returnClass");
 			} else if (famix instanceof FamixAttribute) {
 				FamixClass belongsToClass = ((FamixAttribute) famix).getBelongsToClass();
 				if(belongsToClass != null)
-					printEdgeInGrooveGraph(out, famix.getID(), belongsToClass.getID(), "belongsTo");
+					printEdgeInGrooveGraph(out, famix.getUniqueID(), belongsToClass.getUniqueID(), "belongsTo");
 				FamixClass declaredClass = ((FamixAttribute) famix).getDeclaredClass();
 				if(declaredClass != null)
-					printEdgeInGrooveGraph(out, famix.getID(), declaredClass.getID(), "declaredClass");
+					printEdgeInGrooveGraph(out, famix.getUniqueID(), declaredClass.getUniqueID(), "declaredClass");
 			} else if (famix instanceof FamixInvocation) {
-				FamixBehaviouralEntity candidate = ((FamixInvocation) famix).getCandidate();
-				if(candidate != null)
-					printEdgeInGrooveGraph(out, famix.getID(), candidate.getID(), "candidate");
+//				FamixBehaviouralEntity candidate = ((FamixInvocation) famix).getCandidate();
+//				if(candidate != null)
+//					printEdgeInGrooveGraph(out, famix.getUniqueID(), candidate.getUniqueID(), "candidate");
+				for(FamixBehaviouralEntity candidate : ((FamixInvocation) famix).getCandidates()){
+					if(candidate != null)
+						printEdgeInGrooveGraph(out, famix.getUniqueID(), candidate.getUniqueID(), "candidate");
+				}
 				FamixMethod invokedby = (FamixMethod) ((FamixInvocation) famix).getInvokedBy();
-				printEdgeInGrooveGraph(out, famix.getID(), invokedby.getID(), "invokedBy");
+				printEdgeInGrooveGraph(out, famix.getUniqueID(), invokedby.getUniqueID(), "invokedBy");
 			} else if (famix instanceof FamixLocalVariable) {
 				FamixMethod belongsToMethod = (FamixMethod) ((FamixLocalVariable) famix).getBelongsToBehaviour();
 				if(belongsToMethod != null)
-					printEdgeInGrooveGraph(out, famix.getID(), belongsToMethod.getID(), "belongsTo");
+					printEdgeInGrooveGraph(out, famix.getUniqueID(), belongsToMethod.getUniqueID(), "belongsTo");
 				FamixClass declaredClass = ((FamixLocalVariable) famix).getDeclaredClass();
 				if(declaredClass != null)
-					printEdgeInGrooveGraph(out, famix.getID(), declaredClass.getID(), "declaredClass");
+					printEdgeInGrooveGraph(out, famix.getUniqueID(), declaredClass.getUniqueID(), "declaredClass");
 			}
 		}
 		catch (IOException e) {

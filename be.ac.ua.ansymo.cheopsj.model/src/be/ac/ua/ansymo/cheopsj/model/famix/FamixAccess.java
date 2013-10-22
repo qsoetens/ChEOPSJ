@@ -10,6 +10,10 @@
  ******************************************************************************/
 package be.ac.ua.ansymo.cheopsj.model.famix;
 
+import javax.persistence.Entity;
+import javax.persistence.Transient;
+
+@Entity
 public class FamixAccess extends FamixAssociation {
 
 	/**
@@ -21,6 +25,7 @@ public class FamixAccess extends FamixAssociation {
 
 	private FamixBehaviouralEntity accessedIn;
 
+	@Transient
 	public FamixStructuralEntity getAccesses() {
 		return accesses;
 	}
@@ -29,6 +34,7 @@ public class FamixAccess extends FamixAssociation {
 		this.accesses = accesses;
 	}
 
+	@Transient
 	public FamixBehaviouralEntity getAccessedIn() {
 		return accessedIn;
 	}
@@ -37,6 +43,7 @@ public class FamixAccess extends FamixAssociation {
 		this.accessedIn = accessedIn;
 	}
 
+	@Transient
 	@Override
 	public String getFamixType() {
 		return "Access";

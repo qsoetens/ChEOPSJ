@@ -20,6 +20,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.WorkbenchException;
 
 import be.ac.ua.ansymo.cheopsj.model.ModelManager;
+import be.ac.ua.ansymo.cheopsj.model.ModelManagerChange;
 
 
 
@@ -37,12 +38,14 @@ public class AbstractCheopsJTest {
 	protected IJavaProject fJProject1;
 	protected IPackageFragmentRoot fRoot1;
 	protected ModelManager manager;
+	protected ModelManagerChange managerChange;
 
 	/**
 	 * Perform pre-test initialization.
 	 */
 	public void setUp() throws Exception {
 		manager = ModelManager.getInstance();
+		managerChange = ModelManagerChange.getInstance();
 
 		// Initialize the test fixture for each test
 		// that is run.

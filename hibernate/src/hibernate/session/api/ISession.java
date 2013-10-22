@@ -108,6 +108,19 @@ public interface ISession {
      *             if session is not open.
      */
     public abstract <T> List<T> query(String hqlQuery, Class<T> type) throws Exception;
+    
+    /**
+     * Generic method. Executes a hql query and returns the results.
+     * 
+     * @param hqlQuery
+     *            the query string.
+     * 
+     * @return an integer
+     * @throws HibernateException
+     *             if session is not open.
+     */
+    public abstract int query(String hqlQuery) throws Exception;
+    
 
     /**
      * Generic method. Executes a hql query and returns the results, but limits the number of results obtained from the
@@ -232,4 +245,6 @@ public interface ISession {
      * @return the Hibernate session
      */
     public abstract Session getHibernateSession();
+
+	public abstract void clearDatabase();
 }

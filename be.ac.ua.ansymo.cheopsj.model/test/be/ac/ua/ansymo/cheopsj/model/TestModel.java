@@ -57,47 +57,47 @@ public class TestModel {
 	
 	@Test
 	public void testAddFamixElement() {
-		int sizeFamEnt;
+		//int sizeFamEnt;
 		Subject[] fes = {fe1, fe2, fe3, fe4, fe5, fe6};
 		String nameFamPack, nameFamClass, nameFamMeth, nameFamAtt, nameFamVar, nameFamInv;
 		
 		for(Subject fe : fes) {
-			sizeFamEnt = model.getFamixEntities().size();
+			//sizeFamEnt = model.getFamixEntities().size();
 			model.addFamixElement(fe);
 			
 			if (fe instanceof FamixPackage) {
 				nameFamPack = ((FamixPackage) fe).getUniqueName();
 				model.getFamixPackage(nameFamPack);
-				assertTrue(!model.getFamixPackagesMap().isEmpty());
+				assertTrue(model.famixPackageExists(nameFamPack));
 			} 
 			else if (fe instanceof FamixClass) {
 				nameFamClass = ((FamixClass) fe).getUniqueName();
 				model.getFamixClass(nameFamClass);
-				assertTrue(!model.getFamixClassesMap().isEmpty());
+				assertTrue(model.famixClassExists(nameFamClass));
 			} 
 			else if (fe instanceof FamixMethod) {
 				nameFamMeth = ((FamixMethod) fe).getUniqueName();
 				model.getFamixMethod(nameFamMeth);
-				assertTrue(!model.getFamixMethodsMap().isEmpty());
+				assertTrue(model.famixMethodExists(nameFamMeth));
 			} 
 			else if (fe instanceof FamixAttribute) {
 				nameFamAtt = ((FamixAttribute) fe).getUniqueName();
 				model.getFamixField(nameFamAtt);
-				assertTrue(!model.getFamixFieldsMap().isEmpty());
+				assertTrue(model.famixFieldExists(nameFamAtt));
 			} 
 			else if (fe instanceof FamixInvocation) {
 				nameFamInv = ((FamixInvocation) fe).getStringRepresentation();
 				model.getFamixInvocation(nameFamInv);
-				assertTrue(!model.getFamixInvocationsMap().isEmpty());
+				assertTrue(model.famixInvocationExists(nameFamInv));
 			} 
 			else if (fe instanceof FamixLocalVariable) {
 				nameFamVar = ((FamixLocalVariable) fe).getUniqueName();
 				model.getFamixVariable(nameFamVar);
-				assertTrue(!model.getFamixVariablesMap().isEmpty());
+				assertTrue(model.famixVariableExists(nameFamVar));
 			}
 			
-			assertTrue(!model.getFamixEntities().isEmpty());
-			assertTrue(model.getFamixEntities().size() == (sizeFamEnt + 1));
+			/*assertTrue(!model.getFamixEntities().isEmpty());
+			assertTrue(model.getFamixEntities().size() == (sizeFamEnt + 1));*/
 		}
 	}
 	

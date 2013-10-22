@@ -10,6 +10,9 @@
  ******************************************************************************/
 package be.ac.ua.ansymo.cheopsj.model.famix;
 
+import javax.persistence.Entity;
+import javax.persistence.Transient;
+
 import org.eclipse.swt.graphics.Image;
 
 public class FamixGlobalVariable extends FamixStructuralEntity {
@@ -33,7 +36,6 @@ public class FamixGlobalVariable extends FamixStructuralEntity {
 	 * @return Returns the famixPackage.
 	 * 
 	 */
-
 	public FamixPackage getFamixPackage()
 	{
 		return famixPackage;
@@ -51,7 +53,6 @@ public class FamixGlobalVariable extends FamixStructuralEntity {
 		this.famixPackage = famixPackage;
 	}
 
-	
 	@Override
 	public String getFamixType() {
 		return "Global Variable";
