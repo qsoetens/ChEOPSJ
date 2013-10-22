@@ -14,6 +14,7 @@ import be.ac.ua.ansymo.cheopsj.model.ModelManagerEvent;
 
 public interface ModelManagerListener {
 	   public void changesAdded(ModelManagerEvent event);
+	   public void refresh();
 }
 
 

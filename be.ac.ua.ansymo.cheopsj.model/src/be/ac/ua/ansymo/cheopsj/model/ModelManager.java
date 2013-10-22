@@ -18,10 +18,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import be.ac.ua.ansymo.cheopsj.model.changes.Add;
-import be.ac.ua.ansymo.cheopsj.model.changes.AtomicChange;
-import be.ac.ua.ansymo.cheopsj.model.changes.Change;
-import be.ac.ua.ansymo.cheopsj.model.changes.Remove;
 import be.ac.ua.ansymo.cheopsj.model.changes.Subject;
 import be.ac.ua.ansymo.cheopsj.model.famix.FamixAttribute;
 import be.ac.ua.ansymo.cheopsj.model.famix.FamixClass;
@@ -137,8 +133,14 @@ public class ModelManager implements Serializable{
 		 * ArrayList<FamixObject>(); listeners = new
 		 * ArrayList<ModelManagerListener>();
 		 */
-		INSTANCE = new ModelManager();
-		getModelManagerChange().clearModel();
+		//INSTANCE = new ModelManager();
+		try {
+			SessionHandler.getHandler().getCurrentSession().clearDatabase();
+			getModelManagerListeners().fireRefresh();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	/*
@@ -225,7 +227,7 @@ public class ModelManager implements Serializable{
 
 		try {
 			ISession lSession = SessionHandler.getHandler().getCurrentSession();
-			packages = lSession.query("from FamixPackage as pack where pack.uniqueName'"+elementName+"'", FamixPackage.class);
+			packages = lSession.query("from FamixPackage as pack where pack.uniqueName='"+elementName+"'", FamixPackage.class);
 		} catch (Exception ee) {
 		}
 

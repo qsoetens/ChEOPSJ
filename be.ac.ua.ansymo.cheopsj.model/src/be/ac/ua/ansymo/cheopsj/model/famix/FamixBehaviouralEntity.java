@@ -135,8 +135,10 @@ public abstract class FamixBehaviouralEntity extends FamixEntity {
 		return this.localVariables.values();
 	}
 
-	public void setLocalVariables(Map<String, FamixLocalVariable> localVariables) {
-		this.localVariables = localVariables;
+	public void setLocalVariables(Collection<FamixLocalVariable> localVariables){
+		for(FamixLocalVariable localvar : localVariables){
+			this.localVariables.put(localvar.getUniqueName(), localvar);
+		}		
 	}
 
 	/**

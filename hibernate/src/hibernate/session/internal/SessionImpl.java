@@ -282,7 +282,14 @@ public class SessionImpl implements ISession {
     }
 
 	public void clearDatabase() {
-		fHibernateSession.createSQLQuery("truncate table *").executeUpdate();		
+		try{
+			fHibernateSession.createSQLQuery("truncate table \"CHANGESTRUCTDEPS\"").executeUpdate();
+			fHibernateSession.createSQLQuery("truncate table \"INVOCATIONCANDIDATES\"").executeUpdate();
+			fHibernateSession.createSQLQuery("truncate table \"CHANGE\"").executeUpdate();
+			fHibernateSession.createSQLQuery("truncate table \"SUBJECT\"").executeUpdate();
+		}catch(Exception e){
+			e.printStackTrace();
+		}
 	}
     
 }

@@ -140,4 +140,9 @@ public class ZestChangeViewContentProvider implements IGraphEntityContentProvide
 		}
 	}
 
+	@Override
+	public void refresh() {
+		viewer.refresh();
+	}
+
 }

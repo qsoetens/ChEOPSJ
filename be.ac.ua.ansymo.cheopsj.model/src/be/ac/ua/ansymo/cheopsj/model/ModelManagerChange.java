@@ -111,14 +111,6 @@ public class ModelManagerChange {
 		
 		return changeCount + " changes; " + addCount + " additions and " + removeCount + " removals";
 	}
-
-	/*
-	 * For testing purposes only!
-	 */
-	public void clearModel() {
-		INSTANCE = new ModelManagerChange();
-	}
-	
 	
 	public Change getLatestChange(Subject sub){
 		List<AtomicChange> changes = null;

@@ -76,10 +76,9 @@ public class ModelManagerListeners {
 		// printAllChanges();
 	}
 	
-	/*
-	 * For testing purposes only!
-	 */
-	public void clearModel() {
-		INSTANCE = new ModelManagerListeners();
+	public void fireRefresh(){
+		for (ModelManagerListener i : listeners) {
+			i.refresh();
+		}	
 	}
 }
