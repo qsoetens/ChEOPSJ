@@ -10,6 +10,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaProject;
@@ -51,6 +52,7 @@ public class ClassAdditionTest {
 	@Before
 	public void setUp() throws Exception {
 		manager = ModelManager.getInstance();
+		manager.clearModel();
 		recorder1 = createRecorderFromDeclaration();
 		managerChange = ModelManagerChange.getInstance();
 	}
@@ -78,7 +80,6 @@ public class ClassAdditionTest {
 
 	@After
 	public void tearDown() throws Exception {
-		manager.clearModel();
 	}
 
 	@Test
@@ -138,6 +139,7 @@ public class ClassAdditionTest {
 			IWorkspace workspace = ResourcesPlugin.getWorkspace();
 			IWorkspaceRoot root = workspace.getRoot();
 			IProject project  = root.getProject("TestProject");
+			project.open(null);
 			IJavaProject javaProject = JavaCore.create(project);
 
 			IPackageFragment mypackage = javaProject.findPackageFragment(
@@ -170,6 +172,9 @@ public class ClassAdditionTest {
 			e.printStackTrace();
 			fail("Unexpected exception");
 		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+			fail("Unexpected exception");
+		} catch (CoreException e) {
 			e.printStackTrace();
 			fail("Unexpected exception");
 		}
@@ -309,8 +314,10 @@ public class ClassAdditionTest {
 		recorder1.storeChange(rem);
 		AtomicChange secondAdd = new Add();
 		recorder1.storeChange(secondAdd);
+		
+		
 
-		FamixClass clazz = (FamixClass)firstAdd.getChangeSubject();
+		FamixClass clazz = manager.getFamixClass(packname+"."+classname);
 		Change change = (Change) firstAdd.getStructuralDependencies().toArray()[0];
 		FamixPackage pack = (FamixPackage)((AtomicChange)change).getChangeSubject();
 

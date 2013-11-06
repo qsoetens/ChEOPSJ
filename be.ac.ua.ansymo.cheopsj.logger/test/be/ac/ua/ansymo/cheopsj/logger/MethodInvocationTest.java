@@ -70,6 +70,7 @@ public class MethodInvocationTest extends AbstractCheopsJTest {
 		// create another class
 		fcu2 = fPack1.getCompilationUnit("FooClass.java");
 		ftype2 = fcu2.createType("public class FooClass {\n}\n", null, true, null);
+		Thread.sleep(2000);
 		ftype2.createField("private BooClass b", null, true, null);
 		ftype2.createMethod("public void foo() {}\n", null, true, null);
 		ftype2.createMethod("public void foo2() {}\n", null, true, null);

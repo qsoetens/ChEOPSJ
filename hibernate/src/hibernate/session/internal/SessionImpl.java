@@ -193,7 +193,7 @@ public class SessionImpl implements ISession {
     }
 
     private void ensureTransactionIsActive() throws Exception {
-        if (fTransaction == null) {
+        if (fTransaction == null || !fTransaction.isActive()) {
             Exception ex = new Exception("No Transaction is active.");
 
             throw ex;
@@ -241,7 +241,7 @@ public class SessionImpl implements ISession {
     }
 
     private void assertTransactionIsNotActive() throws Exception {
-        if (fTransaction != null) {
+        if (fTransaction != null && fTransaction.isActive()) {
             Exception ex = new HibernateException("A Transaction is already active.");
             throw ex;
         }

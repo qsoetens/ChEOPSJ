@@ -10,6 +10,8 @@
  ******************************************************************************/
 package be.ac.ua.ansymo.cheopsj.logger;
 
+import hibernate.session.SessionHandler;
+
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
@@ -46,6 +48,7 @@ public class AbstractCheopsJTest {
 	public void setUp() throws Exception {
 		manager = ModelManager.getInstance();
 		managerChange = ModelManagerChange.getInstance();
+		manager.clearModel();
 
 		// Initialize the test fixture for each test
 		// that is run.
@@ -74,9 +77,9 @@ public class AbstractCheopsJTest {
 		// delay(300);
 
 		// Add additional teardown code here.
-		manager.clearModel();
+		//manager.clearModel();
 		JavaProjectHelper.delete(fJProject1);
-
+		SessionHandler.getHandler().cleanupHibernateSessions();
 		// getJavaPage().hideView(testView);
 		// getJavaPage().hideView(zestView);
 	}

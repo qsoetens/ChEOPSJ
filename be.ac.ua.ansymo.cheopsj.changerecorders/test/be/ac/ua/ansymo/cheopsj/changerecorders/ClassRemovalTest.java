@@ -33,6 +33,7 @@ public class ClassRemovalTest {
 	@Before
 	public void setUp() throws Exception {
 		manager = ModelManager.getInstance();
+		manager.clearModel();
 		managerChange = ModelManagerChange.getInstance();
 		recorder1 = createRecorderFromDeclaration();
 		addition = new Add();
@@ -62,7 +63,6 @@ public class ClassRemovalTest {
 
 	@After
 	public void tearDown() throws Exception {
-		manager.clearModel();
 	}
 	
 	

@@ -33,7 +33,6 @@ public class FamixAttribute extends FamixStructuralEntity {
 	private FamixClass belongsToClass = null;
 
 	// private String AccessControlQualifier;
-	// TODO: Type?? either a FamixClass or a PrimitiveType.
 
 	private boolean hasClassScope;
 

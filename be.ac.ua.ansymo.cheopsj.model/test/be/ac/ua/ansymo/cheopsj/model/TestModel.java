@@ -13,8 +13,10 @@ import be.ac.ua.ansymo.cheopsj.model.changes.CompositeChange;
 import be.ac.ua.ansymo.cheopsj.model.changes.IChange;
 import be.ac.ua.ansymo.cheopsj.model.changes.Remove;
 import be.ac.ua.ansymo.cheopsj.model.changes.Subject;
+import be.ac.ua.ansymo.cheopsj.model.famix.FamixAssociation;
 import be.ac.ua.ansymo.cheopsj.model.famix.FamixAttribute;
 import be.ac.ua.ansymo.cheopsj.model.famix.FamixClass;
+import be.ac.ua.ansymo.cheopsj.model.famix.FamixEntity;
 import be.ac.ua.ansymo.cheopsj.model.famix.FamixInvocation;
 import be.ac.ua.ansymo.cheopsj.model.famix.FamixLocalVariable;
 import be.ac.ua.ansymo.cheopsj.model.famix.FamixMethod;
@@ -25,7 +27,8 @@ public class TestModel {
 	private Change change;
 	private ModelManager model;
 	private ModelManagerChange modelChange;
-	private Subject fe1, fe2, fe3, fe4, fe5, fe6;
+	private FamixEntity fe1, fe2, fe3, fe4, fe6;
+	private FamixAssociation fe5;
 	
 	@Before
 	public void setUp() throws Exception {
@@ -33,15 +36,22 @@ public class TestModel {
 		model = ModelManager.getInstance();
 		modelChange = ModelManagerChange.getInstance();
 		fe1 = new FamixClass();
+		fe1.setUniqueName("be.ac.ua.famixclassentity");
 		fe2 = new FamixMethod();
+		fe2.setUniqueName("be.ac.ua.famixclassentity.someMethod()");
 		fe3 = new FamixPackage();
+		fe3.setUniqueName("be.ac.ua");
 		fe4 = new FamixAttribute();
+		fe4.setUniqueName("be.ac.ua.famixclassentity.someField");
 		fe5 = new FamixInvocation();
+		fe5.setStringRepresentation("be.ac.ua.famixclassentity.boo{foo}");
 		fe6 = new FamixLocalVariable();
+		fe6.setUniqueName("be.ac.ua.famixclassentity.someMethod.localvar");
 	}
 
 	@After
 	public void tearDown() throws Exception {
+		model.clearModel();
 	}
 
 	@Test
@@ -67,32 +77,32 @@ public class TestModel {
 			
 			if (fe instanceof FamixPackage) {
 				nameFamPack = ((FamixPackage) fe).getUniqueName();
-				model.getFamixPackage(nameFamPack);
+				//model.getFamixPackage(nameFamPack);
 				assertTrue(model.famixPackageExists(nameFamPack));
 			} 
 			else if (fe instanceof FamixClass) {
 				nameFamClass = ((FamixClass) fe).getUniqueName();
-				model.getFamixClass(nameFamClass);
+				//model.getFamixClass(nameFamClass);
 				assertTrue(model.famixClassExists(nameFamClass));
 			} 
 			else if (fe instanceof FamixMethod) {
 				nameFamMeth = ((FamixMethod) fe).getUniqueName();
-				model.getFamixMethod(nameFamMeth);
+				//model.getFamixMethod(nameFamMeth);
 				assertTrue(model.famixMethodExists(nameFamMeth));
 			} 
 			else if (fe instanceof FamixAttribute) {
 				nameFamAtt = ((FamixAttribute) fe).getUniqueName();
-				model.getFamixField(nameFamAtt);
+				//model.getFamixField(nameFamAtt);
 				assertTrue(model.famixFieldExists(nameFamAtt));
 			} 
 			else if (fe instanceof FamixInvocation) {
 				nameFamInv = ((FamixInvocation) fe).getStringRepresentation();
-				model.getFamixInvocation(nameFamInv);
+				//model.getFamixInvocation(nameFamInv);
 				assertTrue(model.famixInvocationExists(nameFamInv));
 			} 
 			else if (fe instanceof FamixLocalVariable) {
 				nameFamVar = ((FamixLocalVariable) fe).getUniqueName();
-				model.getFamixVariable(nameFamVar);
+				//model.getFamixVariable(nameFamVar);
 				assertTrue(model.famixVariableExists(nameFamVar));
 			}
 			
@@ -111,8 +121,8 @@ public class TestModel {
 		modelChange.addChange(new Remove());
 		modelChange.addChange(new Remove());
 		modelChange.addChange(new AtomicChange());
-		modelChange.addChange(new CompositeChange());
-		modelChange.addChange(new CompositeChange());
+		//modelChange.addChange(new CompositeChange());
+		//modelChange.addChange(new CompositeChange());
 		
 		int changeCountLoc = modelChange.getChanges().size();
 		String result;

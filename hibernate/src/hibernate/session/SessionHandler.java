@@ -242,10 +242,10 @@ public final class SessionHandler {
                 configuration.setProperty("hibernate.connection.driver_class", dbDriverName);
             }
             configuration.setProperty("hibernate.jdbc.batch_size", "25");
-            configuration.setProperty("hibernate.connection.pool_size", "2");
+            configuration.setProperty("hibernate.connection.pool_size", "1");
             configuration.setProperty("hibernate.cache.use_second_level_cache", "false");
             configuration.setProperty("hibernate.current_session_context_class", "thread");
-            // configuration.setProperty("hibernate.current_session_context_class", "managed");
+            //configuration.setProperty("hibernate.current_session_context_class", "managed");
 
             configuration.setProperty("hibernate.show_sql", "true");
             //configuration.setProperty("hibernate.hbm2ddl.auto", "create-drop");

@@ -38,6 +38,7 @@ public class ClassAndPackageRemovalTest {
 	@Before
 	public void setUp() throws Exception {
 		manager = ModelManager.getInstance();
+		manager.clearModel();
 		managerChange = ModelManagerChange.getInstance();
 		createRecorderFromDeclaration();
 		

@@ -178,30 +178,8 @@ public class MethodRecorder extends AbstractEntityRecorder {
 		change.setChangeSubject(famixMethod);
 		famixMethod.addChange(change);
 
-		setStructuralDependencies(change, famixMethod, parent, this);
+		setStructuralDependencies(change, famixMethod, parent);
 		managerChange.addChange(change);
 	}
 
-	protected void removeAllContainedWithin(AtomicChange change, AtomicChange additionChange) {
-		Collection<Change> dependees = additionChange.getStructuralDependees();
-		for (Change dependee : dependees) {
-			if (dependee instanceof Add) {
-				Subject changesubject = ((AtomicChange) dependee).getChangeSubject();
-				Change latestChange = managerChange.getLatestChange(changesubject); 
-				if (latestChange instanceof Add) {
-					// only remove if it wasn't removed yet
-
-					Remove removal = new Remove();
-					removal.setChangeSubject(changesubject);
-					setStructuralDependencies(removal, removal.getChangeSubject(), parent, this);
-
-					change.addStructuralDependency(removal);
-
-					managerChange.addChange(removal);
-				} else if (latestChange instanceof Remove) {
-					change.addStructuralDependency(latestChange);
-				}
-			}
-		}
-	}
 }

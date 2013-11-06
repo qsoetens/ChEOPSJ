@@ -72,6 +72,7 @@ public class ModelManager implements Serializable{
 			lSession.flush();
 			lSession.clear();
 		} catch (Exception e) {
+			e.printStackTrace();
 			if (lSession != null) {
 				try {
 					lSession.rollbackTransaction();
@@ -108,7 +109,8 @@ public class ModelManager implements Serializable{
 		try {
 			ISession lSession = SessionHandler.getHandler().getCurrentSession();
 			subjects = lSession.query("from Subject", Subject.class);
-		} catch (Exception ee) {
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 
 		return subjects;
@@ -196,7 +198,8 @@ public class ModelManager implements Serializable{
 		try {
 			ISession lSession = SessionHandler.getHandler().getCurrentSession();
 			methods = lSession.query("from FamixMethod as method where method.name='"+calledMethodName+"'", FamixMethod.class);
-		} catch (Exception ee) {
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		if(methods.isEmpty())
 			return new ArrayList<FamixMethod>();
@@ -209,7 +212,8 @@ public class ModelManager implements Serializable{
 		try {
 			ISession lSession = SessionHandler.getHandler().getCurrentSession();
 			methods = lSession.query("from FamixMethod as method where method.name='"+name+"'", FamixMethod.class);
-		} catch (Exception ee) {
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		if(methods.isEmpty())
 			return false;
@@ -228,7 +232,8 @@ public class ModelManager implements Serializable{
 		try {
 			ISession lSession = SessionHandler.getHandler().getCurrentSession();
 			packages = lSession.query("from FamixPackage as pack where pack.uniqueName='"+elementName+"'", FamixPackage.class);
-		} catch (Exception ee) {
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 
 		if(packages.isEmpty())
@@ -248,7 +253,8 @@ public class ModelManager implements Serializable{
 		try {
 			ISession lSession = SessionHandler.getHandler().getCurrentSession();
 			packages = lSession.query("from FamixPackage as pack where pack.uniqueName='"+elementName+"'", FamixPackage.class);
-		} catch (Exception ee) {
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 
 		if(packages.isEmpty())
@@ -266,7 +272,8 @@ public class ModelManager implements Serializable{
 		try {
 			ISession lSession = SessionHandler.getHandler().getCurrentSession();
 			classes = lSession.query("from FamixClass as clazz where clazz.uniqueName='"+elementName+"'", FamixClass.class);
-		} catch (Exception ee) {
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		if(classes.isEmpty())
 			return false;
@@ -284,8 +291,8 @@ public class ModelManager implements Serializable{
 		try {
 			ISession lSession = SessionHandler.getHandler().getCurrentSession();
 			classes = lSession.query("from FamixClass as clazz where clazz.uniqueName='"+elementName+"'", FamixClass.class);
-		} catch (Exception ee) {
-			ee.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 
 		if(classes.isEmpty())
@@ -303,7 +310,8 @@ public class ModelManager implements Serializable{
 		try {
 			ISession lSession = SessionHandler.getHandler().getCurrentSession();
 			methods = lSession.query("from FamixMethod as method where method.uniqueName='"+elementName+"'", FamixMethod.class);
-		} catch (Exception ee) {
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		if(methods.isEmpty())
 			return false;
@@ -320,7 +328,8 @@ public class ModelManager implements Serializable{
 		try {
 			ISession lSession = SessionHandler.getHandler().getCurrentSession();
 			methods = lSession.query("from FamixMethod as method where method.uniqueName='"+elementName+"'", FamixMethod.class);
-		} catch (Exception ee) {
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		if(methods.isEmpty())
 			return null;
@@ -337,7 +346,8 @@ public class ModelManager implements Serializable{
 		try {
 			ISession lSession = SessionHandler.getHandler().getCurrentSession();
 			fields = lSession.query("from FamixAttribute as field where field.uniqueName='"+elementName+"'", FamixAttribute.class);
-		} catch (Exception ee) {
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		if(fields.isEmpty())
 			return false;
@@ -354,7 +364,8 @@ public class ModelManager implements Serializable{
 		try {
 			ISession lSession = SessionHandler.getHandler().getCurrentSession();
 			fields = lSession.query("from FamixAttribute as field where field.uniqueName='"+elementName+"'", FamixAttribute.class);
-		} catch (Exception ee) {
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		if(fields.isEmpty())
 			return null;
@@ -371,7 +382,8 @@ public class ModelManager implements Serializable{
 		try {
 			ISession lSession = SessionHandler.getHandler().getCurrentSession();
 			invs = lSession.query("from FamixInvocation as inv where inv.stringRepresentation='"+stringrepresentation+"'", FamixInvocation.class);
-		} catch (Exception ee) {
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		if(invs.isEmpty())
 			return null;
@@ -388,7 +400,8 @@ public class ModelManager implements Serializable{
 		try {
 			ISession lSession = SessionHandler.getHandler().getCurrentSession();
 			invs = lSession.query("from FamixInvocation as inv where inv.stringRepresentation='"+stringrepresentation+"'", FamixInvocation.class);
-		} catch (Exception ee) {
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		if(invs.isEmpty())
 			return false;
@@ -405,7 +418,8 @@ public class ModelManager implements Serializable{
 		try {
 			ISession lSession = SessionHandler.getHandler().getCurrentSession();
 			vars = lSession.query("from FamixLocalVariable as var where var.uniqueName='"+variableName+"'", FamixLocalVariable.class);
-		} catch (Exception ee) {
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		if(vars.isEmpty())
 			return false;
@@ -422,7 +436,8 @@ public class ModelManager implements Serializable{
 		try {
 			ISession lSession = SessionHandler.getHandler().getCurrentSession();
 			vars = lSession.query("from FamixLocalVariable as var where var.uniqueName='"+variableName+"'", FamixLocalVariable.class);
-		} catch (Exception ee) {
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		if(vars.isEmpty())
 			return null;

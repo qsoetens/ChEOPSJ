@@ -46,6 +46,14 @@ public class ClassRecorder extends AbstractEntityRecorder {
 	private ClassRecorder(){
 		//get manager instance
 	}
+	
+	public ClassRecorder(FamixClass element){
+		famixClass = element;
+		parent = element.getBelongsToPackage();
+		uniqueName = element.getUniqueName();
+		name = element.getName();
+		flags = element.getFlags();
+	}
 
 	public ClassRecorder(IType element) {
 		this();
@@ -234,33 +242,8 @@ public class ClassRecorder extends AbstractEntityRecorder {
 		change.setChangeSubject(famixClass);
 		famixClass.addChange(change);
 
-		setStructuralDependencies(change, famixClass, parent, this);
+		setStructuralDependencies(change, famixClass, parent);
 		managerChange.addChange(change);
-	}
-
-	protected void removeAllContainedWithin(AtomicChange change, AtomicChange additionChange) {
-		Collection<Change> dependees = additionChange.getStructuralDependees();
-		for (Change dependee : dependees) {
-			if (dependee instanceof Add) {
-				Subject changesubject = ((AtomicChange) dependee).getChangeSubject();
-				Change latestChange = managerChange.getLatestChange(changesubject);
-						
-				if (latestChange instanceof Add) {
-					// only remove if it wasn't removed yet
-
-					Remove removal = new Remove();
-					removal.setChangeSubject(changesubject);
-					changesubject.addChange(removal);
-					setStructuralDependencies(removal, removal.getChangeSubject(), parent, this);
-
-					change.addStructuralDependency(removal);
-
-					managerChange.addChange(removal);
-				} else if (latestChange instanceof Remove) {
-					change.addStructuralDependency(latestChange);
-				}
-			}
-		}
 	}
 
 }

@@ -45,7 +45,8 @@ public class ModelManagerChange {
 		try {
 			ISession lSession = SessionHandler.getHandler().getCurrentSession();
 			changes = lSession.query("from Change", Change.class);
-		} catch (Exception ee) {
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 
 		return changes;
@@ -69,6 +70,7 @@ public class ModelManagerChange {
 			//alert listeners that a change was added
 			getModelManagerListeners().fireChangeAdded(change);
 		} catch (Exception e) {
+			e.printStackTrace();
 			if (lSession != null) {
 				try {
 					lSession.rollbackTransaction();
@@ -106,7 +108,8 @@ public class ModelManagerChange {
 			changeCount = lSession.query("select count(*) from Change");
 			addCount = lSession.query("select count(*) from Add");
 			removeCount = lSession.query("select count(*) from Remove");
-		} catch (Exception ee) {
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		
 		return changeCount + " changes; " + addCount + " additions and " + removeCount + " removals";
@@ -119,9 +122,10 @@ public class ModelManagerChange {
 			 changes = lSession.query(
 					 "select change from AtomicChange as change inner join change.changeSubject as subject "
 					 + "where subject.id =" + sub.getId()
-					 +"order by change.timeStamp desc"
+					 +" order by change.timeStamp desc"
 					 ,AtomicChange.class);
-		} catch (Exception ee) {
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		if(changes == null || changes.isEmpty())
 			return null;
@@ -136,9 +140,10 @@ public class ModelManagerChange {
 			 changes = lSession.query(
 					 "select change from Add as change inner join change.changeSubject as subject "
 					 + "where subject.id = " + sub.getId()
-					 +"order by change.timeStamp desc"
+					 +" order by change.timeStamp desc"
 					 ,Add.class);
-		} catch (Exception ee) {
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		if(changes == null || changes.isEmpty())
 			return null;
@@ -151,11 +156,12 @@ public class ModelManagerChange {
 		try {
 			ISession lSession = SessionHandler.getHandler().getCurrentSession();
 			 changes = lSession.query(
-					 "select change from Remove as change inner join change.changeSubject as subject "
-					 + "where subject.id =" + sub.getId()
-					 +"order by change.timeStamp desc"
+					 "select change from Remove as change inner join change.changeSubject as subject"
+					 + " where subject.id =" + sub.getId()
+					 +" order by change.timeStamp desc"
 					 ,Remove.class);
-		} catch (Exception ee) {
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		if(changes == null || changes.isEmpty())
 			return null;

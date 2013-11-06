@@ -46,6 +46,7 @@ public class PackageAdditionTest {
 	@Before
 	public void setUp() throws Exception {
 		manager = ModelManager.getInstance();
+		manager.clearModel();
 		managerChange = ModelManagerChange.getInstance();
 		createRecorderFromDeclaration();
 	}
@@ -60,7 +61,6 @@ public class PackageAdditionTest {
 
 	@After
 	public void tearDown() throws Exception {
-		manager.clearModel();
 	}
 
 	@Test

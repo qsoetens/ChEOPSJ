@@ -61,6 +61,7 @@ public class MethodAdditionTest {
 	@Before
 	public void setUp(){
 		manager = ModelManager.getInstance();
+		manager.clearModel();
 
 		AST ast = AST.newAST(AST.JLS3);
 		CompilationUnit cu = ast.newCompilationUnit();
@@ -93,7 +94,7 @@ public class MethodAdditionTest {
 
 	@After
 	public void tearDown(){
-		manager.clearModel();
+		
 	}
 
 	@Test

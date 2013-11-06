@@ -29,6 +29,7 @@ public class PackageRemovalTest {
 	@Before
 	public void setUp() throws Exception {
 		manager = ModelManager.getInstance();
+		manager.clearModel();
 		managerChange = ModelManagerChange.getInstance();
 		PackageRecorder rec = new PackageRecorder(p5);
 		rec.storeChange(new Add());

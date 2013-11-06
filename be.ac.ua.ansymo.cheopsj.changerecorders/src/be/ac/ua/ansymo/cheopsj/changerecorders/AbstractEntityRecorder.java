@@ -11,6 +11,8 @@
 
 package be.ac.ua.ansymo.cheopsj.changerecorders;
 
+import java.util.Collection;
+
 import be.ac.ua.ansymo.cheopsj.model.ModelManager;
 import be.ac.ua.ansymo.cheopsj.model.ModelManagerChange;
 import be.ac.ua.ansymo.cheopsj.model.changes.Add;
@@ -48,7 +50,7 @@ public abstract class AbstractEntityRecorder {
 	abstract protected void createAndLinkChange(AtomicChange change);
 	
 	protected void setStructuralDependencies(AtomicChange change, Subject subject, 
-			FamixEntity parent, Object classObj) {
+			FamixEntity parent) {
 		
 		if (change instanceof Add) {
 			if (parent != null) {
@@ -68,11 +70,31 @@ public abstract class AbstractEntityRecorder {
 				change.addStructuralDependency(additionChange);
 				
 				//Dependencies to removes of child entities:
-				if(classObj instanceof ClassRecorder) {
-					((ClassRecorder) classObj).removeAllContainedWithin(change, additionChange);
-				}
-				else {
-					((MethodRecorder) classObj).removeAllContainedWithin(change, additionChange);
+				removeAllContainedWithin(change, additionChange, parent);
+			}
+		}
+	}
+	
+	protected void removeAllContainedWithin(AtomicChange change, AtomicChange additionChange, FamixEntity parent) {
+		Collection<Change> dependees = additionChange.getStructuralDependees();
+		for (Change dependee : dependees) {
+			if (dependee instanceof Add) {
+				Subject changesubject = ((AtomicChange) dependee).getChangeSubject();
+				Change latestChange = managerChange.getLatestChange(changesubject);
+						
+				if (latestChange instanceof Add) {
+					// only remove if it wasn't removed yet
+
+					Remove removal = new Remove();
+					removal.setChangeSubject(changesubject);
+					changesubject.addChange(removal);
+					setStructuralDependencies(removal, removal.getChangeSubject(), parent);
+
+					change.addStructuralDependency(removal);
+
+					managerChange.addChange(removal);
+				} else if (latestChange instanceof Remove) {
+					change.addStructuralDependency(latestChange);
 				}
 			}
 		}

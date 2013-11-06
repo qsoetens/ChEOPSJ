@@ -43,9 +43,11 @@ import be.ac.ua.ansymo.cheopsj.model.famix.FamixClass;
 
 public class FieldRecorder extends AbstractEntityRecorder {
 	private FamixAttribute famixField;
-	private FamixClass ContainingClass;
+	//private FamixClass ContainingClass;
 	private FamixClass declaredClass;
 	
+	
+	private String parentUniqueName = "";
 	private String uniquename = "";
 	private int flags;
 	private String name = "";
@@ -58,11 +60,12 @@ public class FieldRecorder extends AbstractEntityRecorder {
 		
 		declaredClass = findDeclaredClass(field);
 		
-		String classname = ((IType) field.getParent()).getFullyQualifiedName();
-		ContainingClass = manager.getFamixClass(classname);
+		parentUniqueName = ((IType) field.getParent()).getFullyQualifiedName();
+		//ContainingClass = manager.getFamixClass(classname);
+		
 			
 		name = field.getElementName();
-		uniquename = classname + '.' + name;
+		uniquename = parentUniqueName + '.' + name;
 						
 		try {
 			flags = field.getFlags();
@@ -74,21 +77,14 @@ public class FieldRecorder extends AbstractEntityRecorder {
 
 	public FieldRecorder(FieldDeclaration field) {
 		this();
-				
-		ContainingClass = findParentFamixEntity(field);
-		
-		
+
+		parentUniqueName = findParentName(field);
 		
 		List<?> fragments = field.fragments();
 		VariableDeclarationFragment var = (VariableDeclarationFragment)fragments.get(0);
 		//TODO what if more than one field is declared!
-		if(ContainingClass != null){
-			uniquename = ContainingClass.getUniqueName() + "." + var.getName().getIdentifier();
-			name = var.getName().getIdentifier();
-		}else{//THIS SHOULD NEVER HAPPEN, A FIELD IS ALWAYS IN A CLASS
-			uniquename = var.getName().getIdentifier();
-			name = var.getName().getIdentifier();
-		}
+		uniquename = parentUniqueName + "." + var.getName().getIdentifier();
+		name = var.getName().getIdentifier();
 		
 		declaredClass = findDeclaredClass(field);
 		
@@ -109,8 +105,7 @@ public class FieldRecorder extends AbstractEntityRecorder {
 			name = uniquename.substring(j+1,uniquename.length());
 			
 			if(parentEntity.getType().isClass()){
-				String parentUniqueName = parentEntity.getUniqueName();
-				ContainingClass = manager.getFamixClass(parentUniqueName);
+				parentUniqueName = parentEntity.getUniqueName();
 			}
 		}
 		flags = entity.getModifiers(); //FIXME fix this, this is not right		
@@ -193,12 +188,12 @@ public class FieldRecorder extends AbstractEntityRecorder {
 		return manager.getFamixClass(declaredClassName);
 	}
 
-	private FamixClass findParentFamixEntity(FieldDeclaration field) {
+	/*private FamixClass findParentFamixEntity(FieldDeclaration field) {
 		//find parent famix entity
 		String parentName = findParentName(field);
 	
 		return manager.getFamixClass(parentName);	
-	}
+	}*/
 	
 	private String findParentName(ASTNode node){
 		ASTNode parent = node.getParent();
@@ -226,6 +221,8 @@ public class FieldRecorder extends AbstractEntityRecorder {
 			famixField.setUniqueName(uniquename);
 			
 			famixField.setFlags(flags);
+			
+			FamixClass ContainingClass = manager.getFamixClass(parentUniqueName);
 
 			if (ContainingClass != null) {
 				famixField.setBelongsToClass(ContainingClass);
@@ -241,7 +238,6 @@ public class FieldRecorder extends AbstractEntityRecorder {
 			manager.addFamixElement(famixField);
 		} else {
 			famixField = manager.getFamixField(uniquename);
-			ContainingClass = famixField.getBelongsToClass();
 			declaredClass = famixField.getDeclaredClass();
 		}
 	}
@@ -276,7 +272,7 @@ public class FieldRecorder extends AbstractEntityRecorder {
 	}
 	
 	private void setStructDepAdd(AtomicChange change, Subject subject) {
-		
+		FamixClass ContainingClass = manager.getFamixClass(parentUniqueName);
 		if (ContainingClass != null) {
 			Change parentChange = managerChange.getLastestAddition(ContainingClass);
 			if (parentChange != null) {
