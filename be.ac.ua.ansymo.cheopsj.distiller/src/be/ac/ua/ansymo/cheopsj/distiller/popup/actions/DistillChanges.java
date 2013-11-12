@@ -113,8 +113,8 @@ public class DistillChanges implements IObjectActionDelegate {
 					//refresh project!
 					//selectedProject.refreshLocal(IProject.DEPTH_INFINITE, new SubProgressMonitor(monitor, 1));
 					
-					double percent = ((double)rev/targetRev)*100;
 					if (monitor != null) {
+						double percent = ((double)rev/targetRev)*100;
 						monitor.subTask("from revision: " + rev + "/" + targetRev + " (" +(int)percent+ "%)");
 					}
 					LogEntryHandler entryHandler = connector.getLogEntryHandler();

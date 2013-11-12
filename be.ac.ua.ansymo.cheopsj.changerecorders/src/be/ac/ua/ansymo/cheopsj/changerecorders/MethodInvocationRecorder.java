@@ -14,22 +14,17 @@ package be.ac.ua.ansymo.cheopsj.changerecorders;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.jdt.core.dom.IMethodBinding;
+import org.eclipse.jdt.core.dom.Expression;
 import org.eclipse.jdt.core.dom.MethodInvocation;
+import org.eclipse.jdt.core.dom.QualifiedName;
 
-import ch.uzh.ifi.seal.changedistiller.model.entities.SourceCodeEntity;
-import be.ac.ua.ansymo.cheopsj.model.ModelManager;
-import be.ac.ua.ansymo.cheopsj.model.ModelManagerChange;
 import be.ac.ua.ansymo.cheopsj.model.changes.Add;
 import be.ac.ua.ansymo.cheopsj.model.changes.AtomicChange;
 import be.ac.ua.ansymo.cheopsj.model.changes.Change;
 import be.ac.ua.ansymo.cheopsj.model.changes.Remove;
-import be.ac.ua.ansymo.cheopsj.model.changes.Subject;
-import be.ac.ua.ansymo.cheopsj.model.famix.FamixAttribute;
-import be.ac.ua.ansymo.cheopsj.model.famix.FamixClass;
 import be.ac.ua.ansymo.cheopsj.model.famix.FamixInvocation;
-import be.ac.ua.ansymo.cheopsj.model.famix.FamixLocalVariable;
 import be.ac.ua.ansymo.cheopsj.model.famix.FamixMethod;
+import ch.uzh.ifi.seal.changedistiller.model.entities.SourceCodeEntity;
 
 /**
  * @author quinten
@@ -94,13 +89,19 @@ public class MethodInvocationRecorder extends StatementRecorder {
 			}
 
 		}*/
+		Expression expr = node.getExpression();
+		if(expr instanceof QualifiedName){
+			calledMethodName = ((QualifiedName)expr).getFullyQualifiedName();
+			calledMethodName += "."+node.getName().getIdentifier();
+		}else{
+			calledMethodName = invokedby.getBelongsToClass().getUniqueName() + '.' + node.getName().getIdentifier();
+		}
 		
-		calledMethodName = node.getName().getIdentifier();
-		if(manager.famixMethodWithNameExists(calledMethodName)){
+		if(manager.famixMethodExists(calledMethodName)){
 			calledMethodCandidates = manager.getFamixMethodsWithName(calledMethodName);
 		}else{
 			FamixMethod calledmethod = new FamixMethod();
-			calledmethod.setUniqueName(invokedby.getBelongsToClass().getUniqueName() + '.' + calledMethodName);
+			calledmethod.setUniqueName(calledMethodName);
 			calledmethod.setDummy(true);
 			manager.addFamixElement(calledmethod);
 			calledMethodCandidates.add(calledmethod);

@@ -94,7 +94,8 @@ public class ClassAndPackageRemovalTest {
 	public void test2(){
 		//Package removal test without first removing class
 		packrecorder.storeChange(packrem);
-		FamixPackage pack = (FamixPackage) packrem.getChangeSubject();		
+		FamixPackage pack = (FamixPackage) packrem.getChangeSubject();
+		pack = manager.getFamixPackage(pack.getUniqueName());
 		FamixClass clazz = (FamixClass) pack.getClasses().toArray()[0];
 		
 		classrem = managerChange.getLatestRemoval(clazz);

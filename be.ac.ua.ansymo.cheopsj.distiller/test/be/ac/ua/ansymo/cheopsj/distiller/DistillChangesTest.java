@@ -49,7 +49,8 @@ public class DistillChangesTest {
 	private SVNClientManager clientManager;
 
 	@Before
-	public void setUp() throws Exception {		
+	public void setUp() throws Exception {	
+		ModelManager.getInstance().clearModel();
 		IJavaProject newProject = JavaProjectHelper.createJavaProject("TestProject1", "bin");//$NON-NLS-1$//$NON-NLS-2$
 		project  = newProject.getProject();
 		work_dir = project.getLocation().toFile();
@@ -82,7 +83,7 @@ public class DistillChangesTest {
 		//project has to be deleted using eclipse interface else trouble
 		project.delete(true, null);
 		deleteFile(rep_dir);
-		ModelManager.getInstance().clearModel();
+		//ModelManager.getInstance().clearModel();
 	}
 
 	/**
@@ -517,8 +518,8 @@ public class DistillChangesTest {
 		check(changes, "Addition", "package1.Main.shared", "First commit", "Attribute");
 		check(changes, "Addition", "package1.Main.main", "First commit", "Method");
 		check(changes, "Addition", "package1.Main.stupidMethod", "First commit", "Method");
-		check(changes, "Addition", "package1.Main.main{println}", "First commit", "Invocation");
-		check(changes, "Addition", "package1.Main.stupidMethod{println}", "First commit", "Invocation");
+		check(changes, "Addition", "package1.Main.main{System.out.println}", "First commit", "Invocation");
+		check(changes, "Addition", "package1.Main.stupidMethod{System.out.println}", "First commit", "Invocation");
 		assertEquals(0, changes.size());
 	}
 	
@@ -528,9 +529,9 @@ public class DistillChangesTest {
 	 * 
 	 **/
 	private void checkSecondRevision(List<Change> changes) {
-		check(changes, "Removal", "package1.Main.shared : int", "Second commit", "Attribute");
+		check(changes, "Removal", "package1.Main.shared", "Second commit", "Attribute");
 		// FIXME: fix this bug: removing invocations in a new method have no intent.
-		check(changes, "Removal", "package1.Main.stupidMethod{println}", "", "Invocation");
+		check(changes, "Removal", "package1.Main.stupidMethod{System.out.println}", "", "Invocation");
 		check(changes, "Removal", "package1.Main.stupidMethod", "Second commit", "Method");
 		check(changes, "Addition", "package1.Main.run", "Second commit", "Method");
 		// FIXME: fix this bug: adding invocations of a new method have no intent.

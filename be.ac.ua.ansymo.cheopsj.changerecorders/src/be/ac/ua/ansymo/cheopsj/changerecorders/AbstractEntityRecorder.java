@@ -80,6 +80,7 @@ public abstract class AbstractEntityRecorder {
 		for (Change dependee : dependees) {
 			if (dependee instanceof Add) {
 				Subject changesubject = ((AtomicChange) dependee).getChangeSubject();
+				changesubject = manager.getFamixEntity(changesubject.getId());
 				Change latestChange = managerChange.getLatestChange(changesubject);
 						
 				if (latestChange instanceof Add) {

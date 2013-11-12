@@ -114,6 +114,7 @@ public class SessionImpl implements ISession {
         assertSessionIsOpen();
 
         fHibernateSession.save(saveableObject);
+        
     }
 
     /**

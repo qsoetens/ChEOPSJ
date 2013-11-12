@@ -445,4 +445,18 @@ public class ModelManager implements Serializable{
 			return vars.get(0);
 	}
 
+	public Subject getFamixEntity(Long id) {
+		List<Subject> vars = new ArrayList<Subject>();
+		try {
+			ISession lSession = SessionHandler.getHandler().getCurrentSession();
+			vars = lSession.query("from Subject as var where var.id='"+id+"'", Subject.class);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		if(vars.isEmpty())
+			return null;
+		else
+			return vars.get(0);
+	}
+
 }

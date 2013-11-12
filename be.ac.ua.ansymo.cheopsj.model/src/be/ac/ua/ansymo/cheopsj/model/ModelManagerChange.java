@@ -99,21 +99,48 @@ public class ModelManagerChange {
 	 * @return a string containing the counted changes
 	 */
 	public String getSummary() {
+		return 	getChangeCount() + " changes; " +
+				getAddCount() + " additions and " + 
+				getRemoveCount() + " removals";
+	}
+	
+	
+	public int getChangeCount() {
 		int changeCount = 0;
-		int addCount = 0;
-		int removeCount = 0;
-		
 		try {
 			ISession lSession = SessionHandler.getHandler().getCurrentSession();
 			changeCount = lSession.query("select count(*) from Change");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return changeCount;
+	}
+	
+	public int getAddCount() {
+		int addCount = 0;
+		try {
+			ISession lSession = SessionHandler.getHandler().getCurrentSession();
 			addCount = lSession.query("select count(*) from Add");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return addCount;
+	}
+	
+	public int getRemoveCount() {
+		int removeCount = 0;
+		try {
+			ISession lSession = SessionHandler.getHandler().getCurrentSession();
 			removeCount = lSession.query("select count(*) from Remove");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
-		return changeCount + " changes; " + addCount + " additions and " + removeCount + " removals";
+		return removeCount;
 	}
+	
 	
 	public Change getLatestChange(Subject sub){
 		List<AtomicChange> changes = null;
@@ -160,6 +187,22 @@ public class ModelManagerChange {
 					 + " where subject.id =" + sub.getId()
 					 +" order by change.timeStamp desc"
 					 ,Remove.class);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		if(changes == null || changes.isEmpty())
+			return null;
+		else
+			return changes.get(0);
+	}
+
+	public AtomicChange getLatestChange() {
+		List<AtomicChange> changes = null;
+		try {
+			ISession lSession = SessionHandler.getHandler().getCurrentSession();
+			 changes = lSession.query(
+					 "select change from AtomicChange as change order by change.timeStamp desc"
+					 ,AtomicChange.class);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

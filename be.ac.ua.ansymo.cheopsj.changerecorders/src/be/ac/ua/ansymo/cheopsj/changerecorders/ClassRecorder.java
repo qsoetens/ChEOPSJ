@@ -10,8 +10,6 @@
  ******************************************************************************/
 package be.ac.ua.ansymo.cheopsj.changerecorders;
 
-import java.util.Collection;
-
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IPackageFragment;
@@ -21,25 +19,20 @@ import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.PackageDeclaration;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
-import ch.uzh.ifi.seal.changedistiller.model.entities.SourceCodeEntity;
 
-import be.ac.ua.ansymo.cheopsj.model.ModelManager;
-import be.ac.ua.ansymo.cheopsj.model.ModelManagerChange;
 import be.ac.ua.ansymo.cheopsj.model.changes.Add;
 import be.ac.ua.ansymo.cheopsj.model.changes.AtomicChange;
-import be.ac.ua.ansymo.cheopsj.model.changes.Change;
-import be.ac.ua.ansymo.cheopsj.model.changes.Remove;
-import be.ac.ua.ansymo.cheopsj.model.changes.Subject;
 import be.ac.ua.ansymo.cheopsj.model.famix.FamixClass;
 import be.ac.ua.ansymo.cheopsj.model.famix.FamixEntity;
 import be.ac.ua.ansymo.cheopsj.model.famix.FamixPackage;
+import ch.uzh.ifi.seal.changedistiller.model.entities.SourceCodeEntity;
 
 //TODO need to fix inheritance relationships and links to interfaces
 public class ClassRecorder extends AbstractEntityRecorder {
 	private FamixClass famixClass;
 	private FamixEntity parent;
 	
-	private String uniqueName;
+	private String uniqueName = "";
 	private int flags;
 	private String name = "";
 
@@ -50,6 +43,9 @@ public class ClassRecorder extends AbstractEntityRecorder {
 	public ClassRecorder(FamixClass element){
 		famixClass = element;
 		parent = element.getBelongsToPackage();
+		if(parent == null)
+			parent = element.getBelongsToClass();
+		
 		uniqueName = element.getUniqueName();
 		name = element.getName();
 		flags = element.getFlags();
@@ -92,10 +88,6 @@ public class ClassRecorder extends AbstractEntityRecorder {
 
 		//set the flags
 		flags = declaration.getFlags();
-		
-//		String superclassname = declaration.getSuperclass().getFullyQualifiedName();
-//		System.out.println(superclassname);
-		
 	}
 
 	public ClassRecorder(SourceCodeEntity entity, SourceCodeEntity parentEntity) {
@@ -214,13 +206,20 @@ public class ClassRecorder extends AbstractEntityRecorder {
 	private void setClassFlagsAndParent(FamixClass famixClass) {
 		famixClass.setFlags(flags);
 
-		if (parent != null && parent instanceof FamixPackage) {
-			famixClass.setBelongsToPackage((FamixPackage) parent);
-			((FamixPackage) parent).addClass(famixClass);
-		} else if (parent != null && parent instanceof FamixClass) {
-			famixClass.setBelongsToClass((FamixClass) parent);
-			((FamixClass) parent).addNestedClass(famixClass);
-		}		
+		if(parent instanceof FamixClass){
+			parent = manager.getFamixClass(parent.getUniqueName());
+			if(parent != null){
+				famixClass.setBelongsToClass((FamixClass) parent);
+				((FamixClass) parent).addNestedClass(famixClass);
+			}
+		}else if(parent instanceof FamixPackage){
+			parent = manager.getFamixPackage(parent.getUniqueName());
+			if(parent != null){
+				famixClass.setBelongsToPackage((FamixPackage) parent);
+				((FamixPackage) parent).addClass(famixClass);
+			}
+		}
+		
 	}
 
 	/*

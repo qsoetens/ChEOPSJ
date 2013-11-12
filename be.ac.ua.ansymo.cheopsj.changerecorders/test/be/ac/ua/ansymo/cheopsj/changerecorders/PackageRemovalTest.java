@@ -98,6 +98,9 @@ public class PackageRemovalTest {
 		recorder1.storeChange(rem);
 		
 		assertEquals(7, managerChange.getChanges().size());
+		assertEquals(7, managerChange.getChangeCount());
+		assertEquals(5, managerChange.getAddCount());
+		assertEquals(2, managerChange.getRemoveCount());
 		assertTrue(rem.getStructuralDependencies().contains(childrem));
 	}
 

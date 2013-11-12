@@ -107,9 +107,9 @@ public class MethodRecorder extends AbstractEntityRecorder {
 			uniquename = uniquename.substring(0, i);
 			
 			int j = uniquename.lastIndexOf('.');
-			name = uniquename.substring(j,i);
+			name = uniquename.substring(j+1,i);
 			
-			if(parentEntity.getType().isType()){
+			if(parentEntity.getType().isClass()){
 				String parentUniqueName = parentEntity.getUniqueName();
 				parent = manager.getFamixClass(parentUniqueName);
 			}
