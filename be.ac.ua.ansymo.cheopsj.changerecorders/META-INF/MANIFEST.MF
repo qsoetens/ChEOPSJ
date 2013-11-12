@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Changerecorders
 Bundle-SymbolicName: be.ac.ua.ansymo.cheopsj.changerecorders
-Bundle-Version: 1.0.1
+Bundle-Version: 1.0.2
 Export-Package: be.ac.ua.ansymo.cheopsj.changerecorders
 Require-Bundle: be.ac.ua.ansymo.cheopsj.model,
  org.eclipse.jdt.core,

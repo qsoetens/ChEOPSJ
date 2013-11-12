@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Testtool
 Bundle-SymbolicName: be.ac.ua.ansymo.cheopsj.testtool;singleton:=true
-Bundle-Version: 1.0.1
+Bundle-Version: 1.0.2
 Bundle-Activator: be.ac.ua.ansymo.cheopsj.testtool.Activator
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
