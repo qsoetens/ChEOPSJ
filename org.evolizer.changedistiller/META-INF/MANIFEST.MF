@@ -69,3 +69,4 @@ Export-Package: ch.uzh.ifi.seal.changedistiller,
  org.eclipse.jdt.internal.compiler.util,
  org.eclipse.jdt.internal.core.util
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-Vendor: s.e.a.l. - University of Zurich, Switzerland

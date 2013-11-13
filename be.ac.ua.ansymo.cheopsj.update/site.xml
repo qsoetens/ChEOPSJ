@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <feature url="features/be.ac.ua.ansymo.cheopsj_1.0.1.jar" id="be.ac.ua.ansymo.cheopsj" version="1.0.1"/>
+   <description name="ChEOPSJ" url="http://win.ua.ac.be/~qsoeten/other/cheopsj/update/">
+      Software is an ever-changing entity and frequently executed unit tests are the primary means to increase the confidence that the changed system continues to work as expected. Executing an entire test suite however can take a significant amount of time; much longer than developers are willing to wait before tackling the next change action. Our tool prototype ChEOPSJ may alleviate this problem by adopting a change-centric approach as it sits in the back of Eclipse and captures all changes made in the main editor while the developer is programming. The changes and the dependencies between them are analyzed to deduce which unit tests are relevant for a selected sequence of changes.
+   </description>
+   <feature url="features/be.ac.ua.ansymo.cheopsj_1.0.2.jar" id="be.ac.ua.ansymo.cheopsj" version="1.0.2">
+      <category name="ChEOPSJ"/>
+   </feature>
+   <category-def name="ChEOPSJ" label="ChEOPSJ"/>
 </site>

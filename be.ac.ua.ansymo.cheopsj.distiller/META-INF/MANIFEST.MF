@@ -19,3 +19,4 @@ Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ClassPath: lib/svnkit.jar,
  .
+Bundle-Vendor: Ansymo - University of Antwerp

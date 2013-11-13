@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Ui
+Bundle-Name: be.ac.ua.ansymo.cheopsj.model.ui
 Bundle-SymbolicName: be.ac.ua.ansymo.cheopsj.model.ui;singleton:=true
 Bundle-Version: 1.0.2
 Bundle-Activator: be.ac.ua.ansymo.cheopsj.model.ui.Activator
@@ -16,3 +16,4 @@ Require-Bundle: org.eclipse.ui,
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: be.ac.ua.ansymo.cheopsj.model.ui.view.changeinspector
+Bundle-Vendor: Ansymo - University of Antwerp
