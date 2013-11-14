@@ -16,6 +16,8 @@
  */
 package hibernate;
 
+import hibernate.session.SessionHandler;
+
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -58,6 +60,7 @@ public class HibernatePlugin extends Plugin {
     @Override
     public void stop(BundleContext context) throws Exception {
         HibernatePlugin.sPlugin = null;
+        SessionHandler.getHandler().cleanupHibernateSessions();
         super.stop(context);
     }
 

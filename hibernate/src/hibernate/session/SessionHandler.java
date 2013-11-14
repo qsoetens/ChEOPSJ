@@ -247,7 +247,7 @@ public final class SessionHandler {
             configuration.setProperty("hibernate.current_session_context_class", "thread");
             //configuration.setProperty("hibernate.current_session_context_class", "managed");
 
-            configuration.setProperty("hibernate.show_sql", "true");
+            configuration.setProperty("hibernate.show_sql", "false");
             //configuration.setProperty("hibernate.hbm2ddl.auto", "create-drop");
             configuration.setProperty("hibernate.hbm2ddl.auto", "update");
 

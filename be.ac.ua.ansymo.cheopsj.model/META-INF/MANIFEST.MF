@@ -8,15 +8,11 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.jdt.ui,
  org.eclipse.jdt.core,
- org.junit
+ org.junit,
+ hibernate;bundle-version="2.0.0"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: be.ac.ua.ansymo.cheopsj.model,
  be.ac.ua.ansymo.cheopsj.model.changes,
  be.ac.ua.ansymo.cheopsj.model.famix
-Import-Package: hibernate.model.api,
- hibernate.session,
- hibernate.session.api,
- javax.persistence,
- org.hibernate
 Bundle-Vendor: Ansymo - University of Antwerp

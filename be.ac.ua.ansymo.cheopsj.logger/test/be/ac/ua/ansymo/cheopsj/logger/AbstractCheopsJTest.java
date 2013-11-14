@@ -10,8 +10,6 @@
  ******************************************************************************/
 package be.ac.ua.ansymo.cheopsj.logger;
 
-import hibernate.session.SessionHandler;
-
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
@@ -79,7 +77,6 @@ public class AbstractCheopsJTest {
 		// Add additional teardown code here.
 		//manager.clearModel();
 		JavaProjectHelper.delete(fJProject1);
-		SessionHandler.getHandler().cleanupHibernateSessions();
 		// getJavaPage().hideView(testView);
 		// getJavaPage().hideView(zestView);
 	}
