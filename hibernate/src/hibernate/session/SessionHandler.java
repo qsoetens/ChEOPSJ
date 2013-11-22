@@ -323,4 +323,16 @@ public final class SessionHandler {
             return isModelEntity(superClass);
         }
     }
+    
+    public void removeCurrentSession(){
+    	try {
+			String dbUrl = DBProperties.dbUrl;
+			ISession session = getCurrentSession(dbUrl);
+			session.close();
+			fSessionMap.remove(dbUrl);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    }
 }
