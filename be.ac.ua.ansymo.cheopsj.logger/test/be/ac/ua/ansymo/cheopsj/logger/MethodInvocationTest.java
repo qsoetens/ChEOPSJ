@@ -11,24 +11,12 @@
 
 package be.ac.ua.ansymo.cheopsj.logger;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-
-import java.util.List;
-
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IType;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
-import be.ac.ua.ansymo.cheopsj.model.changes.Add;
-import be.ac.ua.ansymo.cheopsj.model.changes.AtomicChange;
-import be.ac.ua.ansymo.cheopsj.model.changes.Change;
-import be.ac.ua.ansymo.cheopsj.model.famix.FamixInvocation;
-import be.ac.ua.ansymo.cheopsj.model.famix.FamixMethod;
 
 
 

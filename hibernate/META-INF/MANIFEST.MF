@@ -133,6 +133,5 @@ Export-Package: hibernate.model.api,
  org.hibernate.type;x-internal:=true,
  org.hibernate.usertype;x-internal:=true,
  org.hibernate.util;x-internal:=true
-Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Require-Bundle: org.eclipse.core.resources;bundle-version="3.8.100",
  org.eclipse.core.runtime;bundle-version="3.9.0"
