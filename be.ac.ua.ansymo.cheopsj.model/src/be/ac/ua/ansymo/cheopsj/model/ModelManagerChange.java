@@ -66,6 +66,8 @@ public class ModelManagerChange {
 
 			lSession.flush();
 			lSession.clear();
+			
+			lSession.endTransaction();
 
 			//alert listeners that a change was added
 			getModelManagerListeners().fireChangeAdded(change);
@@ -74,16 +76,9 @@ public class ModelManagerChange {
 			if (lSession != null) {
 				try {
 					lSession.rollbackTransaction();
+					SessionHandler.getHandler().removeCurrentSession();
 				} catch (Exception e1) {
 					e1.printStackTrace();
-				}
-			}
-		} finally {
-			if (lSession != null) {
-				try {
-					lSession.endTransaction();
-				} catch (Exception e) {
-					e.printStackTrace();
 				}
 			}
 		}

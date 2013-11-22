@@ -191,6 +191,8 @@ public class SessionImpl implements ISession {
         assertTransactionIsNotActive();
 
         fTransaction = fHibernateSession.beginTransaction();
+        
+        ensureTransactionIsActive();
     }
 
     private void ensureTransactionIsActive() throws Exception {
