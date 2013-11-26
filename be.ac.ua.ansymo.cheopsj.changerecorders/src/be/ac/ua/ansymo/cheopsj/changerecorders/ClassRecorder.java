@@ -10,8 +10,6 @@
  ******************************************************************************/
 package be.ac.ua.ansymo.cheopsj.changerecorders;
 
-import java.util.Collection;
-
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IPackageFragment;
@@ -21,33 +19,36 @@ import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.PackageDeclaration;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
-import ch.uzh.ifi.seal.changedistiller.model.entities.SourceCodeEntity;
 
-import be.ac.ua.ansymo.cheopsj.model.ModelManager;
-import be.ac.ua.ansymo.cheopsj.model.ModelManagerChange;
 import be.ac.ua.ansymo.cheopsj.model.changes.Add;
 import be.ac.ua.ansymo.cheopsj.model.changes.AtomicChange;
-import be.ac.ua.ansymo.cheopsj.model.changes.Change;
-import be.ac.ua.ansymo.cheopsj.model.changes.Remove;
-import be.ac.ua.ansymo.cheopsj.model.changes.Subject;
 import be.ac.ua.ansymo.cheopsj.model.famix.FamixClass;
 import be.ac.ua.ansymo.cheopsj.model.famix.FamixEntity;
 import be.ac.ua.ansymo.cheopsj.model.famix.FamixPackage;
+import ch.uzh.ifi.seal.changedistiller.model.entities.SourceCodeEntity;
 
 //TODO need to fix inheritance relationships and links to interfaces
 public class ClassRecorder extends AbstractEntityRecorder {
 	private FamixClass famixClass;
 	private FamixEntity parent;
-	private ModelManager manager;
-	private ModelManagerChange managerChange;
-	private String uniqueName;
+	
+	private String uniqueName = "";
 	private int flags;
 	private String name = "";
 
 	private ClassRecorder(){
 		//get manager instance
-		manager = ModelManager.getInstance();
-		managerChange = ModelManagerChange.getInstance();
+	}
+	
+	public ClassRecorder(FamixClass element){
+		famixClass = element;
+		parent = element.getBelongsToPackage();
+		if(parent == null)
+			parent = element.getBelongsToClass();
+		
+		uniqueName = element.getUniqueName();
+		name = element.getName();
+		flags = element.getFlags();
 	}
 
 	public ClassRecorder(IType element) {
@@ -87,10 +88,6 @@ public class ClassRecorder extends AbstractEntityRecorder {
 
 		//set the flags
 		flags = declaration.getFlags();
-		
-//		String superclassname = declaration.getSuperclass().getFullyQualifiedName();
-//		System.out.println(superclassname);
-		
 	}
 
 	public ClassRecorder(SourceCodeEntity entity, SourceCodeEntity parentEntity) {
@@ -199,7 +196,7 @@ public class ClassRecorder extends AbstractEntityRecorder {
 				//If it was a dummy, undummy it!
 				setClassFlagsAndParent(famixClass);
 				
-				famixClass.setIsDummy(false);
+				famixClass.setDummy(false);
 			}else{
 				parent = famixClass.getBelongsToPackage();
 			}
@@ -209,13 +206,20 @@ public class ClassRecorder extends AbstractEntityRecorder {
 	private void setClassFlagsAndParent(FamixClass famixClass) {
 		famixClass.setFlags(flags);
 
-		if (parent != null && parent instanceof FamixPackage) {
-			famixClass.setBelongsToPackage((FamixPackage) parent);
-			((FamixPackage) parent).addClass(famixClass);
-		} else if (parent != null && parent instanceof FamixClass) {
-			famixClass.setBelongsToClass((FamixClass) parent);
-			((FamixClass) parent).addNestedClass(famixClass);
-		}		
+		if(parent instanceof FamixClass){
+			parent = manager.getFamixClass(parent.getUniqueName());
+			if(parent != null){
+				famixClass.setBelongsToClass((FamixClass) parent);
+				((FamixClass) parent).addNestedClass(famixClass);
+			}
+		}else if(parent instanceof FamixPackage){
+			parent = manager.getFamixPackage(parent.getUniqueName());
+			if(parent != null){
+				famixClass.setBelongsToPackage((FamixPackage) parent);
+				((FamixPackage) parent).addClass(famixClass);
+			}
+		}
+		
 	}
 
 	/*
@@ -227,7 +231,7 @@ public class ClassRecorder extends AbstractEntityRecorder {
 	@Override
 	protected void createAndLinkChange(AtomicChange change) {
 		if(change instanceof Add){
-			Add a = famixClass.getLatestAddition();
+			Add a = managerChange.getLastestAddition(famixClass);
 			if(a != null && a.isDummy()){
 				change = a;
 				change.setDummy(false);
@@ -237,32 +241,8 @@ public class ClassRecorder extends AbstractEntityRecorder {
 		change.setChangeSubject(famixClass);
 		famixClass.addChange(change);
 
-		setStructuralDependencies(change, famixClass, parent, this);
+		setStructuralDependencies(change, famixClass, parent);
 		managerChange.addChange(change);
-	}
-
-	protected void removeAllContainedWithin(AtomicChange change, AtomicChange additionChange) {
-		Collection<Change> dependees = additionChange.getStructuralDependees();
-		for (Change dependee : dependees) {
-			if (dependee instanceof Add) {
-				Subject changesubject = ((AtomicChange) dependee).getChangeSubject();
-				Change latestChange = changesubject.getLatestChange();
-				if (latestChange instanceof Add) {
-					// only remove if it wasn't removed yet
-
-					Remove removal = new Remove();
-					removal.setChangeSubject(changesubject);
-					changesubject.addChange(removal);
-					setStructuralDependencies(removal, removal.getChangeSubject(), parent, this);
-
-					change.addStructuralDependency(removal);
-
-					managerChange.addChange(removal);
-				} else if (latestChange instanceof Remove) {
-					change.addStructuralDependency(latestChange);
-				}
-			}
-		}
 	}
 
 }

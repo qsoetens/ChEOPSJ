@@ -10,8 +10,6 @@
  ******************************************************************************/
 package be.ac.ua.ansymo.cheopsj.changerecorders;
 
-import java.util.Collection;
-
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IType;
@@ -20,33 +18,23 @@ import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
-import ch.uzh.ifi.seal.changedistiller.model.entities.SourceCodeEntity;
 
-import be.ac.ua.ansymo.cheopsj.model.ModelManager;
-import be.ac.ua.ansymo.cheopsj.model.ModelManagerChange;
-import be.ac.ua.ansymo.cheopsj.model.changes.Add;
 import be.ac.ua.ansymo.cheopsj.model.changes.AtomicChange;
-import be.ac.ua.ansymo.cheopsj.model.changes.Change;
-import be.ac.ua.ansymo.cheopsj.model.changes.Remove;
-import be.ac.ua.ansymo.cheopsj.model.changes.Subject;
 import be.ac.ua.ansymo.cheopsj.model.famix.FamixClass;
 import be.ac.ua.ansymo.cheopsj.model.famix.FamixMethod;
+import ch.uzh.ifi.seal.changedistiller.model.entities.SourceCodeEntity;
 
 
 
 public class MethodRecorder extends AbstractEntityRecorder {
 	private FamixMethod famixMethod;
 	private FamixClass parent; // TODO is there something like a nested method inside another method?
-	private ModelManager manager;
-	private ModelManagerChange managerChange;
 	private String uniquename = ""; //TODO need to add parameters to unique naming
 	//TODO need to link method to return type
 	private int flags = 0;
 	private String name = "";
 	
 	private MethodRecorder(){
-		manager = ModelManager.getInstance();
-		managerChange = ModelManagerChange.getInstance();
 	}
 
 	public MethodRecorder(IMethod method) {
@@ -111,9 +99,9 @@ public class MethodRecorder extends AbstractEntityRecorder {
 			uniquename = uniquename.substring(0, i);
 			
 			int j = uniquename.lastIndexOf('.');
-			name = uniquename.substring(j,i);
+			name = uniquename.substring(j+1,i);
 			
-			if(parentEntity.getType().isType()){
+			if(parentEntity.getType().isClass()){
 				String parentUniqueName = parentEntity.getUniqueName();
 				parent = manager.getFamixClass(parentUniqueName);
 			}
@@ -142,7 +130,7 @@ public class MethodRecorder extends AbstractEntityRecorder {
 			if (famixMethod.isDummy()) {
 				setMethodFlagsAndParent();
 				
-				famixMethod.setIsDummy(false);
+				famixMethod.setDummy(false);
 			} else {
 				parent = famixMethod.getBelongsToClass();
 			}
@@ -151,7 +139,7 @@ public class MethodRecorder extends AbstractEntityRecorder {
 
 	private void setMethodFlagsAndParent() {
 		if (uniquename.contains("test")) {
-			famixMethod.setIsTest(true);
+			famixMethod.setTest(true);
 		}
 		
 		famixMethod.setFlags(flags);
@@ -182,30 +170,8 @@ public class MethodRecorder extends AbstractEntityRecorder {
 		change.setChangeSubject(famixMethod);
 		famixMethod.addChange(change);
 
-		setStructuralDependencies(change, famixMethod, parent, this);
+		setStructuralDependencies(change, famixMethod, parent);
 		managerChange.addChange(change);
 	}
 
-	protected void removeAllContainedWithin(AtomicChange change, AtomicChange additionChange) {
-		Collection<Change> dependees = additionChange.getStructuralDependees();
-		for (Change dependee : dependees) {
-			if (dependee instanceof Add) {
-				Subject changesubject = ((AtomicChange) dependee).getChangeSubject();
-				Change latestChange = changesubject.getLatestChange();
-				if (latestChange instanceof Add) {
-					// only remove if it wasn't removed yet
-
-					Remove removal = new Remove();
-					removal.setChangeSubject(changesubject);
-					setStructuralDependencies(removal, removal.getChangeSubject(), parent, this);
-
-					change.addStructuralDependency(removal);
-
-					managerChange.addChange(removal);
-				} else if (latestChange instanceof Remove) {
-					change.addStructuralDependency(latestChange);
-				}
-			}
-		}
-	}
 }

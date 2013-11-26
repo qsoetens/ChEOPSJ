@@ -1,4 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <feature url="features/be.ac.ua.ansymo.cheopsj_1.0.1.jar" id="be.ac.ua.ansymo.cheopsj" version="1.0.1"/>
+   <feature url="features/be.ac.ua.ansymo.cheopsj.features.core_1.0.2.jar" id="be.ac.ua.ansymo.cheopsj.features.core" version="1.0.2">
+      <category name="ChEOPSJ"/>
+   </feature>
+   <feature url="features/be.ac.ua.ansymo.cheopsj.features.distiller_1.0.2.jar" id="be.ac.ua.ansymo.cheopsj.features.distiller" version="1.0.2">
+      <category name="ChEOPSJ"/>
+   </feature>
+   <feature url="features/be.ac.ua.ansymo.cheopsj.features.ui_1.0.2.jar" id="be.ac.ua.ansymo.cheopsj.features.ui" version="1.0.2">
+      <category name="ChEOPSJ"/>
+   </feature>
+   <feature url="features/be.ac.ua.ansymo.cheopsj.features.testselection_1.0.2.jar" id="be.ac.ua.ansymo.cheopsj.features.testselection" version="1.0.2">
+      <category name="ChEOPSJ_Applications"/>
+   </feature>
+   <category-def name="ChEOPSJ" label="ChEOPSJ"/>
+   <category-def name="ChEOPSJ_Applications" label="ChEOPS Applications"/>
 </site>

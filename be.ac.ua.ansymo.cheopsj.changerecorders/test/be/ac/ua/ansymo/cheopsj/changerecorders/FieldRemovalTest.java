@@ -50,6 +50,7 @@ public class FieldRemovalTest {
 	@Before
 	public void setUp(){
 		manager = ModelManager.getInstance();
+		manager.clearModel();
 		managerChange = ModelManagerChange.getInstance();
 		
 		AST ast2 = AST.newAST(AST.JLS3);

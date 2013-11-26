@@ -13,7 +13,14 @@ package be.ac.ua.ansymo.cheopsj.model.famix;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.Transient;
 
+@Entity
 public class FamixInvocation extends FamixAssociation {
 
 	/**
@@ -27,7 +34,7 @@ public class FamixInvocation extends FamixAssociation {
 	private FamixBehaviouralEntity invokedBy = null;
 
 	private List<FamixBehaviouralEntity> candidates = new ArrayList<FamixBehaviouralEntity>();
-	private FamixBehaviouralEntity candidate = null;
+	//private FamixBehaviouralEntity candidate = null;
 
 	/**
 	 * Getter of the property <tt>invokedBy</tt>
@@ -35,7 +42,7 @@ public class FamixInvocation extends FamixAssociation {
 	 * @return Returns the invokedBy.
 	 * 
 	 */
-
+	@ManyToOne(targetEntity=be.ac.ua.ansymo.cheopsj.model.famix.FamixBehaviouralEntity.class)
 	public FamixBehaviouralEntity getInvokedBy() {
 		return invokedBy;
 	}
@@ -51,23 +58,33 @@ public class FamixInvocation extends FamixAssociation {
 		this.invokedBy = invokedBy;
 	}
 
+	@ManyToMany(targetEntity=be.ac.ua.ansymo.cheopsj.model.famix.FamixBehaviouralEntity.class)
+	@JoinTable(name = "InvocationCandidates",
+		joinColumns = @JoinColumn (name="invocation_id"),
+		inverseJoinColumns = @JoinColumn(name="candidate_id"))
 	public List<FamixBehaviouralEntity> getCandidates() {
 		return candidates;
+	}
+
+	public void setCandidates(List<FamixBehaviouralEntity> candidates) {
+		this.candidates = candidates;
 	}
 
 	public void addCandidate(FamixBehaviouralEntity candidate) {
 		this.candidates.add(candidate);
 	}
 	
-	public FamixBehaviouralEntity getCandidate() {
-		return candidate;
-	}
-
-	public void setCandidate(FamixBehaviouralEntity candidate) {
-		this.candidate = candidate;
-	}
+//	@Transient
+//	public FamixBehaviouralEntity getCandidate() {
+//		return candidate;
+//	}
+//
+//	public void setCandidate(FamixBehaviouralEntity candidate) {
+//		this.candidate = candidate;
+//	}
 
 	@Override
+	@Transient
 	public String getFamixType() {
 		return "Invocation";
 	}
@@ -82,8 +99,8 @@ public class FamixInvocation extends FamixAssociation {
 		boolean result = false;
 		if (fe instanceof FamixInvocation) {
 			result = invokedBy.equals(((FamixInvocation) fe).getInvokedBy());
-			//result = result && candidates.equals(((FamixInvocation) fe).getCandidates());
-			result = result && candidate.equals(((FamixInvocation) fe).getCandidate());
+			result = result && candidates.equals(((FamixInvocation) fe).getCandidates());
+			//result = result && candidate.equals(((FamixInvocation) fe).getCandidate());
 		}
 
 		return result;

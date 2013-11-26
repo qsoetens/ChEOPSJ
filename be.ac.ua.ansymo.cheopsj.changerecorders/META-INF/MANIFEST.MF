@@ -1,8 +1,8 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Changerecorders
+Bundle-Name: be.ac.ua.ansymo.cheopsj.changerecorders
 Bundle-SymbolicName: be.ac.ua.ansymo.cheopsj.changerecorders
-Bundle-Version: 1.0.1
+Bundle-Version: 1.0.2
 Export-Package: be.ac.ua.ansymo.cheopsj.changerecorders
 Require-Bundle: be.ac.ua.ansymo.cheopsj.model,
  org.eclipse.jdt.core,
@@ -14,3 +14,4 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ClassPath: .,
  lib/commons-collections-3.2.1.jar,
  lib/mockito-all-1.9.5-rc1.jar
+Bundle-Vendor: Ansymo - University of Antwerp

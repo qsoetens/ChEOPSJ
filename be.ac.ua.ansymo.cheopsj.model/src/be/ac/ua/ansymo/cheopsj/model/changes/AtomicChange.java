@@ -10,9 +10,14 @@
  ******************************************************************************/
 package be.ac.ua.ansymo.cheopsj.model.changes;
 
+import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
+import javax.persistence.Transient;
+
 import be.ac.ua.ansymo.cheopsj.model.famix.FamixAssociation;
 import be.ac.ua.ansymo.cheopsj.model.famix.FamixEntity;
 
+@Entity
 public class AtomicChange extends Change {
 
 	/**
@@ -35,6 +40,7 @@ public class AtomicChange extends Change {
 	 * 
 	 * @return Returns the changeSubject.
 	 */
+	@ManyToOne(targetEntity=be.ac.ua.ansymo.cheopsj.model.changes.Subject.class)
 	public Subject getChangeSubject() {
 		return changeSubject;
 	}
@@ -49,6 +55,7 @@ public class AtomicChange extends Change {
 		this.changeSubject = changeSubject;
 	}
 
+	@Transient
 	@Override
 	public String getFamixType() {
 		if (changeSubject != null)
@@ -57,6 +64,7 @@ public class AtomicChange extends Change {
 			return "";
 	}
 
+	@Transient
 	@Override
 	public String getName() {
 		if (changeSubject != null && changeSubject instanceof FamixEntity)
@@ -65,5 +73,5 @@ public class AtomicChange extends Change {
 			return ((FamixAssociation) changeSubject).getStringRepresentation();
 		else
 			return "";
-	}
+	}	
 }

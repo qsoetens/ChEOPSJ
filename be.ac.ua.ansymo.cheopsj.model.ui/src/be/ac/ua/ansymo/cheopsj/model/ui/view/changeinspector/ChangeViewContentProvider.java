@@ -91,4 +91,11 @@ public class ChangeViewContentProvider implements IStructuredContentProvider,
 		return managerChange.getSummary();
 	}
 
+	@Override
+	public void refresh() {
+		viewer.refresh();
+		view.updateSummaryBreakdown();
+	}
+
+	
 }

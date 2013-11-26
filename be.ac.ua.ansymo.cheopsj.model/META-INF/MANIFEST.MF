@@ -1,16 +1,18 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Model
-Bundle-SymbolicName: be.ac.ua.ansymo.cheopsj.model
-Bundle-Version: 1.0.1
+Bundle-Name: be.ac.ua.ansymo.cheopsj.model
+Bundle-SymbolicName: be.ac.ua.ansymo.cheopsj.model;singleton:=true
+Bundle-Version: 1.0.2
 Bundle-Activator: be.ac.ua.ansymo.cheopsj.model.Activator
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.jdt.ui,
  org.eclipse.jdt.core,
- org.junit
+ org.junit,
+ hibernate;bundle-version="2.0.0"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: be.ac.ua.ansymo.cheopsj.model,
  be.ac.ua.ansymo.cheopsj.model.changes,
  be.ac.ua.ansymo.cheopsj.model.famix
+Bundle-Vendor: Ansymo - University of Antwerp

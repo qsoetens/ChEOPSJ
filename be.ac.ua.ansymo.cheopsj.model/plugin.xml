@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="hibernate.modelProvider">
+      <model
+            class="be.ac.ua.ansymo.cheopsj.model.changes.ModelProvider"
+            name="be.ac.ua.ansymo.cheopsj.model.changemodel">
+      </model>
+   </extension>
+   <extension
+         point="hibernate.modelProvider">
+      <model
+            class="be.ac.ua.ansymo.cheopsj.model.famix.ModelProvider"
+            name="be.ac.ua.ansymo.cheopsj.model.famixmodel">
+      </model>
+   </extension>
+
+</plugin>

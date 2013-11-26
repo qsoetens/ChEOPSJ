@@ -10,11 +10,16 @@
  ******************************************************************************/
 package be.ac.ua.ansymo.cheopsj.model.famix;
 
+import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
+import javax.persistence.Transient;
+
 import org.eclipse.jdt.core.Flags;
 import org.eclipse.jdt.ui.ISharedImages;
 import org.eclipse.jdt.ui.JavaUI;
 import org.eclipse.swt.graphics.Image;
 
+@Entity
 public class FamixMethod extends FamixBehaviouralEntity {
 
 	/**
@@ -39,7 +44,8 @@ public class FamixMethod extends FamixBehaviouralEntity {
 	 * @return Returns the belongsToClass.
 	 * 
 	 */
-
+	@ManyToOne(
+			targetEntity=be.ac.ua.ansymo.cheopsj.model.famix.FamixClass.class)
 	public FamixClass getBelongsToClass() {
 		return belongsToClass;
 	}
@@ -55,6 +61,7 @@ public class FamixMethod extends FamixBehaviouralEntity {
 		this.belongsToClass = belongsToClass;
 	}
 
+	@Transient
 	public boolean isHasClassScope() {
 		return hasClassScope;
 	}
@@ -63,6 +70,7 @@ public class FamixMethod extends FamixBehaviouralEntity {
 		this.hasClassScope = hasClassScope;
 	}
 
+	@Transient
 	public boolean isAbstract() {
 		return isAbstract;
 	}
@@ -71,6 +79,7 @@ public class FamixMethod extends FamixBehaviouralEntity {
 		this.isAbstract = isAbstract;
 	}
 
+	@Transient
 	public boolean isConstructor() {
 		return isConstructor;
 	}
@@ -79,6 +88,7 @@ public class FamixMethod extends FamixBehaviouralEntity {
 		this.isConstructor = isConstructor;
 	}
 
+	@Transient
 	@Override
 	public String getFamixType() {
 		return "Method";
@@ -89,6 +99,7 @@ public class FamixMethod extends FamixBehaviouralEntity {
 	 * 
 	 * @see be.ac.ua.cheopsj.Model.Famix.FamixEntity#getIcon()
 	 */
+	@Transient
 	@Override
 	public Image getIcon() {
 		Image icon = null;
@@ -108,7 +119,7 @@ public class FamixMethod extends FamixBehaviouralEntity {
 
 	private boolean isTest = false;
 
-	public void setIsTest(boolean b) {
+	public void setTest(boolean b) {
 		this.isTest = b;
 	}
 

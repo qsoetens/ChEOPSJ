@@ -34,7 +34,7 @@ public class FindRelevantTests extends AbstractHandler {
 		List<?> selectedChanges = selection.toList();
 
 		RelevantTestFinder.findTests(selectedChanges);
-		RelevantTestFinder.printRelevantTests();
+		//RelevantTestFinder.printRelevantTests();
 		RelevantTestFinder.runTests();
 		
 		/*try {

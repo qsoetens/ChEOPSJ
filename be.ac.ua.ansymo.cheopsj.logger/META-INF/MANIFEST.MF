@@ -1,8 +1,8 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Logger
+Bundle-Name: be.ac.ua.ansymo.cheopsj.logger
 Bundle-SymbolicName: be.ac.ua.ansymo.cheopsj.logger;singleton:=true
-Bundle-Version: 1.0.1
+Bundle-Version: 1.0.2
 Bundle-Activator: be.ac.ua.ansymo.cheopsj.logger.Activator
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
@@ -20,3 +20,4 @@ Export-Package: be.ac.ua.ansymo.cheopsj.logger,
  be.ac.ua.ansymo.cheopsj.logger.util
 Bundle-ClassPath: lib/commons-collections-3.2.1.jar,
  .
+Bundle-Vendor: Ansymo - University of Antwerp

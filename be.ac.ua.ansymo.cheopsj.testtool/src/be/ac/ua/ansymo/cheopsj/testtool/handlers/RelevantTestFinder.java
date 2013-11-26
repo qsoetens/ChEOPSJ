@@ -35,6 +35,7 @@ import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.junit.launcher.JUnitLaunchShortcut;
 import org.eclipse.jface.viewers.StructuredSelection;
 
+import be.ac.ua.ansymo.cheopsj.model.ModelManagerChange;
 import be.ac.ua.ansymo.cheopsj.model.changes.Add;
 import be.ac.ua.ansymo.cheopsj.model.changes.AtomicChange;
 import be.ac.ua.ansymo.cheopsj.model.changes.Change;
@@ -205,8 +206,8 @@ public class RelevantTestFinder {
 				AtomicChange ach = (AtomicChange) ch;
 				if (ach.getChangeSubject() instanceof FamixInvocation) {
 					FamixInvocation inv = (FamixInvocation) ach.getChangeSubject();
-					if (inv.getCandidate().getUniqueName().equals(calledMethod.getUniqueName()))
-					//if(inv.getCandidates().contains(calledMethod))
+					//if (inv.getCandidate().getUniqueName().equals(calledMethod.getUniqueName()))
+					if(inv.getCandidates().contains(calledMethod))
 						invocations.add((Add) ach);
 				}
 			}
@@ -220,13 +221,15 @@ public class RelevantTestFinder {
 	 */
 	private static AtomicChange findContainingMethodAddition(AtomicChange change) {
 		// Need a better way to navigate through hierarchical dependencies.
+		ModelManagerChange changeManager = ModelManagerChange.getInstance();
+		
 		if (change.getChangeSubject() instanceof FamixMethod) {
-			return change.getChangeSubject().getLatestAddition();
+			return changeManager.getLastestAddition(change.getChangeSubject());
 		}
 
 		if (change.getChangeSubject() instanceof FamixInvocation) {
 			FamixInvocation inv = (FamixInvocation) change.getChangeSubject();
-			return inv.getInvokedBy().getLatestAddition();
+			return changeManager.getLastestAddition(inv.getInvokedBy());
 		}
 
 		List<Change> deps = (List<Change>) change.getStructuralDependencies();

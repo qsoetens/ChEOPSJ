@@ -1,6 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Branding
+Bundle-Name: ChEOPSJ
 Bundle-SymbolicName: be.ac.ua.ansymo.cheopsj.branding
-Bundle-Version: 1.0.1
+Bundle-Version: 1.0.2
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-Vendor: Ansymo - University of Antwerp

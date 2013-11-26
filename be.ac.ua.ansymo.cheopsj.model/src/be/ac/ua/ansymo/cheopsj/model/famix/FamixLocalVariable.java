@@ -10,10 +10,15 @@
  ******************************************************************************/
 package be.ac.ua.ansymo.cheopsj.model.famix;
 
+import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
+import javax.persistence.Transient;
+
 import org.eclipse.jdt.ui.ISharedImages;
 import org.eclipse.jdt.ui.JavaUI;
 import org.eclipse.swt.graphics.Image;
 
+@Entity
 public class FamixLocalVariable extends FamixStructuralEntity {
 
 	/**
@@ -31,7 +36,8 @@ public class FamixLocalVariable extends FamixStructuralEntity {
 	 * @return Returns the famixBehaviouralEntity.
 	 * 
 	 */
-
+	@ManyToOne(
+			targetEntity=be.ac.ua.ansymo.cheopsj.model.famix.FamixBehaviouralEntity.class)
 	public FamixBehaviouralEntity getBelongsToBehaviour() {
 		return belongsToBehaviour;
 	}
@@ -48,6 +54,7 @@ public class FamixLocalVariable extends FamixStructuralEntity {
 	}
 
 	@Override
+	@Transient
 	public String getFamixType() {
 		return "Local Variable";
 	}
@@ -57,6 +64,7 @@ public class FamixLocalVariable extends FamixStructuralEntity {
 	 * 
 	 * @see be.ac.ua.cheopsj.Model.Famix.FamixEntity#getIcon()
 	 */
+	@Transient
 	@Override
 	public Image getIcon() {
 		return JavaUI.getSharedImages().getImage(ISharedImages.IMG_OBJS_LOCAL_VARIABLE);

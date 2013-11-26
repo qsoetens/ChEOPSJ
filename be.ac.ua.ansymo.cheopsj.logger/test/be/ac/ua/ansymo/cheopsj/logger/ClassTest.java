@@ -82,7 +82,7 @@ public class ClassTest extends AbstractCheopsJTest {
 
 		assertTrue(manager.famixPackageExists("pack1"));
 		FamixPackage packInSystem = manager.getFamixPackage("pack1");
-		AtomicChange packAddition = packInSystem.getLatestAddition();
+		AtomicChange packAddition = managerChange.getLastestAddition(packInSystem); 
 
 		assertTrue(manager.famixClassExists("pack1.TestClass"));
 		FamixClass classInSystem = manager.getFamixClass("pack1.TestClass");

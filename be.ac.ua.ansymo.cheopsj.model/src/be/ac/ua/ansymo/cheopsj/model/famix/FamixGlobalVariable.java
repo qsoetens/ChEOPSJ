@@ -33,7 +33,6 @@ public class FamixGlobalVariable extends FamixStructuralEntity {
 	 * @return Returns the famixPackage.
 	 * 
 	 */
-
 	public FamixPackage getFamixPackage()
 	{
 		return famixPackage;
@@ -51,7 +50,6 @@ public class FamixGlobalVariable extends FamixStructuralEntity {
 		this.famixPackage = famixPackage;
 	}
 
-	
 	@Override
 	public String getFamixType() {
 		return "Global Variable";

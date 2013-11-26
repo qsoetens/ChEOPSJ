@@ -10,32 +10,49 @@
  ******************************************************************************/
 package be.ac.ua.ansymo.cheopsj.model.changes;
 
+import hibernate.model.api.IModelEntity;
+
 import java.io.Serializable;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.Date;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 
-public class Change implements IChange, Serializable {
+@Entity
+@Inheritance(strategy=InheritanceType.SINGLE_TABLE)
+public class Change implements IChange, Serializable, IModelEntity{
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1775934576119950076L;
-	private Timestamp timeStamp;
+	private Date timeStamp;
 	private boolean isApplied;
 	private boolean isDummy;
 	private String intent = "";
 	private String user = "";
-	private Collection<CompositeChange> composites;
-	private Collection<Change> semanticalDependencies;
+	//private Collection<CompositeChange> composites;
+	//private Collection<Change> semanticalDependencies;
 	private Collection<Change> structuralDependencies;
-	private Collection<Change> semanticalDependees;
+	//private Collection<Change> semanticalDependees;
 	private Collection<Change> structuralDependees;
 	
 	private String UniqueID;
@@ -44,9 +61,9 @@ public class Change implements IChange, Serializable {
 	public Change() {
 		setTimeStamp(now());
 
-		composites = new ArrayList<CompositeChange>();
-		semanticalDependees = new ArrayList<Change>();
-		semanticalDependencies = new ArrayList<Change>();
+		//composites = new ArrayList<CompositeChange>();
+		//semanticalDependees = new ArrayList<Change>();
+		//semanticalDependencies = new ArrayList<Change>();
 		structuralDependees = new ArrayList<Change>();
 		structuralDependencies = new ArrayList<Change>();
 		
@@ -54,15 +71,23 @@ public class Change implements IChange, Serializable {
 		IDCounter++;
 	}
 	
-	public String getID(){
+	public String getUniqueID(){
 		return UniqueID;
 	}
+	
+	public void setUniqueID(String id){
+		this.UniqueID = id;
+	}
+	
+	
 
-	static public Timestamp now() {
+	static public Date now() {
 		Calendar calendar = Calendar.getInstance();
 		java.util.Date now = calendar.getTime();
-		java.sql.Timestamp currentTimestamp = new java.sql.Timestamp(now.getTime());
-		return currentTimestamp;
+		return now;
+		
+		//java.sql.Timestamp currentTimestamp = new java.sql.Timestamp(now.getTime());
+		//return currentTimestamp;
 	}
 
 	public void undo() {
@@ -77,7 +102,8 @@ public class Change implements IChange, Serializable {
 	 * @return Returns the timeStamp.
 	 */
 	@Override
-	public Timestamp getTimeStamp() {
+	@Temporal(TemporalType.TIME)
+	public Date getTimeStamp() {
 		return timeStamp;
 	}
 
@@ -87,7 +113,7 @@ public class Change implements IChange, Serializable {
 	 * @param timeStamp
 	 *            The timeStamp to set.
 	 */
-	public void setTimeStamp(Timestamp timeStamp) {
+	public void setTimeStamp(Date timeStamp) {
 		this.timeStamp = timeStamp;
 	}
 
@@ -148,51 +174,51 @@ public class Change implements IChange, Serializable {
 		this.user = user;
 	}
 
-	/**
-	 * Getter of the property <tt>composites</tt>
-	 * 
-	 * @return Returns the composites.
-	 */
-	public Collection<CompositeChange> getComposites() {
-		return composites;
-	}
-
-	/**
-	 * Setter of the property <tt>composites</tt>
-	 * 
-	 * @param composites
-	 *            The composites to set.
-	 * 
-	 */
-	public void setComposites(Collection<CompositeChange> composites) {
-		this.composites = composites;
-	}
-
-	/**
-	 * Getter of the property <tt>semanticalDependencies</tt>
-	 * 
-	 * @return Returns the semanticalDependencies.
-	 * 
-	 */
-	public Collection<Change> getSemanticalDependencies() {
-		return this.semanticalDependencies;
-	}
-
-	public void addSemanticalDependency(Change change) {
-		this.semanticalDependees.add(change);
-		if (!change.getSemanticalDependencies().contains(this))
-			change.addSemanticalDependee(this);
-	}
-
-	public Collection<Change> getSemanticalDependees() {
-		return this.semanticalDependees;
-	}
-
-	public void addSemanticalDependee(Change change) {
-		this.semanticalDependees.add(change);
-		if (!change.getSemanticalDependencies().contains(this))
-			change.addSemanticalDependency(this);
-	}
+//	/**
+//	 * Getter of the property <tt>composites</tt>
+//	 * 
+//	 * @return Returns the composites.
+//	 */
+//	public Collection<CompositeChange> getComposites() {
+//		return composites;
+//	}
+//
+//	/**
+//	 * Setter of the property <tt>composites</tt>
+//	 * 
+//	 * @param composites
+//	 *            The composites to set.
+//	 * 
+//	 */
+//	public void setComposites(Collection<CompositeChange> composites) {
+//		this.composites = composites;
+//	}
+//
+//	/**
+//	 * Getter of the property <tt>semanticalDependencies</tt>
+//	 * 
+//	 * @return Returns the semanticalDependencies.
+//	 * 
+//	 */
+//	public Collection<Change> getSemanticalDependencies() {
+//		return this.semanticalDependencies;
+//	}
+//
+//	public void addSemanticalDependency(Change change) {
+//		this.semanticalDependees.add(change);
+//		if (!change.getSemanticalDependencies().contains(this))
+//			change.addSemanticalDependee(this);
+//	}
+//
+//	public Collection<Change> getSemanticalDependees() {
+//		return this.semanticalDependees;
+//	}
+//
+//	public void addSemanticalDependee(Change change) {
+//		this.semanticalDependees.add(change);
+//		if (!change.getSemanticalDependencies().contains(this))
+//			change.addSemanticalDependency(this);
+//	}
 
 	/**
 	 * Getter of the property <tt>structuralDependencies</tt>
@@ -200,6 +226,10 @@ public class Change implements IChange, Serializable {
 	 * @return Returns the structuralDependencies.
 	 * 
 	 */
+	@ManyToMany(targetEntity=be.ac.ua.ansymo.cheopsj.model.changes.Change.class)
+	@JoinTable(name = "ChangeStructDeps",
+		joinColumns = @JoinColumn (name="change_id"),
+		inverseJoinColumns = @JoinColumn(name="dep_change_id"))
 	public Collection<Change> getStructuralDependencies() {
 		return this.structuralDependencies;
 	}
@@ -210,6 +240,8 @@ public class Change implements IChange, Serializable {
 			change.addStructuralDependee(this);
 	}
 
+	@ManyToMany(mappedBy = "structuralDependencies",
+			targetEntity=be.ac.ua.ansymo.cheopsj.model.changes.Change.class)
 	public Collection<Change> getStructuralDependees() {
 		return this.structuralDependees;
 	}
@@ -220,22 +252,26 @@ public class Change implements IChange, Serializable {
 			change.addStructuralDependency(this);
 	}
 
+	@Transient
 	@Override
 	public String getChangeType() {
 		return "";
 	}
 
+	@Transient
 	@Override
 	public String getName() {
 		return "";
 	}
 
+	@Transient
 	// For now, this is how we suppress a warning that we cannot fix
 	// See Bugzilla #163093 and Bugzilla #149805 comment #14
 	public Object getAdapter(@SuppressWarnings("rawtypes") Class adapter) {
 		return Platform.getAdapterManager().getAdapter(this, adapter);
 	}
 
+	@Transient
 	public String getFamixType() {
 		return "";
 	}
@@ -261,17 +297,18 @@ public class Change implements IChange, Serializable {
 		for (Change ch : this.structuralDependees) {
 			returnval += ch.getChangeType() + " of " + ch.getFamixType() + " " + ch.getName() + '\n';
 		}
-		returnval += "Semantical dependencies" + '\n';
-		for (Change ch : this.semanticalDependencies) {
-			returnval += ch.getChangeType() + " of " + ch.getFamixType() + " " + ch.getName() + '\n';
-		}
-		returnval += "Semantical dependees" + '\n';
-		for (Change ch : this.semanticalDependees) {
-			returnval += ch.getChangeType() + " of " + ch.getFamixType() + " " + ch.getName() + '\n';
-		}
+//		returnval += "Semantical dependencies" + '\n';
+//		for (Change ch : this.semanticalDependencies) {
+//			returnval += ch.getChangeType() + " of " + ch.getFamixType() + " " + ch.getName() + '\n';
+//		}
+//		returnval += "Semantical dependees" + '\n';
+//		for (Change ch : this.semanticalDependees) {
+//			returnval += ch.getChangeType() + " of " + ch.getFamixType() + " " + ch.getName() + '\n';
+//		}
 		return returnval;
 	}
 
+	@Transient
 	public Image getIcon() {
 		return PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJ_ELEMENT);
 	}
@@ -282,5 +319,50 @@ public class Change implements IChange, Serializable {
 
 	public void setDummy(boolean isDummy) {
 		this.isDummy = isDummy;
+	}
+	
+	private Long id;
+
+    @Id @GeneratedValue(strategy = GenerationType.AUTO )
+    public Long getId() { return id; }
+
+    protected void setId(Long id) { this.id = id; }
+
+    @Transient
+	@Override
+	public String getURI() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+    @Transient
+	@Override
+	public String getLabel() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public static int getIDCounter() {
+		return IDCounter;
+	}
+
+	public static void setIDCounter(int iDCounter) {
+		IDCounter = iDCounter;
+	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+
+	public void setApplied(boolean isApplied) {
+		this.isApplied = isApplied;
+	}
+
+	public void setStructuralDependencies(Collection<Change> structuralDependencies) {
+		this.structuralDependencies = structuralDependencies;
+	}
+
+	public void setStructuralDependees(Collection<Change> structuralDependees) {
+		this.structuralDependees = structuralDependees;
 	}
 }

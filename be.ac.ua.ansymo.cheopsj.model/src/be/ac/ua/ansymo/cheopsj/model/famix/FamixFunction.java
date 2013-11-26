@@ -10,8 +10,12 @@
  ******************************************************************************/
 package be.ac.ua.ansymo.cheopsj.model.famix;
 
+import javax.persistence.Entity;
+import javax.persistence.Transient;
+
 import org.eclipse.swt.graphics.Image;
 
+@Entity
 public class FamixFunction extends FamixBehaviouralEntity {
 //Not needed for Java Code?
 	
@@ -20,6 +24,7 @@ public class FamixFunction extends FamixBehaviouralEntity {
 	 */
 	private static final long serialVersionUID = 2985009944673293595L;
 
+	@Transient
 	@Override
 	public String getFamixType() {
 		return "Function";
@@ -28,6 +33,7 @@ public class FamixFunction extends FamixBehaviouralEntity {
 	/* (non-Javadoc)
 	 * @see be.ac.ua.cheopsj.Model.Famix.FamixEntity#getIcon()
 	 */
+	@Transient
 	@Override
 	public Image getIcon() {
 		return null;

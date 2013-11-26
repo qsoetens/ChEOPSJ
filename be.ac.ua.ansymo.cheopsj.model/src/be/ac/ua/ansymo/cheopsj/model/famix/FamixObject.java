@@ -13,8 +13,12 @@ package be.ac.ua.ansymo.cheopsj.model.famix;
 import java.util.Collection;
 import java.util.Iterator;
 
+import javax.persistence.Entity;
+import javax.persistence.Transient;
+
 import be.ac.ua.ansymo.cheopsj.model.changes.Subject;
 
+@Entity
 public abstract class FamixObject extends Subject {
 	/**
 	 * 
@@ -42,6 +46,7 @@ public abstract class FamixObject extends Subject {
      */
 	private Collection<FamixProperty> property = null;
 
+	@Transient
 	public String getCommentsAt() {
 		return CommentsAt;
 	}
@@ -56,7 +61,7 @@ public abstract class FamixObject extends Subject {
 	 * @return Returns the property.
 	 * 
 	 */
-
+	@Transient
 	public Collection<FamixProperty> getProperty() {
 		return property;
 	}
@@ -79,6 +84,7 @@ public abstract class FamixObject extends Subject {
 	 * @see java.util.Collection#isEmpty()
 	 * 
 	 */
+	@Transient
 	public boolean isPropertyEmpty() {
 		return property.isEmpty();
 	}
@@ -182,7 +188,7 @@ public abstract class FamixObject extends Subject {
 	/**
 	 * 
 	 */
-	public void setIsDummy(boolean d) {
+	public void setDummy(boolean d) {
 		dummy = d;
 	}
 

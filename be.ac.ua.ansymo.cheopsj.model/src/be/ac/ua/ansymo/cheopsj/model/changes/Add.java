@@ -10,10 +10,14 @@
  ******************************************************************************/
 package be.ac.ua.ansymo.cheopsj.model.changes;
 
+import javax.persistence.Entity;
+import javax.persistence.Transient;
+
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 
+@Entity
 public class Add extends AtomicChange {
 
 	/**
@@ -25,11 +29,13 @@ public class Add extends AtomicChange {
 
 	public void apply() { }
 	
+	@Transient
 	@Override
 	public String getChangeType() {
 		return "Addition";
 	}
 
+	@Transient
 	@Override
 	public Image getIcon() {
 		return PlatformUI.getWorkbench().getSharedImages()

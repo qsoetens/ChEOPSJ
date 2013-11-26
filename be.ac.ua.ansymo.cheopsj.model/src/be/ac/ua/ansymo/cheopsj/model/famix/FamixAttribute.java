@@ -10,11 +10,16 @@
  ******************************************************************************/
 package be.ac.ua.ansymo.cheopsj.model.famix;
 
+import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
+import javax.persistence.Transient;
+
 import org.eclipse.jdt.core.Flags;
 import org.eclipse.jdt.ui.ISharedImages;
 import org.eclipse.jdt.ui.JavaUI;
 import org.eclipse.swt.graphics.Image;
 
+@Entity
 public class FamixAttribute extends FamixStructuralEntity {
 
 	/**
@@ -28,7 +33,6 @@ public class FamixAttribute extends FamixStructuralEntity {
 	private FamixClass belongsToClass = null;
 
 	// private String AccessControlQualifier;
-	// TODO: Type?? either a FamixClass or a PrimitiveType.
 
 	private boolean hasClassScope;
 
@@ -38,7 +42,7 @@ public class FamixAttribute extends FamixStructuralEntity {
 	 * @return Returns the belongsToClass.
 	 * 
 	 */
-
+	@ManyToOne(targetEntity=be.ac.ua.ansymo.cheopsj.model.famix.FamixClass.class)
 	public FamixClass getBelongsToClass() {
 		return belongsToClass;
 	}
@@ -54,6 +58,7 @@ public class FamixAttribute extends FamixStructuralEntity {
 		this.belongsToClass = belongsToClass;
 	}
 
+	@Transient
 	public boolean isHasClassScope() {
 		return hasClassScope;
 	}
@@ -62,6 +67,7 @@ public class FamixAttribute extends FamixStructuralEntity {
 		this.hasClassScope = hasClassScope;
 	}
 
+	@Transient
 	@Override
 	public String getFamixType() {
 		return "Attribute";
@@ -72,6 +78,7 @@ public class FamixAttribute extends FamixStructuralEntity {
 	 * 
 	 * @see be.ac.ua.cheopsj.Model.Famix.FamixEntity#getIcon()
 	 */
+	@Transient
 	@Override
 	public Image getIcon() {
 		Image icon = null;

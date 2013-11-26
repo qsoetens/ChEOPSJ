@@ -13,11 +13,17 @@ package be.ac.ua.ansymo.cheopsj.model.famix;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Transient;
+
 import org.eclipse.jdt.core.Flags;
 import org.eclipse.jdt.ui.ISharedImages;
 import org.eclipse.jdt.ui.JavaUI;
 import org.eclipse.swt.graphics.Image;
 
+@Entity
 public class FamixClass extends FamixEntity {
 
 	/**
@@ -43,6 +49,8 @@ public class FamixClass extends FamixEntity {
 		subclasses = new ArrayList<FamixInheritanceDefinition>();
 	}
 
+	@ManyToOne(
+			targetEntity=be.ac.ua.ansymo.cheopsj.model.famix.FamixPackage.class)
 	public FamixPackage getBelongsToPackage() {
 		return belongsToPackage;
 	}
@@ -51,6 +59,8 @@ public class FamixClass extends FamixEntity {
 		this.belongsToPackage = pack;
 	}
 
+	@ManyToOne(
+			targetEntity=be.ac.ua.ansymo.cheopsj.model.famix.FamixClass.class)
 	public FamixClass getBelongsToClass() {
 		return belongsToClass;
 	}
@@ -60,6 +70,7 @@ public class FamixClass extends FamixEntity {
 		// setBelongsToPackage(clazz.getBelongsToPackage());
 	}
 
+	@Transient
 	public boolean isAbstract() {
 		return isAbstract;
 	}
@@ -95,6 +106,17 @@ public class FamixClass extends FamixEntity {
 		return null;
 	}
 
+	@OneToMany(
+			mappedBy="belongsToClass",
+			targetEntity=be.ac.ua.ansymo.cheopsj.model.famix.FamixMethod.class)
+	public Collection<FamixMethod> getMethods() {
+		return methods;
+	}
+
+	public void setMethods(Collection<FamixMethod> methods) {
+		this.methods = methods;
+	}
+
 	/**
 	 * Ensures that this collection contains the specified element (optional
 	 * operation).
@@ -108,6 +130,18 @@ public class FamixClass extends FamixEntity {
 		return this.attributes.add(attribute);
 	}
 
+	@OneToMany(
+			mappedBy="belongsToClass",
+			targetEntity=be.ac.ua.ansymo.cheopsj.model.famix.FamixAttribute.class)
+	public Collection<FamixAttribute> getAttributes() {
+		return attributes;
+	}
+
+	public void setAttributes(Collection<FamixAttribute> attributes) {
+		this.attributes = attributes;
+	}
+
+	@Transient
 	@Override
 	public String getFamixType() {
 		return "Class";
@@ -117,6 +151,17 @@ public class FamixClass extends FamixEntity {
 		nestedClasses.add(clazz);
 	}
 	
+	@OneToMany(
+			mappedBy="belongsToClass",
+			targetEntity=be.ac.ua.ansymo.cheopsj.model.famix.FamixClass.class)
+	public Collection<FamixClass> getNestedClasses() {
+		return nestedClasses;
+	}
+
+	public void setNestedClasses(Collection<FamixClass> nestedClasses) {
+		this.nestedClasses = nestedClasses;
+	}
+
 	public void addSuperClass(FamixInheritanceDefinition superclass){
 		if(superclass.getSubClass().equals(this)){
 			superclasses.add(superclass);
@@ -129,20 +174,35 @@ public class FamixClass extends FamixEntity {
 		}
 	}
 	
-	public Collection<FamixInheritanceDefinition> getSuperClasses(){
+	@OneToMany(
+			mappedBy="superClass",
+			targetEntity=be.ac.ua.ansymo.cheopsj.model.famix.FamixInheritanceDefinition.class)
+	public Collection<FamixInheritanceDefinition> getSuperclasses(){
 		return superclasses;
 	}
 	
-	public Collection<FamixInheritanceDefinition> getSubClasses(){
+	@OneToMany(
+			mappedBy="subClass",
+			targetEntity=be.ac.ua.ansymo.cheopsj.model.famix.FamixInheritanceDefinition.class)
+	public Collection<FamixInheritanceDefinition> getSubclasses(){
 		return subclasses;
 	}
 	
+
+	public void setSuperclasses(Collection<FamixInheritanceDefinition> superclasses) {
+		this.superclasses = superclasses;
+	}
+
+	public void setSubclasses(Collection<FamixInheritanceDefinition> subclasses) {
+		this.subclasses = subclasses;
+	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
 	 * @see be.ac.ua.cheopsj.Model.Famix.FamixEntity#getIcon()
 	 */
+	@Transient
 	@Override
 	public Image getIcon() {
 		Image icon = null;
@@ -168,6 +228,7 @@ public class FamixClass extends FamixEntity {
 		return icon;
 	}
 
+	@Transient
 	public Collection<String> getSuperClassNames() {
 		Collection<String> superClassNames = new ArrayList<String>();
 		for(FamixInheritanceDefinition def : superclasses){

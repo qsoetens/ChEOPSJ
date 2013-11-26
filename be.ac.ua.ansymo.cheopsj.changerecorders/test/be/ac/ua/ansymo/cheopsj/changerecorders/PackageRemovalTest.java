@@ -29,6 +29,7 @@ public class PackageRemovalTest {
 	@Before
 	public void setUp() throws Exception {
 		manager = ModelManager.getInstance();
+		manager.clearModel();
 		managerChange = ModelManagerChange.getInstance();
 		PackageRecorder rec = new PackageRecorder(p5);
 		rec.storeChange(new Add());
@@ -48,8 +49,8 @@ public class PackageRemovalTest {
 
 		FamixPackage pack = manager.getFamixPackage(p5);
 		assertEquals(2,pack.getAffectingChanges().size());
-		Remove rem = pack.getLatestRemoval();
-		AtomicChange add = pack.getLatestAddition();
+		Remove rem = managerChange.getLatestRemoval(pack);
+		AtomicChange add = managerChange.getLastestAddition(pack);
 
 		assertTrue(rem.getStructuralDependencies().contains(add));
 		assertTrue(add.getStructuralDependees().contains(rem));
@@ -68,19 +69,19 @@ public class PackageRemovalTest {
 		removalDependsOnChildRemoval(p4,p5);
 
 		FamixPackage pack = manager.getFamixPackage(p5);
-		Remove rem = pack.getLatestRemoval();
+		Remove rem = managerChange.getLatestRemoval(pack);
 		assertEquals(1, rem.getStructuralDependencies().size());
 	}
 
 	private void removalDependsOnChildRemoval(String name, String childname) {
 		FamixPackage pack = manager.getFamixPackage(name);
-		Remove rem = pack.getLatestRemoval();
+		Remove rem = managerChange.getLatestRemoval(pack);
 		assertFalse(rem.getStructuralDependencies().isEmpty());
 		FamixPackage pack2 = manager.getFamixPackage(childname);
-		Remove rem2 = pack2.getLatestRemoval();
+		Remove rem2 = managerChange.getLatestRemoval(pack2);
 		assertTrue(rem.getStructuralDependencies().contains(rem2));
 		
-		AtomicChange add = pack.getLatestAddition();
+		AtomicChange add = managerChange.getLastestAddition(pack);
 		assertTrue(rem.getStructuralDependencies().contains(add));
 	}
 	
@@ -97,6 +98,9 @@ public class PackageRemovalTest {
 		recorder1.storeChange(rem);
 		
 		assertEquals(7, managerChange.getChanges().size());
+		assertEquals(7, managerChange.getChangeCount());
+		assertEquals(5, managerChange.getAddCount());
+		assertEquals(2, managerChange.getRemoveCount());
 		assertTrue(rem.getStructuralDependencies().contains(childrem));
 	}
 

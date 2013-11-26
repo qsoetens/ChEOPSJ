@@ -14,6 +14,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import be.ac.ua.ansymo.cheopsj.model.ModelManager;
+import be.ac.ua.ansymo.cheopsj.model.ModelManagerChange;
 import be.ac.ua.ansymo.cheopsj.model.changes.Add;
 import be.ac.ua.ansymo.cheopsj.model.changes.AtomicChange;
 import be.ac.ua.ansymo.cheopsj.model.changes.Remove;
@@ -25,6 +26,7 @@ public class ClassAndPackageRemovalTest {
 	private ClassRecorder classrecorder;
 	private PackageRecorder packrecorder;
 	private ModelManager manager;
+	private ModelManagerChange managerChange;
 	private String packname = "be.ac.ua.test.pack";
 	private String classname = "Boo";
 	
@@ -36,6 +38,8 @@ public class ClassAndPackageRemovalTest {
 	@Before
 	public void setUp() throws Exception {
 		manager = ModelManager.getInstance();
+		manager.clearModel();
+		managerChange = ModelManagerChange.getInstance();
 		createRecorderFromDeclaration();
 		
 		packadd = new Add();
@@ -90,10 +94,11 @@ public class ClassAndPackageRemovalTest {
 	public void test2(){
 		//Package removal test without first removing class
 		packrecorder.storeChange(packrem);
-		FamixPackage pack = (FamixPackage) packrem.getChangeSubject();		
+		FamixPackage pack = (FamixPackage) packrem.getChangeSubject();
+		pack = manager.getFamixPackage(pack.getUniqueName());
 		FamixClass clazz = (FamixClass) pack.getClasses().toArray()[0];
 		
-		classrem = clazz.getLatestRemoval();
+		classrem = managerChange.getLatestRemoval(clazz);
 		
 		assertEquals(2,packrem.getStructuralDependencies().size());
 		assertTrue(packrem.getStructuralDependencies().contains(classrem));

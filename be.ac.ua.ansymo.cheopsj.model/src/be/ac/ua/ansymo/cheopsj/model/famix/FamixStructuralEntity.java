@@ -10,6 +10,10 @@
  ******************************************************************************/
 package be.ac.ua.ansymo.cheopsj.model.famix;
 
+import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
+
+@Entity
 public abstract class FamixStructuralEntity extends FamixEntity {
 
 	/**
@@ -29,7 +33,7 @@ public abstract class FamixStructuralEntity extends FamixEntity {
 	 * @return Returns the declaredClass.
 	 * 
 	 */
-
+	@ManyToOne(targetEntity=be.ac.ua.ansymo.cheopsj.model.famix.FamixClass.class)
 	public FamixClass getDeclaredClass()
 	{
 		return declaredClass;
@@ -46,7 +50,6 @@ public abstract class FamixStructuralEntity extends FamixEntity {
 	public void setDeclaredClass(FamixClass declaredClass){
 		this.declaredClass = declaredClass;
 	}
-
 
 
 	public PrimitiveTypes getDeclaredReturnType() {
