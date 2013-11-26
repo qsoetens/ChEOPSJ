@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="be.ac.ua.ansymo.cheopsj.features.distiller"
+      label="Distiller"
+      version="1.0.2"
+      provider-name="Ansymo - University of Antwerp">
+
+   <description url="http://win.ua.ac.be/~qsoeten/other/cheopsj/">
+      [Enter Feature Description here.]
+   </description>
+
+   <copyright>
+      Copyright 2013 Ansymo - Antwerp Systems and Software Modelling
+   </copyright>
+
+   <license url="http://www.apache.org/licenses/LICENSE-2.0">
+      Copyright 2013 Ansymo - Antwerp Systems and Software Modelling
+
+Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+   </license>
+
+   <url>
+      <update label="ChEOPSJ" url="http://win.ua.ac.be/~qsoeten/other/cheopsj/update/"/>
+   </url>
+
+   <requires>
+      <import feature="be.ac.ua.ansymo.cheopsj.features.core" version="1.0.2"/>
+      <import plugin="org.eclipse.ui"/>
+      <import plugin="org.eclipse.core.runtime"/>
+      <import plugin="org.eclipse.core.resources"/>
+      <import plugin="org.eclipse.jdt.core"/>
+      <import plugin="org.eclipse.team.svn.core"/>
+      <import plugin="org.eclipse.team.core"/>
+      <import plugin="be.ac.ua.ansymo.cheopsj.model"/>
+      <import plugin="be.ac.ua.ansymo.cheopsj.changerecorders"/>
+      <import plugin="org.junit"/>
+      <import plugin="org.evolizer.changedistiller" version="1.0.0" match="greaterOrEqual"/>
+      <import plugin="be.ac.ua.ansymo.cheopsj.logger" version="1.0.2" match="greaterOrEqual"/>
+   </requires>
+
+   <plugin
+         id="be.ac.ua.ansymo.cheopsj.distiller"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+</feature>
