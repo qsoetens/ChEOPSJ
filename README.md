@@ -1,6 +1,8 @@
 ChEOPSJ
 =======
 
+The update site for ChEOPSJ can be found here: http://win.ua.ac.be/~qsoeten/other/cheopsj/update  
+
 Software is an ever-changing entity and frequently executed unit tests are the primary means to increase the confidence that the changed system continues to work as expected. Executing an entire test suite however can take a significant amount of time; much longer than developers are willing to wait before tackling the next change action. Our tool prototype ChEOPSJ may alleviate this problem by adopting a change-centric approach as it sits in the back of Eclipse and captures all changes made in the main editor while the developer is programming. The changes and the dependencies between them are analyzed to deduce which unit tests are relevant for a selected sequence of changes. 
 
 ChEOPSJ is conveniently made up of several eclipse plugins:
