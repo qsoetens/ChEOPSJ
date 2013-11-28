@@ -126,8 +126,5 @@ public class FamixMethod extends FamixBehaviouralEntity {
 	public boolean isTest() {
 		return this.isTest;
 	}
-
-
-
 	
 }

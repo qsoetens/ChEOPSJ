@@ -10,6 +10,7 @@
  ******************************************************************************/
 package be.ac.ua.ansymo.cheopsj.changerecorders;
 
+import org.eclipse.jdt.core.IAnnotation;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IType;
@@ -33,6 +34,7 @@ public class MethodRecorder extends AbstractEntityRecorder {
 	//TODO need to link method to return type
 	private int flags = 0;
 	private String name = "";
+	private boolean isTestMethod = false;
 	
 	private MethodRecorder(){
 	}
@@ -52,6 +54,19 @@ public class MethodRecorder extends AbstractEntityRecorder {
 		} catch (JavaModelException e) {
 			e.printStackTrace();
 		}
+		
+		//We find that the Method is a jUnit 4 type test method?
+		IAnnotation testAnnotation = method.getAnnotation("Test");
+		if(testAnnotation.exists()){
+			isTestMethod = true;
+			parent.setTestClass(true);
+		}
+		
+		//We look for jUnit 3 type test methods the testClass should already be identified.
+		if(parent.isTestClass() && name.contains("test")){
+			isTestMethod = true;
+		}
+		
 	}
 	
 	public MethodRecorder(MethodDeclaration method) {
@@ -124,6 +139,9 @@ public class MethodRecorder extends AbstractEntityRecorder {
 			famixMethod.setUniqueName(uniquename);
 			famixMethod.setName(name);
 			setMethodFlagsAndParent();
+			
+			famixMethod.setTest(isTestMethod);
+			
 			manager.addFamixElement(famixMethod);
 		} else {
 			famixMethod = manager.getFamixMethod(uniquename);

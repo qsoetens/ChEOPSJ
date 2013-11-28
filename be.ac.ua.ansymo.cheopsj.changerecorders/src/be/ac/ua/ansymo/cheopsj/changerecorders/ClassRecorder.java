@@ -31,24 +31,26 @@ import ch.uzh.ifi.seal.changedistiller.model.entities.SourceCodeEntity;
 public class ClassRecorder extends AbstractEntityRecorder {
 	private FamixClass famixClass;
 	private FamixEntity parent;
-	
+
 	private String uniqueName = "";
 	private int flags;
 	private String name = "";
+	private boolean isTestClass = false;
 
 	private ClassRecorder(){
 		//get manager instance
 	}
-	
+
 	public ClassRecorder(FamixClass element){
 		famixClass = element;
 		parent = element.getBelongsToPackage();
 		if(parent == null)
 			parent = element.getBelongsToClass();
-		
+
 		uniqueName = element.getUniqueName();
 		name = element.getName();
 		flags = element.getFlags();
+		isTestClass = element.isTestClass();
 	}
 
 	public ClassRecorder(IType element) {
@@ -64,6 +66,12 @@ public class ClassRecorder extends AbstractEntityRecorder {
 
 		//set the flags
 		try {
+			//When Using jUnit 3, we can identify TestClasses by it using the TestCase interface
+			if(element.getSuperclassName().equals("TestCase")){
+				isTestClass = true;
+			}
+			//In jUnit 4, testclasses are identified by them containing @Test methods, so we can't identify them at this time!
+			
 			flags = element.getFlags();
 		} catch (JavaModelException e) {
 			e.printStackTrace();
@@ -74,7 +82,7 @@ public class ClassRecorder extends AbstractEntityRecorder {
 		this();
 
 		name = declaration.getName().getIdentifier();
-		
+
 		//find the parent famix entity (if any)
 		parent = findParentEntity(declaration);
 
@@ -85,6 +93,12 @@ public class ClassRecorder extends AbstractEntityRecorder {
 			//there was no package declaration == default package
 			uniqueName = declaration.getName().getFullyQualifiedName();
 		}
+		
+		//When Using jUnit 3, we can identify TestClasses by it using the TestCase interface
+		if(declaration.getSuperclass().getFullyQualifiedName().equals("TestCase")){
+			isTestClass = true;
+		}
+		//In jUnit 4, testclasses are identified by them containing @Test methods, so we can't identify them at this time!
 
 		//set the flags
 		flags = declaration.getFlags();
@@ -94,11 +108,11 @@ public class ClassRecorder extends AbstractEntityRecorder {
 		this();
 		if(manager.famixClassExists(parentEntity.getUniqueName()))
 			parent = manager.getFamixClass(parentEntity.getUniqueName());
-		
+
 		uniqueName = entity.getUniqueName();
 		int j = uniqueName.lastIndexOf('.');
 		name = uniqueName.substring(j,uniqueName.length());
-		
+
 		flags = entity.getModifiers();
 		//TODO check supertype
 	}
@@ -144,7 +158,7 @@ public class ClassRecorder extends AbstractEntityRecorder {
 		}
 		return null;
 	}
-	
+
 	private String findParentName(ASTNode node){
 		if(node instanceof TypeDeclaration){
 			String name = ((TypeDeclaration)node).getName().getFullyQualifiedName();
@@ -163,8 +177,8 @@ public class ClassRecorder extends AbstractEntityRecorder {
 		}
 		return "";
 	}
-	
-	
+
+
 
 	/*public ClassRecorder(String name) {
 		manager = ModelManager.getInstance();
@@ -189,13 +203,14 @@ public class ClassRecorder extends AbstractEntityRecorder {
 
 			setClassFlagsAndParent(famixClass);
 			famixClass.setName(name);
+			famixClass.setTestClass(isTestClass);
 			manager.addFamixElement(famixClass);
 		} else {
 			famixClass = manager.getFamixClass(uniqueName);
 			if(famixClass.isDummy()){
 				//If it was a dummy, undummy it!
 				setClassFlagsAndParent(famixClass);
-				
+
 				famixClass.setDummy(false);
 			}else{
 				parent = famixClass.getBelongsToPackage();
@@ -219,7 +234,7 @@ public class ClassRecorder extends AbstractEntityRecorder {
 				((FamixPackage) parent).addClass(famixClass);
 			}
 		}
-		
+
 	}
 
 	/*
@@ -237,7 +252,7 @@ public class ClassRecorder extends AbstractEntityRecorder {
 				change.setDummy(false);
 			}
 		}
-		
+
 		change.setChangeSubject(famixClass);
 		famixClass.addChange(change);
 
