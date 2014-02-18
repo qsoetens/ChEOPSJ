@@ -4,6 +4,6 @@
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry excluding="be/ac/ua/ansymo/cheopsj/distiller/popup/actions/DistillAdditionsFromCurrentVersion.java" kind="src" path="src"/>
 	<classpathentry excluding="resources/" kind="src" path="test"/>
-	<classpathentry exported="true" kind="lib" path="lib/svnkit.jar"/>
+	<classpathentry kind="lib" path="lib/svnkit-1.7.11.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

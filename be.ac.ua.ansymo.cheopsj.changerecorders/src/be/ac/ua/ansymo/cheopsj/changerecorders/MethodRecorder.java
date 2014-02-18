@@ -10,6 +10,7 @@
  ******************************************************************************/
 package be.ac.ua.ansymo.cheopsj.changerecorders;
 
+import org.eclipse.jdt.core.IAnnotation;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IType;
@@ -32,6 +33,7 @@ public class MethodRecorder extends AbstractEntityRecorder {
 	private String uniquename = ""; //TODO need to add parameters to unique naming
 	//TODO need to link method to return type
 	private int flags = 0;
+	private boolean isTest = false;
 	private String name = "";
 	
 	private MethodRecorder(){
@@ -47,15 +49,25 @@ public class MethodRecorder extends AbstractEntityRecorder {
 		if (parentJavaElement != null && parentJavaElement instanceof IType) {
 			parent = manager.getFamixClass(((IType) parentJavaElement).getFullyQualifiedName());
 		}
+		
 		try {
 			flags = method.getFlags();
 		} catch (JavaModelException e) {
 			e.printStackTrace();
 		}
+		
+		//PROBLEM: annotations can be added after the method was created
+		IAnnotation annotation = method.getAnnotation("Test");
+		if(annotation.exists()){
+			isTest = true;
+		}
+		
 	}
 	
 	public MethodRecorder(MethodDeclaration method) {
 		this();
+		
+		
 		
 		parent = findParentFamixEntity(method);
 		name = method.getName().getIdentifier();

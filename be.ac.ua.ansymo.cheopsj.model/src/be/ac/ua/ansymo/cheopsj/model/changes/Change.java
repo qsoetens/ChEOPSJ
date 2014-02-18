@@ -13,6 +13,7 @@ package be.ac.ua.ansymo.cheopsj.model.changes;
 import hibernate.model.api.IModelEntity;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
@@ -35,6 +36,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
+import org.hibernate.annotations.Type;
 
 @Entity
 @Inheritance(strategy=InheritanceType.SINGLE_TABLE)
@@ -44,7 +46,7 @@ public class Change implements IChange, Serializable, IModelEntity{
 	 * 
 	 */
 	private static final long serialVersionUID = 1775934576119950076L;
-	private Date timeStamp;
+	private Timestamp timeStamp;
 	private boolean isApplied;
 	private boolean isDummy;
 	private String intent = "";
@@ -81,13 +83,11 @@ public class Change implements IChange, Serializable, IModelEntity{
 	
 	
 
-	static public Date now() {
+	static public Timestamp now() {
 		Calendar calendar = Calendar.getInstance();
 		java.util.Date now = calendar.getTime();
-		return now;
-		
-		//java.sql.Timestamp currentTimestamp = new java.sql.Timestamp(now.getTime());
-		//return currentTimestamp;
+		java.sql.Timestamp currentTimestamp = new java.sql.Timestamp(now.getTime());
+		return currentTimestamp;
 	}
 
 	public void undo() {
@@ -102,7 +102,7 @@ public class Change implements IChange, Serializable, IModelEntity{
 	 * @return Returns the timeStamp.
 	 */
 	@Override
-	@Temporal(TemporalType.TIME)
+	@Type(type="timestamp")
 	public Date getTimeStamp() {
 		return timeStamp;
 	}
@@ -113,7 +113,7 @@ public class Change implements IChange, Serializable, IModelEntity{
 	 * @param timeStamp
 	 *            The timeStamp to set.
 	 */
-	public void setTimeStamp(Date timeStamp) {
+	public void setTimeStamp(Timestamp timeStamp) {
 		this.timeStamp = timeStamp;
 	}
 
