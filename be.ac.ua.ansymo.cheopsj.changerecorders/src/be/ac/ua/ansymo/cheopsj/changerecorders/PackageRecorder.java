@@ -11,10 +11,13 @@
 package be.ac.ua.ansymo.cheopsj.changerecorders;
 
 import org.eclipse.jdt.core.IPackageFragment;
+import org.eclipse.jdt.core.ICompilationUnit;
+import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.dom.PackageDeclaration;
 
 import be.ac.ua.ansymo.cheopsj.model.changes.Add;
 import be.ac.ua.ansymo.cheopsj.model.changes.AtomicChange;
+import be.ac.ua.ansymo.cheopsj.model.famix.FamixClass;
 import be.ac.ua.ansymo.cheopsj.model.famix.FamixPackage;
 
 
@@ -41,10 +44,14 @@ public class PackageRecorder extends AbstractEntityRecorder {
 	 */
 	public PackageRecorder(IPackageFragment element) {
 		this();
+		
 		uniqueName = element.getElementName();
+		
 		if(uniqueName.lastIndexOf('.') > 0){ //if there is a '.' in the name, then there is a parent package
 			parentName = uniqueName.substring(0, uniqueName.lastIndexOf('.'));
 		}		
+		
+		
 		
 		name = element.getElementName();
 	}

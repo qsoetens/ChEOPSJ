@@ -42,9 +42,6 @@ public class ClassRecorder extends AbstractEntityRecorder {
     uniqueName=uniqueName.replace('$','.');
     name=element.getElementName();
     try {
-      if (element.getSuperclassName().equals("TestCase")) {
-        isTestClass=true;
-      }
       flags=element.getFlags();
     }
  catch (    JavaModelException e) {
