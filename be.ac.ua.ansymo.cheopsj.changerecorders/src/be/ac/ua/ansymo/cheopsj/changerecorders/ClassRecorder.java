@@ -31,7 +31,7 @@ import ch.uzh.ifi.seal.changedistiller.model.entities.SourceCodeEntity;
 public class ClassRecorder extends AbstractEntityRecorder {
 	private FamixClass famixClass;
 	private FamixEntity parent;
-
+	//blablabla
 	private String uniqueName = "";
 	private int flags;
 	private String name = "";
