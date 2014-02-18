@@ -39,6 +39,7 @@ public class FamixClass extends FamixEntity {
 	
 	private Collection<FamixInheritanceDefinition> superclasses = null;
 	private Collection<FamixInheritanceDefinition> subclasses = null;
+	private boolean isTestCase;
 
 	public FamixClass() {
 		methods = new ArrayList<FamixMethod>();
@@ -235,5 +236,13 @@ public class FamixClass extends FamixEntity {
 			superClassNames.add(def.getSuperClass().getUniqueName());
 		}
 		return superClassNames;
+	}
+
+	public void setTestClass(boolean testcase){
+		isTestCase = testcase;
+	}
+	
+	public boolean isTestClass() {
+		return isTestCase;
 	}
 }

@@ -22,6 +22,7 @@ public class MethodRecorder extends AbstractEntityRecorder {
   private int flags=0;
   private boolean isTest=false;
   private String name="";
+  private boolean isTestMethod=false;
   private MethodRecorder(){
   }
   public MethodRecorder(  IMethod method){
@@ -39,9 +40,13 @@ public class MethodRecorder extends AbstractEntityRecorder {
  catch (    JavaModelException e) {
       e.printStackTrace();
     }
-    IAnnotation annotation=method.getAnnotation("Test");
-    if (annotation.exists()) {
-      isTest=true;
+    IAnnotation testAnnotation=method.getAnnotation("Test");
+    if (testAnnotation.exists()) {
+      isTestMethod=true;
+      parent.setTestClass(true);
+    }
+    if (parent.isTestClass() && name.contains("test")) {
+      isTestMethod=true;
     }
   }
   public MethodRecorder(  MethodDeclaration method){
@@ -92,6 +97,7 @@ public class MethodRecorder extends AbstractEntityRecorder {
       famixMethod.setUniqueName(uniquename);
       famixMethod.setName(name);
       setMethodFlagsAndParent();
+      famixMethod.setTest(isTestMethod);
       manager.addFamixElement(famixMethod);
     }
  else {

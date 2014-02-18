@@ -1,4 +1,4 @@
-ChEOPSJ
+ChEOPSJ ![alt text][logo]
 =======
 
 The update site for ChEOPSJ can be found here: http://win.ua.ac.be/~qsoeten/other/cheopsj/update  
@@ -37,3 +37,4 @@ The following eclipse projects are part of the branding/update site/features con
 
 The update site for ChEOPSJ can be found here: http://win.ua.ac.be/~qsoeten/other/cheopsj/update  
 
+ [logo]: http://win.ua.ac.be/~qsoeten/other/data/ChEOPSJLogoBlack.png

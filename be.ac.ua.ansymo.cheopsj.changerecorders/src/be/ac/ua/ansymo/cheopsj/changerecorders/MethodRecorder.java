@@ -35,6 +35,7 @@ public class MethodRecorder extends AbstractEntityRecorder {
 	private int flags = 0;
 	private boolean isTest = false;
 	private String name = "";
+	private boolean isTestMethod = false;
 	
 	private MethodRecorder(){
 	}
@@ -56,10 +57,17 @@ public class MethodRecorder extends AbstractEntityRecorder {
 			e.printStackTrace();
 		}
 		
-		//PROBLEM: annotations can be added after the method was created
-		IAnnotation annotation = method.getAnnotation("Test");
-		if(annotation.exists()){
-			isTest = true;
+
+		//We find that the Method is a jUnit 4 type test method?
+		IAnnotation testAnnotation = method.getAnnotation("Test");
+		if(testAnnotation.exists()){
+			isTestMethod = true;
+			parent.setTestClass(true);
+		}
+		
+		//We look for jUnit 3 type test methods the testClass should already be identified.
+		if(parent.isTestClass() && name.contains("test")){
+			isTestMethod = true;
 		}
 		
 	}
@@ -136,6 +144,9 @@ public class MethodRecorder extends AbstractEntityRecorder {
 			famixMethod.setUniqueName(uniquename);
 			famixMethod.setName(name);
 			setMethodFlagsAndParent();
+			
+			famixMethod.setTest(isTestMethod);
+			
 			manager.addFamixElement(famixMethod);
 		} else {
 			famixMethod = manager.getFamixMethod(uniquename);
