@@ -13,6 +13,9 @@ package be.ac.ua.ansymo.cheopsj.changerecorders;
 
 import java.util.Collection;
 
+import org.eclipse.jdt.core.IParent;
+import org.eclipse.jdt.core.JavaModelException;
+
 import be.ac.ua.ansymo.cheopsj.model.ModelManager;
 import be.ac.ua.ansymo.cheopsj.model.ModelManagerChange;
 import be.ac.ua.ansymo.cheopsj.model.changes.Add;
@@ -31,6 +34,7 @@ public abstract class AbstractEntityRecorder {
 
 	protected ModelManager manager;
 	protected ModelManagerChange managerChange;
+	protected FamixEntity[] OldChildrenEntities; 
 	
 	public AbstractEntityRecorder(){
 		manager = ModelManager.getInstance();
@@ -49,6 +53,18 @@ public abstract class AbstractEntityRecorder {
 
 	abstract protected void createAndLinkChange(AtomicChange change);
 	
+	protected void initializeOldChildrenEntities(IParent element)
+	{
+		try {
+			OldChildrenEntities = new FamixEntity[element.getChildren().length];
+		} catch (JavaModelException e) {
+			OldChildrenEntities = null;
+			e.printStackTrace();
+		}
+		
+		
+		
+	}
 	protected void setStructuralDependencies(AtomicChange change, Subject subject, 
 			FamixEntity parent) {
 		
