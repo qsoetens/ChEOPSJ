@@ -2,19 +2,12 @@
  * Copyright (c) 2011 Quinten David Soetens All rights reserved. This program and the accompanying materials are made available under the terms of the GNU Lesser Public License v2.1 which accompanies this distribution, and is available at http://www.gnu.org/licenses/old-licenses/gpl-2.0.html Contributors: Quinten David Soetens - initial API and implementation
  */
 package be.ac.ua.ansymo.cheopsj.model;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import hibernate.session.SessionHandler;
+import hibernate.session.api.ISession;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import be.ac.ua.ansymo.cheopsj.model.changes.IChange;
 import be.ac.ua.ansymo.cheopsj.model.changes.Subject;
 import be.ac.ua.ansymo.cheopsj.model.famix.FamixAttribute;
 import be.ac.ua.ansymo.cheopsj.model.famix.FamixClass;
@@ -30,24 +23,8 @@ public class ModelManager implements Serializable {
   /** 
  */
   private static final long serialVersionUID=4107886630686152745L;
-  private List<Subject> famixEntities;
-  private Map<String,FamixPackage> famixPackagesMap;
-  private Map<String,FamixClass> famixClassesMap;
-  private Map<String,FamixMethod> famixMethodsMap;
-  private Map<String,List<FamixMethod>> famixMethodListMap;
-  private Map<String,FamixAttribute> famixFieldsMap;
-  private Map<String,FamixInvocation> famixInvocationsMap;
-  private Map<String,FamixLocalVariable> famixVariablesMap;
   private static ModelManager INSTANCE=null;
   private ModelManager(){
-    famixEntities=new ArrayList<Subject>();
-    famixPackagesMap=new HashMap<String,FamixPackage>();
-    famixClassesMap=new HashMap<String,FamixClass>();
-    famixMethodsMap=new HashMap<String,FamixMethod>();
-    famixMethodListMap=new HashMap<String,List<FamixMethod>>();
-    famixFieldsMap=new HashMap<String,FamixAttribute>();
-    famixInvocationsMap=new HashMap<String,FamixInvocation>();
-    famixVariablesMap=new HashMap<String,FamixLocalVariable>();
   }
   /** 
  * The ModelManger is a Singleton entity. Therefore the constructor is private. This method returns an instance of the ModelManger. If no instance existed  before it will call the private constructor to create a new instance. Else It will return the existing instance. 
@@ -61,68 +38,50 @@ public class ModelManager implements Serializable {
  * Method to add a famix entity to the ModelManager. It will add the entity to the large list of famixentitites, but also add it to its resepective map.
  */
   public void addFamixElement(  Subject fe){
-    famixEntities.add(fe);
-    if (fe instanceof FamixPackage) {
-      famixPackagesMap.put(((FamixPackage)fe).getUniqueName(),(FamixPackage)fe);
+    ISession lSession=null;
+    try {
+      lSession=SessionHandler.getHandler().getCurrentSession();
+      lSession.startTransaction();
+      lSession.saveObject(fe);
+      lSession.flush();
+      lSession.clear();
+      lSession.endTransaction();
     }
- else     if (fe instanceof FamixClass) {
-      famixClassesMap.put(((FamixClass)fe).getUniqueName(),(FamixClass)fe);
-    }
- else     if (fe instanceof FamixMethod) {
-      famixMethodsMap.put(((FamixMethod)fe).getUniqueName(),(FamixMethod)fe);
-      if (!famixMethodListMap.containsKey(((FamixMethod)fe).getName())) {
-        famixMethodListMap.put(((FamixMethod)fe).getName(),new ArrayList<FamixMethod>());
+ catch (    Exception e) {
+      e.printStackTrace();
+      if (lSession != null) {
+        try {
+          lSession.rollbackTransaction();
+          SessionHandler.getHandler().removeCurrentSession();
+        }
+ catch (        Exception e1) {
+          e1.printStackTrace();
+        }
       }
-      famixMethodListMap.get(((FamixMethod)fe).getName()).add((FamixMethod)fe);
     }
- else     if (fe instanceof FamixAttribute) {
-      famixFieldsMap.put(((FamixAttribute)fe).getUniqueName(),(FamixAttribute)fe);
-    }
- else     if (fe instanceof FamixInvocation) {
-      famixInvocationsMap.put(((FamixInvocation)fe).getStringRepresentation(),(FamixInvocation)fe);
-    }
- else     if (fe instanceof FamixLocalVariable) {
-      famixVariablesMap.put(((FamixLocalVariable)fe).getUniqueName(),(FamixLocalVariable)fe);
-    }
-  }
-  /** 
- * Method to check if a given famixobject exists in the list of famixentities.
- * @param fe
- * @return
- */
-  public boolean famixElementExists(  Subject fe){
-    return famixEntities.contains(fe);
   }
   /** 
  * @return the list of famixentities
  */
   public Collection<Subject> getFamixElements(){
-    return famixEntities;
+    List<Subject> subjects=new ArrayList<Subject>();
+    try {
+      ISession lSession=SessionHandler.getHandler().getCurrentSession();
+      subjects=lSession.query("from Subject",Subject.class);
+    }
+ catch (    Exception e) {
+      e.printStackTrace();
+    }
+    return subjects;
   }
   public void clearModel(){
-    INSTANCE=new ModelManager();
-    getModelManagerChange().clearModel();
-  }
-  public Map<String,FamixPackage> getFamixPackagesMap(){
-    return famixPackagesMap;
-  }
-  public Map<String,FamixClass> getFamixClassesMap(){
-    return famixClassesMap;
-  }
-  public Map<String,FamixMethod> getFamixMethodsMap(){
-    return famixMethodsMap;
-  }
-  public List<Subject> getFamixEntities(){
-    return famixEntities;
-  }
-  public Map<String,FamixAttribute> getFamixFieldsMap(){
-    return famixFieldsMap;
-  }
-  public Map<String,FamixLocalVariable> getFamixVariablesMap(){
-    return famixVariablesMap;
-  }
-  public Map<String,FamixInvocation> getFamixInvocationsMap(){
-    return famixInvocationsMap;
+    try {
+      SessionHandler.getHandler().getCurrentSession().clearDatabase();
+      getModelManagerListeners().fireRefresh();
+    }
+ catch (    Exception e) {
+      e.printStackTrace();
+    }
   }
   public ModelManagerListeners getModelManagerListeners(){
     return ModelManagerListeners.getInstance();
@@ -131,94 +90,231 @@ public class ModelManager implements Serializable {
     return ModelManagerChange.getInstance();
   }
   public List<FamixMethod> getFamixMethodsWithName(  String calledMethodName){
-    if (famixMethodListMap.containsKey(calledMethodName))     return famixMethodListMap.get(calledMethodName);
- else     return new ArrayList<FamixMethod>();
+    List<FamixMethod> methods=new ArrayList<FamixMethod>();
+    try {
+      ISession lSession=SessionHandler.getHandler().getCurrentSession();
+      methods=lSession.query("from FamixMethod as method where method.name='" + calledMethodName + "'",FamixMethod.class);
+    }
+ catch (    Exception e) {
+      e.printStackTrace();
+    }
+    if (methods.isEmpty())     return new ArrayList<FamixMethod>();
+ else     return methods;
   }
   public boolean famixMethodWithNameExists(  String name){
-    return famixMethodListMap.containsKey(name);
+    List<FamixMethod> methods=new ArrayList<FamixMethod>();
+    try {
+      ISession lSession=SessionHandler.getHandler().getCurrentSession();
+      methods=lSession.query("from FamixMethod as method where method.name='" + name + "'",FamixMethod.class);
+    }
+ catch (    Exception e) {
+      e.printStackTrace();
+    }
+    if (methods.isEmpty())     return false;
+ else     return true;
   }
   /** 
  * @param elementName
  * @return
  */
   public boolean famixPackageExists(  String elementName){
-    return famixPackagesMap.containsKey(elementName);
+    List<FamixPackage> packages=new ArrayList<FamixPackage>();
+    try {
+      ISession lSession=SessionHandler.getHandler().getCurrentSession();
+      packages=lSession.query("from FamixPackage as pack where pack.uniqueName='" + elementName + "'",FamixPackage.class);
+    }
+ catch (    Exception e) {
+      e.printStackTrace();
+    }
+    if (packages.isEmpty())     return false;
+ else     return true;
   }
   /** 
  * @param elementName
  * @return
  */
   public FamixPackage getFamixPackage(  String elementName){
-    return famixPackagesMap.get(elementName);
+    List<FamixPackage> packages=new ArrayList<FamixPackage>();
+    try {
+      ISession lSession=SessionHandler.getHandler().getCurrentSession();
+      packages=lSession.query("from FamixPackage as pack where pack.uniqueName='" + elementName + "'",FamixPackage.class);
+    }
+ catch (    Exception e) {
+      e.printStackTrace();
+    }
+    if (packages.isEmpty())     return null;
+ else     return packages.get(0);
   }
   /** 
  * @param elementName
  * @return
  */
   public boolean famixClassExists(  String elementName){
-    return famixClassesMap.containsKey(elementName);
+    List<FamixClass> classes=new ArrayList<FamixClass>();
+    try {
+      ISession lSession=SessionHandler.getHandler().getCurrentSession();
+      classes=lSession.query("from FamixClass as clazz where clazz.uniqueName='" + elementName + "'",FamixClass.class);
+    }
+ catch (    Exception e) {
+      e.printStackTrace();
+    }
+    if (classes.isEmpty())     return false;
+ else     return true;
   }
   /** 
  * @param elementName
  * @return
  */
   public FamixClass getFamixClass(  String elementName){
-    return famixClassesMap.get(elementName);
+    List<FamixClass> classes=new ArrayList<FamixClass>();
+    try {
+      ISession lSession=SessionHandler.getHandler().getCurrentSession();
+      classes=lSession.query("from FamixClass as clazz where clazz.uniqueName='" + elementName + "'",FamixClass.class);
+    }
+ catch (    Exception e) {
+      e.printStackTrace();
+    }
+    if (classes.isEmpty())     return null;
+ else     return classes.get(0);
   }
   /** 
  * @param elementName
  * @return
  */
   public boolean famixMethodExists(  String elementName){
-    return famixMethodsMap.containsKey(elementName);
+    List<FamixMethod> methods=new ArrayList<FamixMethod>();
+    try {
+      ISession lSession=SessionHandler.getHandler().getCurrentSession();
+      methods=lSession.query("from FamixMethod as method where method.uniqueName='" + elementName + "'",FamixMethod.class);
+    }
+ catch (    Exception e) {
+      e.printStackTrace();
+    }
+    if (methods.isEmpty())     return false;
+ else     return true;
   }
   /** 
  * @param elementName
  * @return
  */
   public FamixMethod getFamixMethod(  String elementName){
-    return famixMethodsMap.get(elementName);
+    List<FamixMethod> methods=new ArrayList<FamixMethod>();
+    try {
+      ISession lSession=SessionHandler.getHandler().getCurrentSession();
+      methods=lSession.query("from FamixMethod as method where method.uniqueName='" + elementName + "'",FamixMethod.class);
+    }
+ catch (    Exception e) {
+      e.printStackTrace();
+    }
+    if (methods.isEmpty())     return null;
+ else     return methods.get(0);
   }
   /** 
  * @param elementName
  * @return
  */
   public boolean famixFieldExists(  String elementName){
-    return famixFieldsMap.containsKey(elementName);
+    List<FamixAttribute> fields=new ArrayList<FamixAttribute>();
+    try {
+      ISession lSession=SessionHandler.getHandler().getCurrentSession();
+      fields=lSession.query("from FamixAttribute as field where field.uniqueName='" + elementName + "'",FamixAttribute.class);
+    }
+ catch (    Exception e) {
+      e.printStackTrace();
+    }
+    if (fields.isEmpty())     return false;
+ else     return true;
   }
   /** 
  * @param elementName
  * @return
  */
   public FamixAttribute getFamixField(  String elementName){
-    return famixFieldsMap.get(elementName);
+    List<FamixAttribute> fields=new ArrayList<FamixAttribute>();
+    try {
+      ISession lSession=SessionHandler.getHandler().getCurrentSession();
+      fields=lSession.query("from FamixAttribute as field where field.uniqueName='" + elementName + "'",FamixAttribute.class);
+    }
+ catch (    Exception e) {
+      e.printStackTrace();
+    }
+    if (fields.isEmpty())     return null;
+ else     return fields.get(0);
   }
   /** 
  * @param stringrepresentation
  * @return
  */
   public FamixInvocation getFamixInvocation(  String stringrepresentation){
-    return famixInvocationsMap.get(stringrepresentation);
+    List<FamixInvocation> invs=new ArrayList<FamixInvocation>();
+    try {
+      ISession lSession=SessionHandler.getHandler().getCurrentSession();
+      invs=lSession.query("from FamixInvocation as inv where inv.stringRepresentation='" + stringrepresentation + "'",FamixInvocation.class);
+    }
+ catch (    Exception e) {
+      e.printStackTrace();
+    }
+    if (invs.isEmpty())     return null;
+ else     return invs.get(0);
   }
   /** 
  * @param stringrepresentation
  * @return
  */
   public boolean famixInvocationExists(  String stringrepresentation){
-    return famixInvocationsMap.containsKey(stringrepresentation);
+    List<FamixInvocation> invs=new ArrayList<FamixInvocation>();
+    try {
+      ISession lSession=SessionHandler.getHandler().getCurrentSession();
+      invs=lSession.query("from FamixInvocation as inv where inv.stringRepresentation='" + stringrepresentation + "'",FamixInvocation.class);
+    }
+ catch (    Exception e) {
+      e.printStackTrace();
+    }
+    if (invs.isEmpty())     return false;
+ else     return true;
   }
   /** 
  * @param variableName
  * @return
  */
   public boolean famixVariableExists(  String variableName){
-    return famixVariablesMap.containsKey(variableName);
+    List<FamixLocalVariable> vars=new ArrayList<FamixLocalVariable>();
+    try {
+      ISession lSession=SessionHandler.getHandler().getCurrentSession();
+      vars=lSession.query("from FamixLocalVariable as var where var.uniqueName='" + variableName + "'",FamixLocalVariable.class);
+    }
+ catch (    Exception e) {
+      e.printStackTrace();
+    }
+    if (vars.isEmpty())     return false;
+ else     return true;
   }
   /** 
  * @param variableName
  * @return
  */
   public FamixLocalVariable getFamixVariable(  String variableName){
-    return famixVariablesMap.get(variableName);
+    List<FamixLocalVariable> vars=new ArrayList<FamixLocalVariable>();
+    try {
+      ISession lSession=SessionHandler.getHandler().getCurrentSession();
+      vars=lSession.query("from FamixLocalVariable as var where var.uniqueName='" + variableName + "'",FamixLocalVariable.class);
+    }
+ catch (    Exception e) {
+      e.printStackTrace();
+    }
+    if (vars.isEmpty())     return null;
+ else     return vars.get(0);
+  }
+  public Subject getFamixEntity(  Long id){
+    List<Subject> vars=new ArrayList<Subject>();
+    try {
+      ISession lSession=SessionHandler.getHandler().getCurrentSession();
+      vars=lSession.query("from Subject as var where var.id='" + id + "'",Subject.class);
+    }
+ catch (    Exception e) {
+      e.printStackTrace();
+    }
+    if (vars.isEmpty())     return null;
+ else     return vars.get(0);
   }
 }

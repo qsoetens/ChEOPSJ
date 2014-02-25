@@ -124,7 +124,7 @@ return oldAST;
  * @param element
  * @param add
  */
-private void storeChange(IJavaElement element,IChange change){
+public void storeChange(IJavaElement element,IChange change){
 if (element instanceof IMethod) {
 new MethodRecorder((IMethod)element).storeChange(change);
 }
@@ -155,7 +155,7 @@ new PackageRecorder((IPackageFragment)element).storeChange(change);
  * @param node
  * @param add
  */
-private void storeChange(ASTNode node,IChange change){
+public void storeChange(ASTNode node,IChange change){
 if (node instanceof MethodInvocation) {
 new MethodInvocationRecorder((MethodInvocation)node).storeChange(change);
 }
