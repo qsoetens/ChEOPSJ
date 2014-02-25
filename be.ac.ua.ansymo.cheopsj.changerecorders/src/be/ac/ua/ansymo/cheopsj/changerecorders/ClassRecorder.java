@@ -31,7 +31,6 @@ import ch.uzh.ifi.seal.changedistiller.model.entities.SourceCodeEntity;
 public class ClassRecorder extends AbstractEntityRecorder {
 	private FamixClass famixClass;
 	private FamixEntity parent;
-	//blablabla
 	private String uniqueName = "";
 	private int flags;
 	private String name = "";
@@ -65,7 +64,7 @@ public class ClassRecorder extends AbstractEntityRecorder {
 		name = element.getElementName();
 
 		//set the flags
-		try {
+		/*try {
 			//When Using jUnit 3, we can identify TestClasses by it using the TestCase interface
 			if(element.getSuperclassName().equals("TestCase")){
 				isTestClass = true;
@@ -75,7 +74,7 @@ public class ClassRecorder extends AbstractEntityRecorder {
 			flags = element.getFlags();
 		} catch (JavaModelException e) {
 			e.printStackTrace();
-		}		
+		}*/		
 	}
 
 	public ClassRecorder(TypeDeclaration declaration) {

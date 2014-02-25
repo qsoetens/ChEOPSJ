@@ -34,7 +34,6 @@ public abstract class AbstractEntityRecorder {
 
 	protected ModelManager manager;
 	protected ModelManagerChange managerChange;
-	protected FamixEntity[] OldChildrenEntities; 
 	
 	public AbstractEntityRecorder(){
 		manager = ModelManager.getInstance();
@@ -52,19 +51,7 @@ public abstract class AbstractEntityRecorder {
 	abstract protected void createAndLinkFamixElement();
 
 	abstract protected void createAndLinkChange(AtomicChange change);
-	
-	protected void initializeOldChildrenEntities(IParent element)
-	{
-		try {
-			OldChildrenEntities = new FamixEntity[element.getChildren().length];
-		} catch (JavaModelException e) {
-			OldChildrenEntities = null;
-			e.printStackTrace();
-		}
 		
-		
-		
-	}
 	protected void setStructuralDependencies(AtomicChange change, Subject subject, 
 			FamixEntity parent) {
 		

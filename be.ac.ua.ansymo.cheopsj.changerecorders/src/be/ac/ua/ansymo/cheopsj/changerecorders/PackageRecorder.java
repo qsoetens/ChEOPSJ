@@ -10,7 +10,11 @@
  ******************************************************************************/
 package be.ac.ua.ansymo.cheopsj.changerecorders;
 
+import org.eclipse.jdt.core.ICompilationUnit;
+import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IPackageFragment;
+import org.eclipse.jdt.core.IType;
+import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.dom.PackageDeclaration;
 
 import be.ac.ua.ansymo.cheopsj.model.changes.Add;
@@ -42,11 +46,46 @@ public class PackageRecorder extends AbstractEntityRecorder {
 	public PackageRecorder(IPackageFragment element) {
 		this();
 		uniqueName = element.getElementName();
+		
 		if(uniqueName.lastIndexOf('.') > 0){ //if there is a '.' in the name, then there is a parent package
 			parentName = uniqueName.substring(0, uniqueName.lastIndexOf('.'));
 		}		
 		
 		name = element.getElementName();
+		
+		
+		// TODO fix: after removal, adds the old classes again (why?).
+		// TODO fix: doesn't link subclasses to the new package, even though the names are correct.
+		try {
+		//	System.out.println(element.hasChildren());
+			if (element.hasChildren()) // see if there are any classes out there under this newly created package. this happens in case of a rename.
+			{
+				IJavaElement[] childrenList = element.getChildren();
+				IType[] childsTypes;
+				int i,j;
+				for(i=0;i<childrenList.length;i++)
+					{
+					if (childrenList[i] instanceof ICompilationUnit)
+					{
+
+						childsTypes = ((ICompilationUnit) childrenList[i]).getTypes();
+						for(j=0;j<childsTypes.length;j++)
+							new ClassRecorder(childsTypes[j]).storeChange(new Add());
+					}
+					else if (childrenList[i] instanceof IType)
+						new ClassRecorder((IType) childrenList[i]).storeChange(new Add());
+					
+					// there shouldn't be anything else at this level.
+					}
+				
+				
+			}
+		} catch (JavaModelException e) {
+			//if there's an exception there, something is terribly wrong, so do nothing.
+			e.printStackTrace();
+		}
+		
+		
 	}
 
 	/**
