@@ -8,3 +8,7 @@ be.ac.ua.ansymo.cheopsj.changerecorders/testworkspace/.metadata/*
 *.class
 
 changedistiller/
+
+**/oldCUs/
+
+*.prevcu
