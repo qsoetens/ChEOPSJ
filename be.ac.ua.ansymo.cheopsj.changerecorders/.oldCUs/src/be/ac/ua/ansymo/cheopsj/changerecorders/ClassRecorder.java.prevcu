@@ -52,9 +52,6 @@ public class ClassRecorder extends AbstractEntityRecorder {
  else {
       uniqueName=declaration.getName().getFullyQualifiedName();
     }
-    if (declaration.getSuperclass().getFullyQualifiedName().equals("TestCase")) {
-      isTestClass=true;
-    }
     flags=declaration.getFlags();
   }
   public ClassRecorder(  SourceCodeEntity entity,  SourceCodeEntity parentEntity){

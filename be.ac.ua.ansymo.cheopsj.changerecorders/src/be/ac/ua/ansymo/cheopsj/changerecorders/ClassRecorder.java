@@ -94,9 +94,9 @@ public class ClassRecorder extends AbstractEntityRecorder {
 		}
 		
 		//When Using jUnit 3, we can identify TestClasses by it using the TestCase interface
-		if(declaration.getSuperclass().getFullyQualifiedName().equals("TestCase")){
+		/*if(declaration.getSuperclass().getFullyQualifiedName().equals("TestCase")){
 			isTestClass = true;
-		}
+		}*/
 		//In jUnit 4, testclasses are identified by them containing @Test methods, so we can't identify them at this time!
 
 		//set the flags

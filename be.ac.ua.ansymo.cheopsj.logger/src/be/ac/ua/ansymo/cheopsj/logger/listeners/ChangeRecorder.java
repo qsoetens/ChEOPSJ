@@ -178,7 +178,7 @@ public class ChangeRecorder {
 	 * @param element
 	 * @param add
 	 */
-	public void storeChange(IJavaElement element, IChange change) {
+	private void storeChange(IJavaElement element, IChange change) {
 		if (element instanceof IMethod) {
 			new MethodRecorder((IMethod) element).storeChange(change);
 		} else if (element instanceof IField) {
@@ -211,7 +211,7 @@ public class ChangeRecorder {
 	 * @param node
 	 * @param add
 	 */
-	public void storeChange(ASTNode node, IChange change) {
+	private void storeChange(ASTNode node, IChange change) {
 		if (node instanceof MethodInvocation) {
 			new MethodInvocationRecorder((MethodInvocation) node).storeChange(change);
 		}else if (node instanceof VariableDeclaration){

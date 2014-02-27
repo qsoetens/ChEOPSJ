@@ -19,7 +19,12 @@ import org.eclipse.jdt.core.dom.PackageDeclaration;
 
 import be.ac.ua.ansymo.cheopsj.model.changes.Add;
 import be.ac.ua.ansymo.cheopsj.model.changes.AtomicChange;
+import be.ac.ua.ansymo.cheopsj.model.changes.IChange;
+import be.ac.ua.ansymo.cheopsj.model.changes.Subject;
 import be.ac.ua.ansymo.cheopsj.model.famix.FamixPackage;
+
+import java.util.List;
+import java.util.ArrayList;
 
 
 /**
@@ -33,7 +38,7 @@ public class PackageRecorder extends AbstractEntityRecorder {
 	private String uniqueName = ""; //the unique name of our package
 	private String parentName = "";
 	private String name = "";
-
+	private List<IType> typeTransporter = new ArrayList<IType>();
 	private PackageRecorder(){
 	}
 
@@ -54,10 +59,8 @@ public class PackageRecorder extends AbstractEntityRecorder {
 		name = element.getElementName();
 		
 		
-		// TODO fix: after removal, adds the old classes again (why?).
 		// TODO fix: doesn't link subclasses to the new package, even though the names are correct.
 		try {
-		//	System.out.println(element.hasChildren());
 			if (element.hasChildren()) // see if there are any classes out there under this newly created package. this happens in case of a rename.
 			{
 				IJavaElement[] childrenList = element.getChildren();
@@ -70,11 +73,13 @@ public class PackageRecorder extends AbstractEntityRecorder {
 
 						childsTypes = ((ICompilationUnit) childrenList[i]).getTypes();
 						for(j=0;j<childsTypes.length;j++)
-							new ClassRecorder(childsTypes[j]).storeChange(new Add());
+					//		new ClassRecorder(childsTypes[j]).storeChange(new Add());
+							typeTransporter.add(childsTypes[j]);
 					}
 					else if (childrenList[i] instanceof IType)
-						new ClassRecorder((IType) childrenList[i]).storeChange(new Add());
-					
+					//	new ClassRecorder((IType) childrenList[i]).storeChange(new Add());
+						typeTransporter.add((IType) childrenList[i]);
+						
 					// there shouldn't be anything else at this level.
 					}
 				
@@ -115,6 +120,27 @@ public class PackageRecorder extends AbstractEntityRecorder {
 		name = uniquename;
 	}
 
+	
+	@Override
+	public void storeChange(IChange change) {
+		if (typeTransporter.size() > 0)
+		{
+			int i;
+			Add rename;
+			for (i=0;i<typeTransporter.size();i++)
+			{
+				rename = new Add();
+				rename.addStructuralDependee((AtomicChange) change);
+				new ClassRecorder(typeTransporter.get(i)).storeChange(rename);
+			}
+			
+		}
+		
+		createAndLinkFamixElement();
+		createAndLinkChange((AtomicChange) change);
+	}
+
+	
 	/*
 	 * (non-Javadoc)
 	 * 

@@ -10,7 +10,11 @@ import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.dom.PackageDeclaration;
 import be.ac.ua.ansymo.cheopsj.model.changes.Add;
 import be.ac.ua.ansymo.cheopsj.model.changes.AtomicChange;
+import be.ac.ua.ansymo.cheopsj.model.changes.IChange;
+import be.ac.ua.ansymo.cheopsj.model.changes.Subject;
 import be.ac.ua.ansymo.cheopsj.model.famix.FamixPackage;
+import java.util.List;
+import java.util.ArrayList;
 /** 
  * The PackageRecorder, is a changerecorder that records changes made to a package.  A package is represented by it's unique name : <superpackage unique name>'.' <package name>
  * @author quinten
@@ -21,6 +25,7 @@ public class PackageRecorder extends AbstractEntityRecorder {
   private String uniqueName="";
   private String parentName="";
   private String name="";
+  private List<IType> typeTransporter=new ArrayList<IType>();
   private PackageRecorder(){
   }
   /** 
@@ -44,9 +49,9 @@ public class PackageRecorder extends AbstractEntityRecorder {
         for (i=0; i < childrenList.length; i++) {
           if (childrenList[i] instanceof ICompilationUnit) {
             childsTypes=((ICompilationUnit)childrenList[i]).getTypes();
-            for (j=0; j < childsTypes.length; j++)             new ClassRecorder(childsTypes[j]).storeChange(new Add());
+            for (j=0; j < childsTypes.length; j++)             typeTransporter.add(childsTypes[j]);
           }
- else           if (childrenList[i] instanceof IType)           new ClassRecorder((IType)childrenList[i]).storeChange(new Add());
+ else           if (childrenList[i] instanceof IType)           typeTransporter.add((IType)childrenList[i]);
         }
       }
     }
@@ -78,6 +83,19 @@ public class PackageRecorder extends AbstractEntityRecorder {
       parentName=uniqueName.substring(0,uniqueName.lastIndexOf('.'));
     }
     name=uniquename;
+  }
+  @Override public void storeChange(  IChange change){
+    if (typeTransporter.size() > 0) {
+      int i;
+      Add rename;
+      for (i=0; i < typeTransporter.size(); i++) {
+        rename=new Add();
+        rename.addStructuralDependee((AtomicChange)change);
+        new ClassRecorder(typeTransporter.get(i)).storeChange(rename);
+      }
+    }
+    createAndLinkFamixElement();
+    createAndLinkChange((AtomicChange)change);
   }
   @Override protected void createAndLinkFamixElement(){
     if (!manager.famixPackageExists(uniqueName)) {
