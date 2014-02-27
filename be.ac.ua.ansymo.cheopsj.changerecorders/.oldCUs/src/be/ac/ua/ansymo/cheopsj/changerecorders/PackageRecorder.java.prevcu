@@ -27,6 +27,12 @@ public class PackageRecorder extends AbstractEntityRecorder {
   private String name="";
   private List<IType> typeTransporter=new ArrayList<IType>();
   private PackageRecorder(){
+    try {
+      LockManager.getInstance().lock();
+    }
+ catch (    InterruptedException e) {
+      e.printStackTrace();
+    }
   }
   /** 
  * Constructor to create a PackageRecorder based on an IPackageFragment, which is a representation of a package in the JDT JavaModel.
@@ -54,9 +60,10 @@ public class PackageRecorder extends AbstractEntityRecorder {
  else           if (childrenList[i] instanceof IType)           typeTransporter.add((IType)childrenList[i]);
         }
       }
+      LockManager.getInstance().unlock();
     }
  catch (    JavaModelException e) {
-      e.printStackTrace();
+      LockManager.getInstance().unlock();
     }
   }
   /** 
@@ -72,6 +79,7 @@ public class PackageRecorder extends AbstractEntityRecorder {
       parentName=uniqueName.substring(0,uniqueName.lastIndexOf('.'));
     }
     name=declaration.getName().getFullyQualifiedName();
+    LockManager.getInstance().unlock();
   }
   /** 
  * @param uniquename
@@ -83,19 +91,29 @@ public class PackageRecorder extends AbstractEntityRecorder {
       parentName=uniqueName.substring(0,uniqueName.lastIndexOf('.'));
     }
     name=uniquename;
+    LockManager.getInstance().unlock();
   }
   @Override public void storeChange(  IChange change){
-    if (typeTransporter.size() > 0) {
+    try {
+      LockManager.getInstance().lock();
+    }
+ catch (    InterruptedException e) {
+      e.printStackTrace();
+    }
+    int j=typeTransporter.size();
+    if (j > 0) {
       int i;
-      Add rename;
-      for (i=0; i < typeTransporter.size(); i++) {
-        rename=new Add();
-        rename.addStructuralDependee((AtomicChange)change);
-        new ClassRecorder(typeTransporter.get(i)).storeChange(rename);
+      Add[] rename;
+      rename=new Add[j];
+      for (i=0; i < j; i++) {
+        rename[i]=new Add();
+        rename[i].addStructuralDependee((AtomicChange)change);
+        new ClassRecorder(typeTransporter.get(i)).storeChange(rename[i]);
       }
     }
     createAndLinkFamixElement();
     createAndLinkChange((AtomicChange)change);
+    LockManager.getInstance().unlock();
   }
   @Override protected void createAndLinkFamixElement(){
     if (!manager.famixPackageExists(uniqueName)) {
