@@ -41,6 +41,12 @@ public class ClassRecorder extends AbstractEntityRecorder {
     uniqueName=element.getFullyQualifiedName();
     uniqueName=uniqueName.replace('$','.');
     name=element.getElementName();
+    try {
+      flags=element.getFlags();
+    }
+ catch (    JavaModelException e) {
+      e.printStackTrace();
+    }
   }
   public ClassRecorder(  TypeDeclaration declaration){
     this();

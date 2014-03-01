@@ -71,10 +71,16 @@ public class ClassRecorder extends AbstractEntityRecorder {
 			}
 			//In jUnit 4, testclasses are identified by them containing @Test methods, so we can't identify them at this time!
 			
-			flags = element.getFlags();
+			
 		} catch (JavaModelException e) {
 			e.printStackTrace();
 		}*/		
+		try {
+			flags = element.getFlags();
+		} catch (JavaModelException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	public ClassRecorder(TypeDeclaration declaration) {

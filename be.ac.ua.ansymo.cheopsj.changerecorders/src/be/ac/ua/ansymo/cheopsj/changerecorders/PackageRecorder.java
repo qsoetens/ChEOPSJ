@@ -66,7 +66,7 @@ public class PackageRecorder extends AbstractEntityRecorder {
 		name = element.getElementName();
 		
 		
-		// TODO fix: doesn't link subclasses to the new package, even though the names are correct.
+		// TODO fix: non-thread safe access error. only some of the classes are linked. why?
 		try {
 			if (element.hasChildren()) // see if there are any classes out there under this newly created package. this happens in case of a rename.
 			{
@@ -153,14 +153,27 @@ public class PackageRecorder extends AbstractEntityRecorder {
 			for (i=0;i<j;i++)
 			{
 				rename[i] = new Add();
-				rename[i].addStructuralDependee((AtomicChange) change);
+				//System.out.println(rename[i].getStructuralDependencies());
+				//System.out.println(rename[i].getStructuralDependencies());
+				//rename[i].addStructuralDependee((AtomicChange) change);
+				
 				new ClassRecorder(typeTransporter.get(i)).storeChange(rename[i]);
+				
+				createAndLinkFamixElement();
+				createAndLinkChange((AtomicChange) change);
+				
+				famixPackage.addChange(rename[i]);
+				setStructuralDependencies(rename[i], rename[i].getChangeSubject(), famixPackage);
+				
 			}
 			
 		}
+		else
+		{
+			createAndLinkFamixElement();
+			createAndLinkChange((AtomicChange) change);
+		}
 		
-		createAndLinkFamixElement();
-		createAndLinkChange((AtomicChange) change);
 		LockManager.getInstance().unlock();
 		
 	}
