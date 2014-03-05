@@ -63,18 +63,14 @@ public class PackageRecorder extends AbstractEntityRecorder {
 	 */
 	public PackageRecorder(IPackageFragment element) {
 		this();
-uniqueName = element.getElementName();
-		
+		uniqueName = element.getElementName();
+
 		if(uniqueName.lastIndexOf('.') > 0){ //if there is a '.' in the name, then there is a parent package
 			parentName = uniqueName.substring(0, uniqueName.lastIndexOf('.'));
 		}		
-		
-		
-		
+
 		name = element.getElementName();
-		
-		
-		// TODO fix: non-thread safe access error. only some of the classes are linked. why?
+
 		try {
 			if (element.hasChildren()) // see if there are any classes out there under this newly created package. this happens in case of a rename.
 			{
@@ -82,40 +78,25 @@ uniqueName = element.getElementName();
 				IType[] childsTypes;
 				int i,j;
 				for(i=0;i<childrenList.length;i++)
-					{
+				{
 					if (childrenList[i] instanceof ICompilationUnit)
 					{
 
-						childsTypes = ((ICompilationUnit) childrenList[i]).getTypes();
+						childsTypes = ((ICompilationUnit) childrenList[i]).getAllTypes();
 						for(j=0;j<childsTypes.length;j++)
-						//new ClassRecorder(childsTypes[j]).storeChange(new Add());
-						typeTransporter.add(childsTypes[j]);
-						
-						
-					    
-					    
-					    
+							typeTransporter.add(childsTypes[j]);
+
 					}
 					else if (childrenList[i] instanceof IType)
-					//	new ClassRecorder((IType) childrenList[i]).storeChange(new Add());
 						typeTransporter.add((IType) childrenList[i]);
-						
-					// there shouldn't be anything else at this level.
-					
-					
-				
-			}
-			//LockManager.getInstance().unlock();
 
-			}}
-			catch (JavaModelException e) {
-				//if there's an exception there, we're in a remove.
-			//LockManager.getInstance().unlock();
-			
-			// e.printStackTrace();
+					// there shouldn't be anything else at this level.
+				}
+			}
 		}
-		
-		
+		catch (JavaModelException e) {
+			//if there's an exception there, we're in a remove.
+		}
 	}
 
 	/**
@@ -149,17 +130,12 @@ uniqueName = element.getElementName();
 
 	@Override
 	public void storeChange(IChange change) {
-		/*try {
-			LockManager.getInstance().lock();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}*/
 		createAndLinkFamixElement();
 		createAndLinkChange((AtomicChange) change);
 	
-		
 		int j=typeTransporter.size();
+		
+		// if there's something in the transporter, then we must be in a rename
 		if (j > 0)
 		{
 		   
@@ -168,25 +144,10 @@ uniqueName = element.getElementName();
 			rename = new Add[j];
 			for (i=0;i<j;i++)
 			{
-				rename[i] = new Add();
-				//System.out.println(rename[i].getStructuralDependencies());
-				//System.out.println(rename[i].getStructuralDependencies());
-			//	rename[i].addStructuralDependee((AtomicChange) change);
-				
+				rename[i] = new Add(); //added because of hibernate. most likely not needed anymore.
 				new ClassRecorder(typeTransporter.get(i)).storeChange(rename[i]);
-				
-			
-				
- 				//famixPackage.addChange(rename[i]);
-				//setStructuralDependencies(rename[i], rename[i].getChangeSubject(), famixPackage);
-				
 			}
-			
 		}
-			
-		
-		//LockManager.getInstance().unlock();
-		
 	}
 
 	

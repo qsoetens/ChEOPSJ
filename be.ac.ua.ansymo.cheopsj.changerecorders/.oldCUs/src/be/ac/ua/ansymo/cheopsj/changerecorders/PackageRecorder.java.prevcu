@@ -58,7 +58,7 @@ public class PackageRecorder extends AbstractEntityRecorder {
         int i, j;
         for (i=0; i < childrenList.length; i++) {
           if (childrenList[i] instanceof ICompilationUnit) {
-            childsTypes=((ICompilationUnit)childrenList[i]).getTypes();
+            childsTypes=((ICompilationUnit)childrenList[i]).getAllTypes();
             for (j=0; j < childsTypes.length; j++)             typeTransporter.add(childsTypes[j]);
           }
  else           if (childrenList[i] instanceof IType)           typeTransporter.add((IType)childrenList[i]);

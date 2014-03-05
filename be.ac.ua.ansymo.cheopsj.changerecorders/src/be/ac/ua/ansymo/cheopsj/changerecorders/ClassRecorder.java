@@ -10,10 +10,14 @@
  ******************************************************************************/
 package be.ac.ua.ansymo.cheopsj.changerecorders;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import org.eclipse.jdt.core.ICompilationUnit;
+import org.eclipse.jdt.core.IField;
 import org.eclipse.jdt.core.IJavaElement;
+import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
@@ -21,13 +25,14 @@ import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.PackageDeclaration;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
-import ch.uzh.ifi.seal.changedistiller.model.entities.SourceCodeEntity;
 
+import ch.uzh.ifi.seal.changedistiller.model.entities.SourceCodeEntity;
 import be.ac.ua.ansymo.cheopsj.model.ModelManager;
 import be.ac.ua.ansymo.cheopsj.model.ModelManagerChange;
 import be.ac.ua.ansymo.cheopsj.model.changes.Add;
 import be.ac.ua.ansymo.cheopsj.model.changes.AtomicChange;
 import be.ac.ua.ansymo.cheopsj.model.changes.Change;
+import be.ac.ua.ansymo.cheopsj.model.changes.IChange;
 import be.ac.ua.ansymo.cheopsj.model.changes.Remove;
 import be.ac.ua.ansymo.cheopsj.model.changes.Subject;
 import be.ac.ua.ansymo.cheopsj.model.famix.FamixClass;
@@ -43,7 +48,10 @@ public class ClassRecorder extends AbstractEntityRecorder {
 	private String uniqueName;
 	private int flags;
 	private String name = "";
+	private List<IMethod> methodTransporter = new ArrayList<IMethod>();
+	private List<IField> fieldTransporter = new ArrayList<IField>();
 
+	
 	private ClassRecorder(){
 		//get manager instance
 		manager = ModelManager.getInstance();
@@ -66,7 +74,26 @@ public class ClassRecorder extends AbstractEntityRecorder {
 			flags = element.getFlags();
 		} catch (JavaModelException e) {
 			e.printStackTrace();
-		}		
+		}	
+		
+		try {
+			if (element.hasChildren()) // see if there are any classes out there under this newly created package. this happens in case of a rename.
+			{
+				IField[] fieldList = element.getFields();
+				for (IField f : fieldList) 
+					fieldTransporter.add(f);
+				
+				IMethod[] methodList = element.getMethods();
+				for (IMethod m : methodList) 
+					methodTransporter.add(m);
+				
+					// there shouldn't be anything else at this level.
+				
+			}
+		}
+		catch (JavaModelException e) {
+			//if there's an exception there, we're in a remove.
+		}
 	}
 
 	public ClassRecorder(TypeDeclaration declaration) {
@@ -114,6 +141,40 @@ public class ClassRecorder extends AbstractEntityRecorder {
 		name = classname;
 	}
 
+	
+
+	@Override
+	public void storeChange(IChange change) {
+		createAndLinkFamixElement();
+		createAndLinkChange((AtomicChange) change);
+	
+		int fC=fieldTransporter.size(),mC=methodTransporter.size();
+		
+		// if there's something in the transporter, then we must be in a rename
+		if (fC + mC > 0)
+		{
+		   
+			int i;
+			Add[] renameF,renameM;
+			renameF = new Add[fC];
+			renameM = new Add[mC];
+			for (i=0;i<fC;i++)
+			{
+				renameF[i] = new Add(); //added because of hibernate. most likely not needed anymore.
+				new FieldRecorder(fieldTransporter.get(i)).storeChange(renameF[i]);
+			}
+			
+			for (i=0;i<mC;i++)
+			{
+				renameM[i] = new Add(); //added because of hibernate. most likely not needed anymore.
+				new MethodRecorder(methodTransporter.get(i)).storeChange(renameM[i]);
+			}
+			
+			
+		}
+	}
+
+	
 	private FamixEntity findParentEntity(IType element) {
 		IJavaElement parentJavaElement = element.getParent();
 		if (parentJavaElement != null) {
