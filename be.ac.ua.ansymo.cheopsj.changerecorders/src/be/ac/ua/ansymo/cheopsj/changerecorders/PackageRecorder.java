@@ -10,9 +10,15 @@
  ******************************************************************************/
 package be.ac.ua.ansymo.cheopsj.changerecorders;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
+import org.eclipse.jdt.core.ICompilationUnit;
+import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IPackageFragment;
+import org.eclipse.jdt.core.IType;
+import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.dom.PackageDeclaration;
 
 import be.ac.ua.ansymo.cheopsj.model.ModelManager;
@@ -20,6 +26,7 @@ import be.ac.ua.ansymo.cheopsj.model.ModelManagerChange;
 import be.ac.ua.ansymo.cheopsj.model.changes.Add;
 import be.ac.ua.ansymo.cheopsj.model.changes.AtomicChange;
 import be.ac.ua.ansymo.cheopsj.model.changes.Change;
+import be.ac.ua.ansymo.cheopsj.model.changes.IChange;
 import be.ac.ua.ansymo.cheopsj.model.changes.Remove;
 import be.ac.ua.ansymo.cheopsj.model.changes.Subject;
 import be.ac.ua.ansymo.cheopsj.model.famix.FamixClass;
@@ -38,6 +45,10 @@ public class PackageRecorder extends AbstractEntityRecorder {
 	private ModelManagerChange managerChange;
 	private String uniqueName; //the unique name of our package
 	private String name = "";
+	private String parentName = "";
+
+	private List<IType> typeTransporter = new ArrayList<IType>();
+
 
 	private PackageRecorder(){
 		manager = ModelManager.getInstance();
@@ -52,8 +63,59 @@ public class PackageRecorder extends AbstractEntityRecorder {
 	 */
 	public PackageRecorder(IPackageFragment element) {
 		this();
-		uniqueName = element.getElementName();
+uniqueName = element.getElementName();
+		
+		if(uniqueName.lastIndexOf('.') > 0){ //if there is a '.' in the name, then there is a parent package
+			parentName = uniqueName.substring(0, uniqueName.lastIndexOf('.'));
+		}		
+		
+		
+		
 		name = element.getElementName();
+		
+		
+		// TODO fix: non-thread safe access error. only some of the classes are linked. why?
+		try {
+			if (element.hasChildren()) // see if there are any classes out there under this newly created package. this happens in case of a rename.
+			{
+				IJavaElement[] childrenList = element.getChildren();
+				IType[] childsTypes;
+				int i,j;
+				for(i=0;i<childrenList.length;i++)
+					{
+					if (childrenList[i] instanceof ICompilationUnit)
+					{
+
+						childsTypes = ((ICompilationUnit) childrenList[i]).getTypes();
+						for(j=0;j<childsTypes.length;j++)
+						//new ClassRecorder(childsTypes[j]).storeChange(new Add());
+						typeTransporter.add(childsTypes[j]);
+						
+						
+					    
+					    
+					    
+					}
+					else if (childrenList[i] instanceof IType)
+					//	new ClassRecorder((IType) childrenList[i]).storeChange(new Add());
+						typeTransporter.add((IType) childrenList[i]);
+						
+					// there shouldn't be anything else at this level.
+					
+					
+				
+			}
+			//LockManager.getInstance().unlock();
+
+			}}
+			catch (JavaModelException e) {
+				//if there's an exception there, we're in a remove.
+			//LockManager.getInstance().unlock();
+			
+			// e.printStackTrace();
+		}
+		
+		
 	}
 
 	/**
@@ -83,6 +145,52 @@ public class PackageRecorder extends AbstractEntityRecorder {
 	 * @see be.ac.ua.cheopsj.Controller.changeRecorders.AbstractEntityRecorder#
 	 * createAndLinkFamixElement()
 	 */
+	
+
+	@Override
+	public void storeChange(IChange change) {
+		/*try {
+			LockManager.getInstance().lock();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}*/
+		createAndLinkFamixElement();
+		createAndLinkChange((AtomicChange) change);
+	
+		
+		int j=typeTransporter.size();
+		if (j > 0)
+		{
+		   
+			int i;
+			Add[] rename;
+			rename = new Add[j];
+			for (i=0;i<j;i++)
+			{
+				rename[i] = new Add();
+				//System.out.println(rename[i].getStructuralDependencies());
+				//System.out.println(rename[i].getStructuralDependencies());
+			//	rename[i].addStructuralDependee((AtomicChange) change);
+				
+				new ClassRecorder(typeTransporter.get(i)).storeChange(rename[i]);
+				
+			
+				
+ 				//famixPackage.addChange(rename[i]);
+				//setStructuralDependencies(rename[i], rename[i].getChangeSubject(), famixPackage);
+				
+			}
+			
+		}
+			
+		
+		//LockManager.getInstance().unlock();
+		
+	}
+
+	
+	
 	@Override
 	protected void createAndLinkFamixElement() {
 		if (!manager.famixPackageExists(uniqueName)) {
