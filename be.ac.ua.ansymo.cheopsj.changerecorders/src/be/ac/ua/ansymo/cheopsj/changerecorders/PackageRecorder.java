@@ -13,22 +13,16 @@ package be.ac.ua.ansymo.cheopsj.changerecorders;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IPackageFragment;
-<<<<<<< HEAD
+
 import org.eclipse.jdt.core.IType;
-=======
-import org.eclipse.jdt.core.ICompilationUnit;
->>>>>>> 0d45dbd5c0ba82490c2cff570bffcb1f5645fccd
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.dom.PackageDeclaration;
 
 import be.ac.ua.ansymo.cheopsj.model.changes.Add;
 import be.ac.ua.ansymo.cheopsj.model.changes.AtomicChange;
-<<<<<<< HEAD
+
 import be.ac.ua.ansymo.cheopsj.model.changes.IChange;
 import be.ac.ua.ansymo.cheopsj.model.changes.Subject;
-=======
-import be.ac.ua.ansymo.cheopsj.model.famix.FamixClass;
->>>>>>> 0d45dbd5c0ba82490c2cff570bffcb1f5645fccd
 import be.ac.ua.ansymo.cheopsj.model.famix.FamixPackage;
 
 import java.util.List;
