@@ -1,28 +1,11 @@
 package be.ac.ua.ansymo.cheopsj.distiller.popup.actions;
 
 import java.io.File;
-import java.lang.reflect.InvocationTargetException;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.jdt.core.IJavaProject;
-import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.dialogs.ErrorDialog;
-import org.eclipse.jface.dialogs.ProgressMonitorDialog;
-import org.eclipse.jface.operation.IRunnableWithProgress;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IObjectActionDelegate;
-import org.eclipse.ui.ISelectionService;
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PlatformUI;
 
 import be.ac.ua.ansymo.cheopsj.distiller.changeextractor.ChangeExtractor;
 import be.ac.ua.ansymo.cheopsj.distiller.connection.Connector;
@@ -31,63 +14,11 @@ import be.ac.ua.ansymo.cheopsj.distiller.connection.LogEntryHandler;
 import be.ac.ua.ansymo.cheopsj.distiller.connection.LogEntryHandler.Change;
 
 
-public class DistillChanges implements IObjectActionDelegate {
+public class DistillChanges extends AbstractDistiller{
 
-	private IProject selectedProject;
 	private Connector connector;
 	
-	private IProject getProjectForSelection(ISelection selection){
-		if(selection == null){ return null; }
-		Object selectedElement = ((IStructuredSelection)selection).getFirstElement();
-				
-		if (selectedElement instanceof IProject) {
-			return (IProject) selectedElement;
-		} else if (selectedElement instanceof IJavaProject){
-			return ((IJavaProject) selectedElement).getProject();
-		}
-		
-		return null;
-	}
-	
-	private void getSelectedProject(){
-		IWorkbench workbench = PlatformUI.getWorkbench();
-		IWorkbenchWindow window = workbench.getActiveWorkbenchWindow();
-		ISelectionService selectionService = window.getSelectionService();
-		ISelection selection = selectionService.getSelection("org.eclipse.jdt.ui.PackageExplorer");
-		selectedProject = getProjectForSelection(selection);
-	}
-	
-	private Shell getShell() {
-		IWorkbench workbench = PlatformUI.getWorkbench();
-		IWorkbenchWindow window = workbench.getActiveWorkbenchWindow();
-		if (window == null)
-			return null;
-		return window.getShell();
-	}
-
-	@Override
-	public void run(IAction action) {
-		getSelectedProject();
-		ProgressMonitorDialog dialog = new ProgressMonitorDialog(getShell());
-		try {
-			dialog.run(true, true, new IRunnableWithProgress() {
-
-				public void run(IProgressMonitor monitor)
-						throws InvocationTargetException, InterruptedException {
-					iterateRevisions(monitor);
-				}
-			});
-		} catch (InterruptedException e) {
-
-		} catch (InvocationTargetException e) {
-			Throwable target = e.getTargetException();
-			ErrorDialog.openError(getShell(), "TargetError",
-					"Error Occured While Running Experiment", new Status(0,
-							"MetricsExperiment", 0, "no message", target));
-		}
-	}
-		
-	private void iterateRevisions(IProgressMonitor monitor){
+	void doYourThing(IProgressMonitor monitor){
 		try {			
 			//TODO record additions for initial project!
 			File projectFile = selectedProject.getLocation().toFile();
@@ -172,13 +103,5 @@ public class DistillChanges implements IObjectActionDelegate {
 			//new LocalVariableRecorder((VariableDeclaration) node).storeChange(change);
 		}
 	}*/
-
-	@Override
-	public void setActivePart(IAction action, IWorkbenchPart targetPart) {
-	}
-
-	@Override
-	public void selectionChanged(IAction action, ISelection selection) {
-	}
 
 }

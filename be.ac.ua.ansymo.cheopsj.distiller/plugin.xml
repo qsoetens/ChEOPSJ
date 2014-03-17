@@ -42,6 +42,13 @@
                enablesFor="1"
                id="DistillerFromSVN.action1">
          </action>
+         <action
+               class="be.ac.ua.ansymo.cheopsj.distiller.popup.actions.DistillAdditionsFromCurrentVersion"
+               enablesFor="1"
+               id="DistillerFromSVN.action2"
+               label="Distill Additions"
+               menubarPath="DistillerFromSVN.menu/group">
+         </action>
       </objectContribution>
       
    </extension>

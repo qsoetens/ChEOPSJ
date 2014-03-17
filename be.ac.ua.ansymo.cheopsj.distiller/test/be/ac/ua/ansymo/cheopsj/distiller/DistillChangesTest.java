@@ -33,6 +33,7 @@ import org.tmatesoft.svn.core.wc.SVNClientManager;
 import org.tmatesoft.svn.core.wc.SVNRevision;
 import org.tmatesoft.svn.core.wc.SVNWCUtil;
 
+import be.ac.ua.ansymo.cheopsj.distiller.popup.actions.AbstractDistiller;
 import be.ac.ua.ansymo.cheopsj.distiller.popup.actions.DistillChanges;
 import be.ac.ua.ansymo.cheopsj.logger.JavaProjectHelper;
 import be.ac.ua.ansymo.cheopsj.model.ModelManager;
@@ -368,7 +369,7 @@ public class DistillChangesTest {
 	private void callDistillChanges(IProject project){
 		try{	
 			//We need to make an object to test the methods
-			DistillChanges distiller = new DistillChanges();
+			AbstractDistiller distiller = new DistillChanges();
 			
 			//Set the private selectedProject field
 			//Field selectedProject =  DistillChanges.class.getField("selectedProject");
