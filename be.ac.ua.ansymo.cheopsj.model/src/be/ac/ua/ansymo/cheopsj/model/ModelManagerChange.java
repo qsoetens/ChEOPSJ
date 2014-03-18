@@ -64,8 +64,8 @@ public class ModelManagerChange {
 			
 			lSession.saveObject(change);
 
-			lSession.flush();
-			lSession.clear();
+			//lSession.flush();
+			//lSession.clear();
 			
 			lSession.endTransaction();
 
@@ -76,10 +76,17 @@ public class ModelManagerChange {
 			if (lSession != null) {
 				try {
 					lSession.rollbackTransaction();
-					SessionHandler.getHandler().removeCurrentSession();
+					//SessionHandler.getHandler().removeCurrentSession();
 				} catch (Exception e1) {
 					e1.printStackTrace();
 				}
+			}
+		} finally {
+			try {
+				lSession.close();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 		}
 	}

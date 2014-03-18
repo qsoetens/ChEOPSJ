@@ -69,20 +69,28 @@ public class ModelManager implements Serializable{
 			lSession.startTransaction();
 			lSession.saveObject(fe);
 
-			lSession.flush();
-			lSession.clear();
+			//lSession.flush();
+			//lSession.clear();
 			lSession.endTransaction();
 		} catch (Exception e) {
 			e.printStackTrace();
 			if (lSession != null) {
 				try {
 					lSession.rollbackTransaction();
-					SessionHandler.getHandler().removeCurrentSession();
+					//SessionHandler.getHandler().removeCurrentSession();
 				} catch (Exception e1) {
 					e1.printStackTrace();
 				}
 			}
 		} 
+		finally{
+			try {
+				lSession.close();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}
 
 	//	/**

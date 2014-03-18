@@ -284,6 +284,8 @@ public class SessionImpl implements ISession {
         return fHibernateSession;
     }
 
+    
+    //WARNING: this is specific for the change based cheopsj database!
 	public void clearDatabase() {
 		try{
 			fHibernateSession.createSQLQuery("truncate table \"CHANGESTRUCTDEPS\"").executeUpdate();
