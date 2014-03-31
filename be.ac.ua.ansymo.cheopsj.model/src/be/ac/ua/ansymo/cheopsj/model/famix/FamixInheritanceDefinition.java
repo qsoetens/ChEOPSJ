@@ -38,7 +38,7 @@ public class FamixInheritanceDefinition extends FamixAssociation {
 
 	@Override
 	public String getFamixType() {
-		return "Inheritance Definition";
+		return "Inheritance";
 	}
 
 	/*

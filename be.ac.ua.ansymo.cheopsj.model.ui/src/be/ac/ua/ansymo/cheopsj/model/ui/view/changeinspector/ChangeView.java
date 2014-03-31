@@ -16,7 +16,9 @@ import org.eclipse.jface.action.GroupMarker;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.jface.viewers.ColumnWeightData;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
@@ -60,7 +62,6 @@ public class ChangeView extends ViewPart {
 		createToolbarButtons();
 		
 		updateSummaryBreakdown();
-		
 	}
 
 	public void updateSummaryBreakdown() {
@@ -151,9 +152,7 @@ public class ChangeView extends ViewPart {
 		viewer.getControl().setFocus();
 	}
 
-	/**
-	 * For testing purposes only.
-	 * 
+	/** 
 	 * @return the table viewer in the Change view
 	 */
 	public TableViewer getChangeViewer() {

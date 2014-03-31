@@ -16,7 +16,7 @@ public class ExportGrooveGraphHandler extends AbstractHandler {
 
 			PrintGraphForGroove.getInstance().printGraphForGroove();
 			// should now also refresh the change view?
-			new RefreshHandler().execute(event);
+			//new RefreshHandler().execute(event);
 			return null;
 		}
 	}

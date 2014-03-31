@@ -38,6 +38,7 @@ import org.eclipse.ui.PlatformUI;
 
 import be.ac.ua.ansymo.cheopsj.changerecorders.ClassRecorder;
 import be.ac.ua.ansymo.cheopsj.changerecorders.FieldRecorder;
+import be.ac.ua.ansymo.cheopsj.changerecorders.InheritanceRecorder;
 import be.ac.ua.ansymo.cheopsj.changerecorders.MethodInvocationRecorder;
 import be.ac.ua.ansymo.cheopsj.changerecorders.MethodRecorder;
 import be.ac.ua.ansymo.cheopsj.changerecorders.PackageRecorder;
@@ -93,6 +94,7 @@ public class DistillAdditionsFromCurrentVersion implements IObjectActionDelegate
 					makeAdditions(monitor);
 				}
 			});
+			dialog.close();
 		} catch (InterruptedException e) {
 
 		} catch (InvocationTargetException e) {
@@ -110,22 +112,40 @@ public class DistillAdditionsFromCurrentVersion implements IObjectActionDelegate
 				IPackageFragment[] packages = javaProject.getPackageFragments();
 				makePackageAdditions(packages);
 				makeClassAdditions(packages);
+				makeClassInheritanceAdditions(packages);
 				makeClassMemberAdditions(packages);
 				makeLocalVarAdditions(packages);
 				makeInvocationAdditions(packages);
 			}catch(JavaModelException e){
-
+				
 			}
 		}	
 
 	}
+
+	private void makeClassInheritanceAdditions(IPackageFragment[] packages) throws JavaModelException {
+		for (IPackageFragment mypackage : packages) {
+			if (mypackage.getKind() == IPackageFragmentRoot.K_SOURCE) {
+				//store additions for each class inside the package.
+				for (ICompilationUnit unit : mypackage.getCompilationUnits()) {
+					IType[] allTypes = unit.getAllTypes();
+					//store additions of type
+					for(IType type: allTypes){
+						InheritanceRecorder recorder = new InheritanceRecorder(type);
+						recorder.storeChanges();
+					}			
+				}
+			}
+		}
+	}
+
 
 	private void makeInvocationAdditions(IPackageFragment[] packages) throws JavaModelException {
 		for (IPackageFragment mypackage : packages) {
 			if (mypackage.getKind() == IPackageFragmentRoot.K_SOURCE) {
 				//store additions for each class inside the package.
 				for (ICompilationUnit unit : mypackage.getCompilationUnits()) {
-					
+
 					CompilationUnit parse = parse(unit);
 					MIVisitor visitor = new MIVisitor();
 					parse.accept(visitor);

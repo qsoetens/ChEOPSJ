@@ -246,14 +246,27 @@ public class ClassRecorder extends AbstractEntityRecorder {
 	@Override
 	protected void createAndLinkFamixElement() {
 		if (!manager.famixClassExists(uniqueName)) {
-			famixClass = new FamixClass();
+			if(!manager.famixClassWithNameExists(name)){
+				famixClass = new FamixClass();
 
-			famixClass.setUniqueName(uniqueName);
+				famixClass.setUniqueName(uniqueName);
 			//famixClass.setName(declaration.getName().getIdentifier());
 
-			setClassFlagsAndParent(famixClass);
-			famixClass.setName(name);
-			manager.addFamixElement(famixClass);
+				setClassFlagsAndParent(famixClass);
+				famixClass.setName(name);
+				manager.addFamixElement(famixClass);
+			}else{
+				famixClass = manager.getFamixClassesWithName(name).get(0);
+				famixClass.setUniqueName(uniqueName);
+				if(famixClass.isDummy()){
+					//If it was a dummy, undummy it!
+					setClassFlagsAndParent(famixClass);
+					
+					famixClass.setIsDummy(false);
+				}else{
+					parent = famixClass.getBelongsToPackage();
+				}
+			}
 		} else {
 			famixClass = manager.getFamixClass(uniqueName);
 			if(famixClass.isDummy()){
@@ -287,6 +300,14 @@ public class ClassRecorder extends AbstractEntityRecorder {
 	 */
 	@Override
 	protected void createAndLinkChange(AtomicChange change) {
+		Change latestChange = famixClass.getLatestChange();
+		//make sure you don't add or remove the same method twice
+		if(latestChange != null && !latestChange.isDummy())
+			if(change instanceof Remove && latestChange instanceof Remove)
+				return;
+			if(change instanceof Add && latestChange instanceof Add)
+				return;
+		
 		if(change instanceof Add){
 			Add a = famixClass.getLatestAddition();
 			if(a != null && a.isDummy()){

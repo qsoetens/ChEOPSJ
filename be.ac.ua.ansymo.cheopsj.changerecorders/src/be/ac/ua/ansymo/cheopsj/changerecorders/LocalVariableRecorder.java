@@ -171,6 +171,15 @@ public class LocalVariableRecorder extends StatementRecorder {
 		if(containingMethod == null)
 			return;
 		
+		Change latestChange = variable.getLatestChange();
+		
+		//make sure you don't add or remove the same method twice
+		if(latestChange != null && !latestChange.isDummy())
+			if(change instanceof Remove && latestChange instanceof Remove)
+				return;
+			if(change instanceof Add && latestChange instanceof Add)
+				return;
+		
 		change.setChangeSubject(variable);
 		variable.addChange(change);
 

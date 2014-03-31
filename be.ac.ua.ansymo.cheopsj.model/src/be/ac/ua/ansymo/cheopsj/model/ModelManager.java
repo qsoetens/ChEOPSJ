@@ -22,11 +22,13 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.SortedMap;
 
 import be.ac.ua.ansymo.cheopsj.model.changes.IChange;
 import be.ac.ua.ansymo.cheopsj.model.changes.Subject;
 import be.ac.ua.ansymo.cheopsj.model.famix.FamixAttribute;
 import be.ac.ua.ansymo.cheopsj.model.famix.FamixClass;
+import be.ac.ua.ansymo.cheopsj.model.famix.FamixInheritanceDefinition;
 import be.ac.ua.ansymo.cheopsj.model.famix.FamixInvocation;
 import be.ac.ua.ansymo.cheopsj.model.famix.FamixLocalVariable;
 import be.ac.ua.ansymo.cheopsj.model.famix.FamixMethod;
@@ -54,13 +56,11 @@ public class ModelManager implements Serializable{
 	private Map<String, FamixClass> famixClassesMap;
 	private Map<String, FamixMethod> famixMethodsMap;
 	private Map<String, List<FamixMethod>> famixMethodListMap;
-
-
 	private Map<String, FamixAttribute> famixFieldsMap;
-
 	private Map<String, FamixInvocation> famixInvocationsMap;
-
 	private Map<String, FamixLocalVariable> famixVariablesMap;
+
+	private Map<String, FamixInheritanceDefinition> famixInheritanceMap;
 
 	//The modelmanager is a Singleton entity, hence the constructor is private.
 	//You should always call the static method getInstance() to get the ModelManager instance.
@@ -78,6 +78,8 @@ public class ModelManager implements Serializable{
 		famixFieldsMap = new HashMap<String, FamixAttribute>();
 		famixInvocationsMap = new HashMap<String, FamixInvocation>();
 		famixVariablesMap = new HashMap<String, FamixLocalVariable>();
+
+		famixInheritanceMap = new HashMap<String, FamixInheritanceDefinition>();
 		// loadModel();
 	}
 
@@ -119,6 +121,8 @@ public class ModelManager implements Serializable{
 			famixInvocationsMap.put(((FamixInvocation) fe).getStringRepresentation(), (FamixInvocation) fe);
 		} else if (fe instanceof FamixLocalVariable) {
 			famixVariablesMap.put(((FamixLocalVariable) fe).getUniqueName(), (FamixLocalVariable) fe);
+		} else if (fe instanceof FamixInheritanceDefinition){
+			famixInheritanceMap.put(((FamixInheritanceDefinition) fe).getStringRepresentation(), (FamixInheritanceDefinition)fe);
 		}
 	}
 
@@ -190,6 +194,7 @@ public class ModelManager implements Serializable{
 			out.writeObject(famixMethodsMap);
 			out.writeObject(famixFieldsMap);
 			out.writeObject(famixInvocationsMap);
+			out.writeObject(famixInheritanceMap);
 			out.writeObject(famixVariablesMap);
 
 			out.close();
@@ -237,6 +242,7 @@ public class ModelManager implements Serializable{
 			famixMethodsMap = (Map<String, FamixMethod>) in.readObject();
 			famixFieldsMap = (Map<String, FamixAttribute>) in.readObject();
 			famixInvocationsMap = (Map<String, FamixInvocation>) in.readObject();
+			famixInheritanceMap = (Map<String, FamixInheritanceDefinition>)in.readObject();
 			famixVariablesMap = (Map<String, FamixLocalVariable>) in.readObject();
 		}
 		catch (IOException ex) {
@@ -276,6 +282,10 @@ public class ModelManager implements Serializable{
 
 	public Map<String, FamixInvocation> getFamixInvocationsMap() {
 		return famixInvocationsMap;
+	}
+
+	public Map<String, FamixInheritanceDefinition> getFamixInheritanceMap(){
+		return famixInheritanceMap;
 	}
 
 	public ModelManagerListeners getModelManagerListeners() {
@@ -349,12 +359,31 @@ public class ModelManager implements Serializable{
 		return famixClassesMap.containsKey(elementName);
 	}
 
+	public boolean famixClassWithNameExists(String className){
+		for (String key : famixClassesMap.keySet()) {
+			if(key.endsWith(className)){
+				return true;
+			}   
+		}
+		return false;
+	}
+
 	/**
 	 * @param elementName
 	 * @return
 	 */
 	public FamixClass getFamixClass(String elementName) {
 		return famixClassesMap.get(elementName);
+	}
+
+	public List<FamixClass> getFamixClassesWithName(String className){
+		List<FamixClass> resultSet = new ArrayList<FamixClass>();
+		for (String key : famixClassesMap.keySet()) {
+			if(key.endsWith(className)){
+				resultSet.add(famixClassesMap.get(key));
+			}   
+		}
+		return resultSet;
 	}
 
 	/**
@@ -403,6 +432,22 @@ public class ModelManager implements Serializable{
 	 */
 	public boolean famixInvocationExists(String stringrepresentation) {
 		return famixInvocationsMap.containsKey(stringrepresentation);
+	}
+
+	/**
+	 * @param stringrepresentation
+	 * @return
+	 */
+	public FamixInheritanceDefinition getFamixInheritance(String stringrepresentation) {
+		return famixInheritanceMap.get(stringrepresentation);
+	}
+
+	/**
+	 * @param stringrepresentation
+	 * @return
+	 */
+	public boolean famixInheritanceExists(String stringrepresentation) {
+		return famixInheritanceMap.containsKey(stringrepresentation);
 	}
 
 	/**

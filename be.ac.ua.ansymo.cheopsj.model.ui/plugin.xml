@@ -16,9 +16,9 @@
         </view>
         <view
               category="be.ac.ua.ansymo.cheopsj"
-              class="be.ac.ua.ansymo.cheopsj.model.ui.views.changegraph.ZestChangeView"
+              class="be.ac.ua.ansymo.cheopsj.model.ui.views.changegraph.ChangeGraphView"
               icon="icons/cheops.gif"
-              id="be.ac.ua.ansymo.cheopsj.model.ui.view.changegraph.ZestChangeView"
+              id="be.ac.ua.ansymo.cheopsj.model.ui.view.changegraph.ChangeGraphView"
               name="ChangeGraph">
         </view>
      </extension>
@@ -119,15 +119,6 @@
                  icon="icons/import_wiz.gif"
                  style="push">
            </command>
-           
-        </menuContribution>
-        <menuContribution
-              locationURI="toolbar:be.ac.ua.ansymo.cheopsj.model.ui.view.changegraph.ZestChangeView?before=additions">
-           <command
-                 commandId="be.ac.ua.ansymo.cheopsj.commands.refreshZest"
-                 icon="icons/sample.gif"
-                 style="push">
-           </command>
            <command
                  commandId="be.ac.ua.ansymo.cheopsj.commands.grooveExport"
                  icon="icons/groove.png"
@@ -136,6 +127,15 @@
            <command
                  commandId="be.ac.ua.ansymo.cheopsj.commands.clearmodel"
                  icon="icons/delete.gif"
+                 style="push">
+           </command>
+           
+        </menuContribution>
+        <menuContribution
+              locationURI="toolbar:be.ac.ua.ansymo.cheopsj.model.ui.view.changegraph.ZestChangeView?before=additions">
+           <command
+                 commandId="be.ac.ua.ansymo.cheopsj.commands.refreshZest"
+                 icon="icons/sample.gif"
                  style="push">
            </command>
         </menuContribution>

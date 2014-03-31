@@ -76,16 +76,17 @@ public class ChangeRecorder {
 		case IJavaElementDelta.ADDED:
 			storeChange(element, new Add());
 
-			if(element instanceof IMethod){
-				try {
-					ILocalVariable[] parameters = ((IMethod) element).getParameters();
-					for(ILocalVariable param: parameters){
-						storeChange(param, new Add());
-					}
-				} catch (JavaModelException e) {
-					e.printStackTrace();
-				}
-			}else if (element instanceof IType){
+//			if(element instanceof IMethod){
+//				try {
+//					ILocalVariable[] parameters = ((IMethod) element).getParameters();
+//					for(ILocalVariable param: parameters){
+//						storeChange(param, new Add());
+//					}
+//				} catch (JavaModelException e) {
+//					e.printStackTrace();
+//				}
+//			}else 
+			if (element instanceof IType){
 				recordInheritanceRelationships((IType)element);
 			}
 			break;
@@ -102,6 +103,7 @@ public class ChangeRecorder {
 					e.printStackTrace();
 				}*/
 			}
+			
 			storeChange(element, new Remove());
 			break;
 		case IJavaElementDelta.CHANGED:

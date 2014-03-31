@@ -17,7 +17,7 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.handlers.HandlerUtil;
 
-import be.ac.ua.ansymo.cheopsj.model.ui.views.changegraph.ZestChangeView;
+import be.ac.ua.ansymo.cheopsj.model.ui.views.changegraph.ChangeGraphView;
 
 
 
@@ -28,8 +28,8 @@ import be.ac.ua.ansymo.cheopsj.model.ui.views.changegraph.ZestChangeView;
 public class RefreshHandler extends AbstractHandler {
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
-		IViewPart findView = HandlerUtil.getActiveWorkbenchWindow(event).getActivePage().findView("be.ac.ua.ansymo.cheopsj.model.ui.view.changegraph.ZestChangeView");
-		ZestChangeView view = (ZestChangeView) findView;
+		IViewPart findView = HandlerUtil.getActiveWorkbenchWindow(event).getActivePage().findView("be.ac.ua.ansymo.cheopsj.model.ui.view.changegraph.ChangeGraphView");
+		ChangeGraphView view = (ChangeGraphView) findView;
 		view.resetViewLayout();
 		return null;
 	}

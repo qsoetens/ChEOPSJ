@@ -19,7 +19,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.handlers.HandlerUtil;
 
 import be.ac.ua.ansymo.cheopsj.model.ui.view.changeinspector.ChangeView;
-import be.ac.ua.ansymo.cheopsj.model.ui.views.changegraph.ZestChangeView;
+import be.ac.ua.ansymo.cheopsj.model.ui.views.changegraph.ChangeGraphView;
 
 
 public class OpenChangeViewHandler extends AbstractHandler {
@@ -47,7 +47,7 @@ public class OpenChangeViewHandler extends AbstractHandler {
 		try {
 			page.showView(ChangeView.ID);
 			// page.showView(GEFChangeView.ID);
-			page.showView(ZestChangeView.ID);
+			page.showView(ChangeGraphView.ID);
 		} catch (PartInitException e) {
 
 		}

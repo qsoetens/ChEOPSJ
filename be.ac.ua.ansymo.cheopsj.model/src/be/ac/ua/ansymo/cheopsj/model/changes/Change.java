@@ -50,7 +50,7 @@ public class Change implements IChange, Serializable {
 		structuralDependees = new ArrayList<Change>();
 		structuralDependencies = new ArrayList<Change>();
 		
-		UniqueID = "n" + Integer.toString(IDCounter);
+		UniqueID = "c" + Integer.toString(IDCounter);
 		IDCounter++;
 	}
 	

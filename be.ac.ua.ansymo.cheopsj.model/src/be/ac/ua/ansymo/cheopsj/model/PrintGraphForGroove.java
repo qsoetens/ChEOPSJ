@@ -14,23 +14,25 @@ import be.ac.ua.ansymo.cheopsj.model.famix.FamixAttribute;
 import be.ac.ua.ansymo.cheopsj.model.famix.FamixBehaviouralEntity;
 import be.ac.ua.ansymo.cheopsj.model.famix.FamixClass;
 import be.ac.ua.ansymo.cheopsj.model.famix.FamixEntity;
+import be.ac.ua.ansymo.cheopsj.model.famix.FamixInheritanceDefinition;
 import be.ac.ua.ansymo.cheopsj.model.famix.FamixInvocation;
 import be.ac.ua.ansymo.cheopsj.model.famix.FamixLocalVariable;
 import be.ac.ua.ansymo.cheopsj.model.famix.FamixMethod;
 import be.ac.ua.ansymo.cheopsj.model.famix.FamixPackage;
+import be.ac.ua.ansymo.cheopsj.model.famix.FamixStructuralEntity;
 
 public class PrintGraphForGroove {
-	
+
 	private ModelManager model;
-	
+
 	//The PrintGraphForGroove is a Singleton entity, hence the constructor is private.
 	//You should always call the static method getInstance() to get the PrintGraphForGroove instance.
 	private static PrintGraphForGroove INSTANCE = null;
-	
+
 	private PrintGraphForGroove() {
 		model = ModelManager.getInstance();
 	}
-	
+
 	/**
 	 * The PrintGraphForGroove is a Singleton entity. Therefore the constructor is private.
 	 * This method returns an instance of the PrintGraphForGroove. If no instance existed 
@@ -44,10 +46,10 @@ public class PrintGraphForGroove {
 			INSTANCE = new PrintGraphForGroove();
 		return INSTANCE;
 	}
-	
+
 	public void printGraphForGroove(){
 		try{
-			FileWriter fstream = new FileWriter("start.gst");
+			FileWriter fstream = new FileWriter("/Users/quinten/Desktop/start.gst");
 			BufferedWriter out = new BufferedWriter(fstream);
 			printStartOfGrooveGraph(out);
 
@@ -75,7 +77,7 @@ public class PrintGraphForGroove {
 		}
 
 	}
-	
+
 	private void printEdgesInGrooveChange(BufferedWriter out, IChange change) {
 		try {
 			printNodeInGrooveGraph(out, change.getID());
@@ -84,7 +86,7 @@ public class PrintGraphForGroove {
 			}else if(change instanceof Remove){
 				printEdgeInGrooveGraph(out, change.getID(), change.getID(), "type:Rem");
 			}
-	
+
 			String timestampID = change.getID() + "a0";
 			printNodeInGrooveGraph(out, timestampID);
 			printEdgeInGrooveGraph(out, timestampID, timestampID, "int:"+change.getTimeStamp().getTime());
@@ -94,23 +96,28 @@ public class PrintGraphForGroove {
 			e.printStackTrace();
 		}
 	}
-	
+
 	private void printEdgesInGrooveFamix(Subject famix, BufferedWriter out) {
 		try {
 			printNodeInGrooveGraph(out, famix.getID());
-	
+
 			printEdgeInGrooveGraph(out, famix.getID(), famix.getID(), "type:"+famix.getFamixType());
-	
+
 			//name ?
-			String nameID = famix.getID() + "a0";
-			printNodeInGrooveGraph(out, nameID);
+
 			if(famix instanceof FamixEntity){
+				String nameID = famix.getID() + "a0";
+				printNodeInGrooveGraph(out, nameID);
+
 				printEdgeInGrooveGraph(out, nameID, nameID, "string:&quot;"+((FamixEntity)famix).getName()+"&quot;");
+				
+				printEdgeInGrooveGraph(out, famix.getID(), nameID, "name");	
 			}else if(famix instanceof FamixInvocation){
 				//printEdgeInGrooveGraph(out, nameID, nameID, "string:&quot;"+((FamixInvocation)famix).getStringRepresentation()+":&quot;");
 			}
-			printEdgeInGrooveGraph(out, famix.getID(), nameID, "name");
-	
+			
+
+
 			if (famix instanceof FamixPackage) {
 				FamixPackage belongsTo = ((FamixPackage) famix).getBelongsToPackage();
 				if(belongsTo != null)				
@@ -137,8 +144,9 @@ public class PrintGraphForGroove {
 				if(declaredClass != null)
 					printEdgeInGrooveGraph(out, famix.getID(), declaredClass.getID(), "declaredClass");
 			} else if (famix instanceof FamixInvocation) {
-				FamixBehaviouralEntity candidate = ((FamixInvocation) famix).getCandidate();
-				if(candidate != null)
+				//FamixBehaviouralEntity candidate = ((FamixInvocation) famix).getCandidate();
+				//if(candidate != null)
+				for(FamixBehaviouralEntity candidate: ((FamixInvocation) famix).getCandidates())
 					printEdgeInGrooveGraph(out, famix.getID(), candidate.getID(), "candidate");
 				FamixMethod invokedby = (FamixMethod) ((FamixInvocation) famix).getInvokedBy();
 				printEdgeInGrooveGraph(out, famix.getID(), invokedby.getID(), "invokedBy");
@@ -149,18 +157,23 @@ public class PrintGraphForGroove {
 				FamixClass declaredClass = ((FamixLocalVariable) famix).getDeclaredClass();
 				if(declaredClass != null)
 					printEdgeInGrooveGraph(out, famix.getID(), declaredClass.getID(), "declaredClass");
+			} else if (famix instanceof FamixInheritanceDefinition){
+				FamixClass subclass = ((FamixInheritanceDefinition) famix).getSubClass();
+				FamixClass superclass = ((FamixInheritanceDefinition) famix).getSuperClass();
+				printEdgeInGrooveGraph(out, famix.getID(), subclass.getID(), "subclass");
+				printEdgeInGrooveGraph(out, famix.getID(), superclass.getID(), "superclass");
 			}
 		}
 		catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	private void printNodeInGrooveGraph(BufferedWriter out, String id) throws IOException{
 		out.write("\t\t<node id=\""+id+"\">\n");
 		out.write("\t\t</node>\n");
 	}
-	
+
 	private void printEdgeInGrooveGraph(BufferedWriter out, String from, String to, String label) throws IOException{
 		out.write("\t\t<edge from=\""+from+"\" to=\""+to+"\">\n");
 		out.write("\t\t\t<attr name=\"label\">\n");
@@ -168,7 +181,7 @@ public class PrintGraphForGroove {
 		out.write("\t\t\t</attr>\n");
 		out.write("\t\t</edge>\n");
 	}
-	
+
 	private void printStartOfGrooveGraph(BufferedWriter out ) throws IOException{
 		out.write("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n");
 		out.write("<gxl xmlns=\"http://www.gupro.de/GXL/gxl-1.0.dtd\">\n");
@@ -176,11 +189,11 @@ public class PrintGraphForGroove {
 		out.write("\t\t<attr name=\"$version\">\n");
 		out.write("\t\t\t<string>curly</string>\n");
 		out.write("\t\t</attr>\n");
-		out.write("\t\t<attr name=\"$version\">\n");
-		out.write("\t\t\t<string>curly</string>\n");
-		out.write("\t\t</attr>\n");
+		//		out.write("\t\t<attr name=\"$version\">\n");
+		//		out.write("\t\t\t<string>curly</string>\n");
+		//		out.write("\t\t</attr>\n");
 	}
-	
+
 	private void printEndOfGrooveGraph(BufferedWriter out ) throws IOException{
 		out.write("\t</graph>\n");
 		out.write("</gxl>");

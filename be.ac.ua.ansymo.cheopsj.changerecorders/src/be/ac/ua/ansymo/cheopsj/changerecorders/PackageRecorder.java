@@ -204,6 +204,15 @@ public class PackageRecorder extends AbstractEntityRecorder {
 	 */
 	@Override
 	protected void createAndLinkChange(AtomicChange change) {
+		Change latestChange = famixPackage.getLatestChange();
+		
+		//make sure you don't add or remove the same method twice
+		if(latestChange != null && !latestChange.isDummy())
+			if(change instanceof Remove && latestChange instanceof Remove)
+				return;
+			if(change instanceof Add && latestChange instanceof Add)
+				return;
+			
 		change.setChangeSubject(famixPackage);
 		famixPackage.addChange(change);
 

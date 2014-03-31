@@ -35,7 +35,7 @@ import be.ac.ua.ansymo.cheopsj.model.famix.FamixPackage;
 
 
 
-public class ZestChangeViewContentProvider implements IGraphEntityContentProvider, ModelManagerListener {
+public class ZestChangeViewContentProvider implements IGraphEntityContentProvider, ModelManagerListener  {
 	private ModelManager manager;
 	private GraphViewer viewer;
 

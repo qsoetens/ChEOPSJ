@@ -47,8 +47,6 @@ public class MethodInvocationRecorder extends StatementRecorder {
 
 	private String stringrepresentation;
 
-
-
 	private MethodInvocationRecorder(){
 		manager = ModelManager.getInstance();
 		managerChange = ModelManagerChange.getInstance();
@@ -225,6 +223,15 @@ public class MethodInvocationRecorder extends StatementRecorder {
 		if(invokedby == null)
 			return;
 
+		Change latestChange = famixInvocation.getLatestChange();
+		
+		//make sure you don't add or remove the same method twice
+		if(latestChange != null && !latestChange.isDummy())
+			if(change instanceof Remove && latestChange instanceof Remove)
+				return;
+			if(change instanceof Add && latestChange instanceof Add)
+				return;
+		
 		change.setChangeSubject(famixInvocation);
 		famixInvocation.addChange(change);
 
