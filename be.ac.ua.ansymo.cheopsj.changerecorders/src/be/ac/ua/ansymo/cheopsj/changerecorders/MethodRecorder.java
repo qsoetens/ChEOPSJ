@@ -20,7 +20,6 @@ import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
-import ch.uzh.ifi.seal.changedistiller.model.entities.SourceCodeEntity;
 
 import be.ac.ua.ansymo.cheopsj.model.ModelManager;
 import be.ac.ua.ansymo.cheopsj.model.ModelManagerChange;
@@ -30,7 +29,9 @@ import be.ac.ua.ansymo.cheopsj.model.changes.Change;
 import be.ac.ua.ansymo.cheopsj.model.changes.Remove;
 import be.ac.ua.ansymo.cheopsj.model.changes.Subject;
 import be.ac.ua.ansymo.cheopsj.model.famix.FamixClass;
+import be.ac.ua.ansymo.cheopsj.model.famix.FamixInvocation;
 import be.ac.ua.ansymo.cheopsj.model.famix.FamixMethod;
+import ch.uzh.ifi.seal.changedistiller.model.entities.SourceCodeEntity;
 
 
 
@@ -62,7 +63,8 @@ public class MethodRecorder extends AbstractEntityRecorder {
 		try {
 			flags = method.getFlags();
 		} catch (JavaModelException e) {
-			e.printStackTrace();
+			//When the method is removed, the java model entity for this method no longer exists, so you can not access its flags anymore.
+			//e.printStackTrace();
 		}
 	}
 	
@@ -201,6 +203,12 @@ public class MethodRecorder extends AbstractEntityRecorder {
 		for (Change dependee : dependees) {
 			if (dependee instanceof Add) {
 				Subject changesubject = ((AtomicChange) dependee).getChangeSubject();
+				
+				//only remove invocations that are actually inside this method body
+				if(changesubject instanceof FamixInvocation &&
+					!((FamixInvocation) changesubject).getInvokedBy().equals(famixMethod) )
+					continue;
+				
 				Change latestChange = changesubject.getLatestChange();
 				if (latestChange instanceof Add) {
 					// only remove if it wasn't removed yet

@@ -50,6 +50,7 @@ public class ClassRecorder extends AbstractEntityRecorder {
 	private String name = "";
 	private List<IMethod> methodTransporter = new ArrayList<IMethod>();
 	private List<IField> fieldTransporter = new ArrayList<IField>();
+	private List<IType> typeTransporter = new ArrayList<IType>();
 
 	
 	private ClassRecorder(){
@@ -87,6 +88,10 @@ public class ClassRecorder extends AbstractEntityRecorder {
 				for (IMethod m : methodList) 
 					methodTransporter.add(m);
 				
+				
+				IType[] typelist = element.getTypes();
+				for(IType t: typelist)
+					typeTransporter.add(t);
 					// there shouldn't be anything else at this level.
 				
 			}
@@ -148,16 +153,19 @@ public class ClassRecorder extends AbstractEntityRecorder {
 		createAndLinkFamixElement();
 		createAndLinkChange((AtomicChange) change);
 	
-		int fC=fieldTransporter.size(),mC=methodTransporter.size();
+		int fC=fieldTransporter.size();
+		int mC=methodTransporter.size();
+		int tC=typeTransporter.size();
 		
-		// if there's something in the transporter, then we must be in a rename
-		if (fC + mC > 0)
+		// if there's something in any transporter, then we must be in a rename
+		if (fC + mC + tC > 0)
 		{
 		   
 			int i;
-			Add[] renameF,renameM;
+			Add[] renameF,renameM,renameT;
 			renameF = new Add[fC];
 			renameM = new Add[mC];
+			renameT = new Add[tC];
 			for (i=0;i<fC;i++)
 			{
 				renameF[i] = new Add(); //added because of hibernate. most likely not needed anymore.
@@ -168,6 +176,12 @@ public class ClassRecorder extends AbstractEntityRecorder {
 			{
 				renameM[i] = new Add(); //added because of hibernate. most likely not needed anymore.
 				new MethodRecorder(methodTransporter.get(i)).storeChange(renameM[i]);
+			}
+			
+			for (i=0;i<tC;i++)
+			{
+				renameT[i] = new Add(); //added because of hibernate. most likely not needed anymore.
+				new ClassRecorder(typeTransporter.get(i)).storeChange(renameT[i]);
 			}
 			
 			

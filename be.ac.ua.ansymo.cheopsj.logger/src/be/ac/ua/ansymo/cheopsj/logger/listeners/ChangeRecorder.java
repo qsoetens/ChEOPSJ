@@ -16,12 +16,12 @@ import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IField;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IJavaElementDelta;
-import org.eclipse.jdt.core.ILocalVariable;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IType;
-import org.eclipse.jdt.core.JavaModelException;
+import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTNode;
+import org.eclipse.jdt.core.dom.ASTParser;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.MethodInvocation;
 import org.eclipse.jdt.core.dom.VariableDeclaration;
@@ -76,16 +76,17 @@ public class ChangeRecorder {
 		case IJavaElementDelta.ADDED:
 			storeChange(element, new Add());
 
-//			if(element instanceof IMethod){
-//				try {
-//					ILocalVariable[] parameters = ((IMethod) element).getParameters();
-//					for(ILocalVariable param: parameters){
-//						storeChange(param, new Add());
-//					}
-//				} catch (JavaModelException e) {
-//					e.printStackTrace();
-//				}
-//			}else 
+			//if(element instanceof IMethod){
+				//				try {
+				//					ILocalVariable[] parameters = ((IMethod) element).getParameters();
+				//					for(ILocalVariable param: parameters){
+				//						storeChange(param, new Add());
+				//					}
+				//				} catch (JavaModelException e) {
+				//					e.printStackTrace();
+				//				}
+
+			//			}else 
 			if (element instanceof IType){
 				recordInheritanceRelationships((IType)element);
 			}
@@ -103,7 +104,7 @@ public class ChangeRecorder {
 					e.printStackTrace();
 				}*/
 			}
-			
+
 			storeChange(element, new Remove());
 			break;
 		case IJavaElementDelta.CHANGED:
@@ -125,7 +126,7 @@ public class ChangeRecorder {
 						// (i.e. there could be a changes in the method body)
 						CompilationUnit oldAST = getOldAST(element);
 						CompilationUnit newAST = delta.getCompilationUnitAST();
-						
+
 						CompilationUnitHistory.storeNewAST(newAST, element.getResource().getProject().getLocation(), element.getResource().getProjectRelativePath() );
 						//CompilationUnitHistory.storeNewAST(newAST, element.getResource().getLocation());
 						if(oldAST != null && newAST != null)
@@ -140,6 +141,14 @@ public class ChangeRecorder {
 			recordElementChanges(child);
 		}
 	}
+
+//	private CompilationUnit parse(ICompilationUnit compilationUnit) {
+//		ASTParser parser = ASTParser.newParser(AST.JLS3);
+//		parser.setKind(ASTParser.K_COMPILATION_UNIT);
+//		parser.setSource(compilationUnit);
+//		parser.setResolveBindings(true);
+//		return (CompilationUnit) parser.createAST(null); // parse
+//	}
 
 	private void recordInheritanceRelationships(IType element) {
 		//IF the element in our model already contained a superclass that inheritance relationship needs to be removed.

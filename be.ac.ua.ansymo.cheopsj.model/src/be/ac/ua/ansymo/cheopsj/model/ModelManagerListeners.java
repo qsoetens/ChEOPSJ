@@ -15,6 +15,8 @@ public class ModelManagerListeners {
 	//You should always call the static method getInstance() to get the ModelManager instance.
 	private static ModelManagerListeners INSTANCE = null;
 	
+	private static boolean alertListener = true;
+	
 	public ModelManagerListeners() {
 		listeners = new ArrayList<ModelManagerListener>();
 	}
@@ -60,11 +62,12 @@ public class ModelManagerListeners {
 	
 	//One change added to ModelManager, this method is used to interate the ModelMangerListeners and notify them.
 	public void fireChangeAdded(IChange newChange) {
-		ModelManagerEvent event = new ModelManagerEvent(ModelManager.getInstance(), new IChange[] {newChange});
-		for (ModelManagerListener i : listeners) {
-			i.changesAdded(event);
+		if(alertListener){
+			ModelManagerEvent event = new ModelManagerEvent(ModelManager.getInstance(), new IChange[] {newChange});
+			for (ModelManagerListener i : listeners) {
+				i.changesAdded(event);
+			}
 		}
-		// printAllChanges();
 	}
 	
 	//Several changes added to ModelManager, this method is used to interate the ModelMangerListeners and notify them.
@@ -73,7 +76,6 @@ public class ModelManagerListeners {
 		for (ModelManagerListener i : listeners) {
 			i.changesAdded(event);
 		}
-		// printAllChanges();
 	}
 	
 	/*
@@ -81,5 +83,12 @@ public class ModelManagerListeners {
 	 */
 	public void clearModel() {
 		INSTANCE = new ModelManagerListeners();
+	}
+	
+	public static void setAlertListeners(boolean b) {
+		alertListener  = b; 
+		if(b){
+			INSTANCE.fireChangesAdded((IChange[]) ModelManagerChange.getInstance().getChanges().toArray());
+		}
 	}
 }

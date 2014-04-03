@@ -167,4 +167,8 @@ public class ChangeView extends ViewPart {
 	public IStructuredSelection getSelection() {
 		return (IStructuredSelection) viewer.getSelection();
 	}
+	
+	public void refresh(){
+		viewer.refresh();
+	}
 }

@@ -46,7 +46,6 @@ public class OpenChangeViewHandler extends AbstractHandler {
 
 		try {
 			page.showView(ChangeView.ID);
-			// page.showView(GEFChangeView.ID);
 			page.showView(ChangeGraphView.ID);
 		} catch (PartInitException e) {
 

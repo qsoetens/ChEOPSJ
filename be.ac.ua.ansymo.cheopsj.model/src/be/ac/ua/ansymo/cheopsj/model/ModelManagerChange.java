@@ -54,6 +54,7 @@ public class ModelManagerChange {
 		//add change to list
 		changes.add(change);
 		//alert listeners that a change was added
+		
 		getModelManagerListeners().fireChangeAdded(change);
 	}
 	

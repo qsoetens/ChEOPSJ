@@ -44,6 +44,8 @@ import be.ac.ua.ansymo.cheopsj.changerecorders.MethodRecorder;
 import be.ac.ua.ansymo.cheopsj.changerecorders.PackageRecorder;
 import be.ac.ua.ansymo.cheopsj.distiller.asts.MIVisitor;
 import be.ac.ua.ansymo.cheopsj.model.ModelManager;
+import be.ac.ua.ansymo.cheopsj.model.ModelManagerChange;
+import be.ac.ua.ansymo.cheopsj.model.ModelManagerListeners;
 import be.ac.ua.ansymo.cheopsj.model.changes.Add;
 
 public class DistillAdditionsFromCurrentVersion implements IObjectActionDelegate {
@@ -109,6 +111,8 @@ public class DistillAdditionsFromCurrentVersion implements IObjectActionDelegate
 
 		if(javaProject instanceof IJavaProject){
 			try{
+				ModelManagerListeners.setAlertListeners(false);
+				
 				IPackageFragment[] packages = javaProject.getPackageFragments();
 				makePackageAdditions(packages);
 				makeClassAdditions(packages);
@@ -116,6 +120,8 @@ public class DistillAdditionsFromCurrentVersion implements IObjectActionDelegate
 				makeClassMemberAdditions(packages);
 				makeLocalVarAdditions(packages);
 				makeInvocationAdditions(packages);
+				
+				ModelManagerListeners.setAlertListeners(true);
 			}catch(JavaModelException e){
 				
 			}

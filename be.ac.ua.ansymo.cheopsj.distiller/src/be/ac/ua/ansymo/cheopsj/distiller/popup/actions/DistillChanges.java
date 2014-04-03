@@ -19,16 +19,19 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.ISelectionService;
+import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.handlers.HandlerUtil;
 
 import be.ac.ua.ansymo.cheopsj.distiller.changeextractor.ChangeExtractor;
 import be.ac.ua.ansymo.cheopsj.distiller.connection.Connector;
 import be.ac.ua.ansymo.cheopsj.distiller.connection.ConnectorFactory;
 import be.ac.ua.ansymo.cheopsj.distiller.connection.LogEntryHandler;
 import be.ac.ua.ansymo.cheopsj.distiller.connection.LogEntryHandler.Change;
+import be.ac.ua.ansymo.cheopsj.model.ModelManagerListeners;
 
 
 public class DistillChanges implements IObjectActionDelegate {
@@ -88,6 +91,7 @@ public class DistillChanges implements IObjectActionDelegate {
 	}
 		
 	private void iterateRevisions(IProgressMonitor monitor){
+		ModelManagerListeners.setAlertListeners(false);
 		try {			
 			//TODO record additions for initial project!
 			File projectFile = selectedProject.getLocation().toFile();
@@ -162,6 +166,7 @@ public class DistillChanges implements IObjectActionDelegate {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		ModelManagerListeners.setAlertListeners(true);
 	}
 	
 	/*private void storeChange(ASTNode node, IChange change) {
