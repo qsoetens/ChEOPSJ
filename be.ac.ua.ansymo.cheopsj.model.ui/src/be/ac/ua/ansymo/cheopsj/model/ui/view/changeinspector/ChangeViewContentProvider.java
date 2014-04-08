@@ -88,8 +88,7 @@ public class ChangeViewContentProvider implements IStructuredContentProvider,
 	}
 
 	public String getSummary() {
-		return "";
-		//return managerChange.getSummary();
+		return managerChange.getSummary();
 	}
 
 }

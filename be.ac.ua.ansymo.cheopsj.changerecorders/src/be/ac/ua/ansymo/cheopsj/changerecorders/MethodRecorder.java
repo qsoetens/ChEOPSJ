@@ -11,14 +11,17 @@
 package be.ac.ua.ansymo.cheopsj.changerecorders;
 
 import java.util.Collection;
+import java.util.List;
 
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
+import org.eclipse.jdt.core.Signature;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
+import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 
 import be.ac.ua.ansymo.cheopsj.model.ModelManager;
@@ -44,7 +47,7 @@ public class MethodRecorder extends AbstractEntityRecorder {
 	//TODO need to link method to return type
 	private int flags = 0;
 	private String name = "";
-	
+
 	private MethodRecorder(){
 		manager = ModelManager.getInstance();
 		managerChange = ModelManagerChange.getInstance();
@@ -54,8 +57,11 @@ public class MethodRecorder extends AbstractEntityRecorder {
 		this();
 		String classname = ((IType) method.getParent()).getFullyQualifiedName();
 		name = method.getElementName();
-		uniquename = classname + '.' + name;
-		
+		//uniquename = classname + '.' + name;
+		uniquename = classname + '.' + toStringName(method);
+
+		System.out.println(uniquename);
+
 		IJavaElement parentJavaElement = method.getParent();
 		if (parentJavaElement != null && parentJavaElement instanceof IType) {
 			parent = manager.getFamixClass(((IType) parentJavaElement).getFullyQualifiedName());
@@ -67,55 +73,92 @@ public class MethodRecorder extends AbstractEntityRecorder {
 			//e.printStackTrace();
 		}
 	}
-	
+
+	private String toStringName(IMethod method) {
+		StringBuffer buffer = new StringBuffer();
+		buffer.append(method.getElementName());
+		buffer.append('(');
+		String[] parameters = method.getParameterTypes();
+		int length;
+		if (parameters != null && (length = parameters.length) > 0) {
+			for (int i = 0; i < length; i++) {
+				buffer.append(Signature.toString(parameters[i]));
+				if (i < length - 1) {
+					buffer.append(", "); //$NON-NLS-1$
+				}
+			}
+		}
+		buffer.append(')');
+		return buffer.toString();
+	}
+
 	public MethodRecorder(MethodDeclaration method) {
 		this();
-		
+
 		parent = findParentFamixEntity(method);
 		name = method.getName().getIdentifier();
 		if(parent != null){
-			uniquename = parent.getUniqueName() + "."  + method.getName().getFullyQualifiedName();
+			uniquename = parent.getUniqueName() + "."  + toStringName(method);
 		}else{
-			uniquename = method.getName().getFullyQualifiedName();
+			uniquename = toStringName(method);
 		}
-		
+
 		flags = method.getFlags();
 	}
-	
+
+	private String toStringName(MethodDeclaration method){
+		StringBuffer buffer = new StringBuffer();
+		buffer.append(method.getName().getIdentifier());
+		buffer.append('(');
+		List<SingleVariableDeclaration> parameters = method.parameters();
+		int length;
+		if (parameters != null && (length = parameters.size()) > 0) {
+			for (int i = 0; i < length; i++) {
+				SingleVariableDeclaration param = parameters.get(i);
+				buffer.append(param.getType().toString());
+				if (i < length - 1) {
+					buffer.append(", "); //$NON-NLS-1$
+				}
+			}
+		}
+		buffer.append(')');
+		return buffer.toString();
+	}
+
 	private FamixClass findParentFamixEntity(MethodDeclaration method) {
 		//find parent famix entity
 		String parentName = findParentName(method);
-	
+
 		return manager.getFamixClass(parentName);	
 	}
-	
+
 	private String findParentName(ASTNode node){
 		ASTNode parent = node.getParent();
 		if(parent instanceof TypeDeclaration){
 			return findParentName(parent) + "." + ((TypeDeclaration) parent).getName().getIdentifier();
 		}
 		if(parent instanceof CompilationUnit){
-			
+
 			if(((CompilationUnit) parent).getPackage() != null)
 				return ((CompilationUnit) parent).getPackage().getName().getFullyQualifiedName();
 			else //default package
 				return "";
 		}
-		
+
 		return "";
 	}
-	
+
 	public MethodRecorder(SourceCodeEntity entity, SourceCodeEntity parentEntity){
 		this();
 		if(entity.getType().isMethod()){
 			uniquename = entity.getUniqueName();
 			int i = uniquename.indexOf('(');
-			uniquename = uniquename.substring(0, i);
-			
+			//uniquename = uniquename.substring(0, i);
+
 			int j = uniquename.lastIndexOf('.');
-			name = uniquename.substring(j,i);
-			
-			if(parentEntity.getType().isType()){
+			name = uniquename.substring(j+1,i);
+
+			if(parentEntity.getType().isClass()){
 				String parentUniqueName = parentEntity.getUniqueName();
 				parent = manager.getFamixClass(parentUniqueName);
 			}
@@ -143,7 +186,7 @@ public class MethodRecorder extends AbstractEntityRecorder {
 			famixMethod = manager.getFamixMethod(uniquename);
 			if (famixMethod.isDummy()) {
 				setMethodFlagsAndParent();
-				
+
 				famixMethod.setIsDummy(false);
 			} else {
 				parent = famixMethod.getBelongsToClass();
@@ -155,9 +198,9 @@ public class MethodRecorder extends AbstractEntityRecorder {
 		if (uniquename.contains("test")) {
 			famixMethod.setIsTest(true);
 		}
-		
+
 		famixMethod.setFlags(flags);
-		
+
 		if (parent != null) {
 			famixMethod.setBelongsToClass(parent);
 			parent.addMethod(famixMethod);
@@ -165,7 +208,7 @@ public class MethodRecorder extends AbstractEntityRecorder {
 
 		/*XXX Fix this too!
 		 * try {
-		 
+
 			FamixClass returnType = manager.getFamixClass(element.getReturnType());
 			famixMethod.setDeclaredReturnClass(returnType);
 		} catch (JavaModelException e) {
@@ -182,20 +225,20 @@ public class MethodRecorder extends AbstractEntityRecorder {
 	@Override
 	protected void createAndLinkChange(AtomicChange change) {
 		Change latestChange = famixMethod.getLatestChange();
-		
+
 		//make sure you don't add or remove the same method twice
 		if(latestChange != null && !latestChange.isDummy())
 			if(change instanceof Remove && latestChange instanceof Remove)
 				return;
-			if(change instanceof Add && latestChange instanceof Add)
-				return;
-		
+		if(change instanceof Add && latestChange instanceof Add)
+			return;
+
 		change.setChangeSubject(famixMethod);
 		famixMethod.addChange(change);
 
 		setStructuralDependencies(change, famixMethod, parent, this);
 		managerChange.addChange(change);
-	 
+
 	}
 
 	protected void removeAllContainedWithin(AtomicChange change, AtomicChange additionChange) {
@@ -203,12 +246,12 @@ public class MethodRecorder extends AbstractEntityRecorder {
 		for (Change dependee : dependees) {
 			if (dependee instanceof Add) {
 				Subject changesubject = ((AtomicChange) dependee).getChangeSubject();
-				
+
 				//only remove invocations that are actually inside this method body
 				if(changesubject instanceof FamixInvocation &&
-					!((FamixInvocation) changesubject).getInvokedBy().equals(famixMethod) )
+						!((FamixInvocation) changesubject).getInvokedBy().equals(famixMethod) )
 					continue;
-				
+
 				Change latestChange = changesubject.getLatestChange();
 				if (latestChange instanceof Add) {
 					// only remove if it wasn't removed yet

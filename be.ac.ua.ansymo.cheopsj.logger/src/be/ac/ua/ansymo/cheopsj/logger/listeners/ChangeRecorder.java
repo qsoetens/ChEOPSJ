@@ -136,19 +136,20 @@ public class ChangeRecorder {
 			}
 			break;
 		}
+		
 		IJavaElementDelta[] children = delta.getAffectedChildren();
 		for (IJavaElementDelta child : children) {
 			recordElementChanges(child);
 		}
 	}
 
-//	private CompilationUnit parse(ICompilationUnit compilationUnit) {
-//		ASTParser parser = ASTParser.newParser(AST.JLS3);
-//		parser.setKind(ASTParser.K_COMPILATION_UNIT);
-//		parser.setSource(compilationUnit);
-//		parser.setResolveBindings(true);
-//		return (CompilationUnit) parser.createAST(null); // parse
-//	}
+	private CompilationUnit parse(ICompilationUnit compilationUnit) {
+		ASTParser parser = ASTParser.newParser(AST.JLS3);
+		parser.setKind(ASTParser.K_COMPILATION_UNIT);
+		parser.setSource(compilationUnit);
+		parser.setResolveBindings(true);
+		return (CompilationUnit) parser.createAST(null); // parse
+	}
 
 	private void recordInheritanceRelationships(IType element) {
 		//IF the element in our model already contained a superclass that inheritance relationship needs to be removed.
@@ -192,6 +193,15 @@ public class ChangeRecorder {
 	private void storeChange(IJavaElement element, IChange change) {
 		if (element instanceof IMethod) {
 			new MethodRecorder((IMethod) element).storeChange(change);
+			
+			CompilationUnit oldAST = getOldAST(element);
+			CompilationUnit newAST = parse(((IMethod) element).getCompilationUnit());
+
+			CompilationUnitHistory.storeNewAST(newAST, element.getResource().getProject().getLocation(), element.getResource().getProjectRelativePath() );
+			//CompilationUnitHistory.storeNewAST(newAST, element.getResource().getLocation());
+			if(oldAST != null && newAST != null && !oldAST.equals(newAST))
+				findAndLogChanges(oldAST, newAST);
+			
 		} else if (element instanceof IField) {
 			new FieldRecorder((IField) element).storeChange(change);
 			//} else if (element instanceof ILocalVariable){
@@ -200,7 +210,7 @@ public class ChangeRecorder {
 		} else if (element instanceof IType) {
 			new ClassRecorder((IType) element).storeChange(change);
 		} else if (element instanceof ICompilationUnit) {
-			if (change instanceof Remove) {
+			/*if (change instanceof Remove) {
 				// super.storeChange(change);
 				String filename = element.getElementName();
 				String classname = filename.substring(0, filename.indexOf('.'));
@@ -211,7 +221,7 @@ public class ChangeRecorder {
 					uniquename = packagename + '.' + classname;
 				}
 				new ClassRecorder(uniquename, classname, packagename).storeChange(change);
-			}
+			}*/
 			//new CompilationUnitRecorder((ICompilationUnit) element).storeChange(change);
 		} else if (element instanceof IPackageFragment) {
 			new PackageRecorder((IPackageFragment) element).storeChange(change);

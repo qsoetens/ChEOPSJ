@@ -49,7 +49,7 @@ public class Change implements IChange, Serializable {
 		semanticalDependencies = new ArrayList<Change>();
 		structuralDependees = new ArrayList<Change>();
 		structuralDependencies = new ArrayList<Change>();
-		
+	
 		UniqueID = "c" + Integer.toString(IDCounter);
 		IDCounter++;
 	}
