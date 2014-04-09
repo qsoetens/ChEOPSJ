@@ -191,16 +191,16 @@ public class ChangeExtractor {
 	}
 
 
-	private static void storeChange(Collection<ASTNode> collection,
+	private void storeChange(Collection<ASTNode> collection,
 			IChange change) {
 		for (ASTNode node : collection) {
 			if (node instanceof MethodInvocation) {
 				if(change instanceof Remove)
 					new MethodInvocationRecorder((MethodInvocation) node)
-						.storeChange(new Remove());
+						.storeChange(changeExtractorProduct.createRemoval());
 				else if(change instanceof Add)
 					new MethodInvocationRecorder((MethodInvocation) node)
-				.storeChange(new Add());
+				.storeChange(changeExtractorProduct.createAddition());
 			} else if (node instanceof VariableDeclaration) {
 				// This is to get changes to other local vars.
 				// new LocalVariableRecorder((VariableDeclaration)

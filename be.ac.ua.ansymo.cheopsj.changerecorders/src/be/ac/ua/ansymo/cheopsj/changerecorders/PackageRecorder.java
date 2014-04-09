@@ -314,6 +314,11 @@ public class PackageRecorder extends AbstractEntityRecorder {
 
 		if(superPack != null && superPack.getLatestAddition() == null){
 			AtomicChange superpackadd = new Add();
+			superpackadd.setIntent(packadd.getIntent());
+			superpackadd.setTimeStamp(packadd.getTimeStamp());
+			superpackadd.setUser(packadd.getUser());
+			superpackadd.setIsApplied(packadd.getIsApplied());
+			
 			superpackadd.setChangeSubject(superPack);
 			superPack.addChange(superpackadd);
 

@@ -124,13 +124,17 @@ public class ChangeExtractorAdditions {
 	private void storePackageAddition(PackageDeclaration pack) {
 		//only create packageaddition, if this package was not previously created
 		if(pack != null){
-			if(!ModelManager.getInstance().famixPackageExists(pack.getName().getFullyQualifiedName())){
-				PackageRecorder recorder = new PackageRecorder(pack);
-				recorder.storeChange(changeExtractorProduct.createAddition());
+			String packname = pack.getName().getFullyQualifiedName();
+			//only create packageaddition, if this package was not previously created
+			if(packname != null && !packname.isEmpty()){
+				if(!ModelManager.getInstance().famixPackageExists(packname)){
+					PackageRecorder recorder = new PackageRecorder(packname);
+					recorder.storeChange(changeExtractorProduct.createAddition());
+				}
 			}
 		}
 	}
-
+	
 	public ChangeExtractorProduct getChangeExtractorProduct() {
 		return changeExtractorProduct;
 	}
