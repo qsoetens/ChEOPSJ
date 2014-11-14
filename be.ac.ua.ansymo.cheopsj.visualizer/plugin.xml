@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+
+   <extension
+         point="org.eclipse.ui.views">
+      <category
+            name="ChEOPSJ Visualization"
+            id="be.ac.ua.ansymo.cheopsj.visualizer">
+      </category>
+      <view
+            name="ChangeGraph"
+            icon="icons/sample.gif"
+            category="be.ac.ua.ansymo.cheopsj.visualizer"
+            class="be.ac.ua.ansymo.cheopsj.visualizer.views.graph.ChangeGraph"
+            id="be.ac.ua.ansymo.cheopsj.visualizer.views.ChangeGraph">
+      </view>
+   </extension>
+   <extension
+         point="org.eclipse.ui.perspectiveExtensions">
+      <perspectiveExtension
+            targetID="org.eclipse.jdt.ui.JavaPerspective">
+         <view
+               ratio="0.5"
+               relative="org.eclipse.ui.views.ProblemView"
+               relationship="right"
+               id="be.ac.ua.ansymo.cheopsj.visualizer.views.ChangeGraph">
+         </view>
+      </perspectiveExtension>
+   </extension>
+   <extension
+         point="org.eclipse.help.contexts">
+      <contexts
+            file="contexts.xml">
+      </contexts>
+   </extension>
+
+</plugin>

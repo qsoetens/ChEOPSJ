@@ -15,6 +15,7 @@ import hibernate.model.api.IModelEntity;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -40,6 +41,12 @@ public abstract class Subject implements IModelEntity, Serializable {
 	private Collection<Change> affectingChanges;
 	private static int IDCounter = 0;
 	private String uniqueID;
+	
+	private int addedChanges = 0;
+	private int deletedChanges = 0;
+	private int modificationChanges = 0;
+	private int totalChanges = 0;
+	private Date mostRecentChange = null;
 
 	public void setUniqueID(String uniqueID) {
 		this.uniqueID = uniqueID;
@@ -83,7 +90,42 @@ public abstract class Subject implements IModelEntity, Serializable {
 	}
 
 	public void addChange(Change change) {
+		updateCounters(change);
 		this.affectingChanges.add(change);
+	}
+	
+	private void updateCounters(Change change) {
+		if (change instanceof Add) {
+			this.addedChanges++;
+			this.totalChanges++;		
+		} else if (change instanceof Modify) {
+			this.modificationChanges++;
+			this.totalChanges++;		
+		} else if (change instanceof Remove) {
+			this.deletedChanges++;
+			this.totalChanges++;		
+		}
+		this.mostRecentChange = change.getTimeStamp();
+	}
+	
+	public int getNumOfAddedChanges() {
+		return this.addedChanges;
+	}
+	
+	public int getNumOfRemovedChanges() {
+		return this.deletedChanges;
+	}
+	
+	public int getNumOfModifyChanges() {
+		return this.modificationChanges;
+	}
+	
+	public int getNumOfTotalChanges() {
+		return this.totalChanges;
+	}
+	
+	public Date getMostRecentTimeStamp() {
+		return this.mostRecentChange;
 	}
 
 	@Transient
