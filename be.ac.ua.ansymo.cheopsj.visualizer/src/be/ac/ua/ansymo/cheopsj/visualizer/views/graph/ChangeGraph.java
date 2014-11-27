@@ -26,15 +26,20 @@ public class ChangeGraph extends ViewPart {
 		viewer = new GraphViewer(parent, SWT.BORDER);
 		viewer.setContentProvider(new ChangeGraphContentProvider());
 		viewer.setLabelProvider(new ChangeGraphLabelProvider());
-		viewer.setLayoutAlgorithm(new ChangeGraphLayoutAlgorithm(LayoutStyles.NO_LAYOUT_NODE_RESIZING));
-		
 		viewer.setInput(ModelManager.getInstance());
+		
+		viewer.setLayoutAlgorithm(new ChangeGraphLayoutAlgorithm(LayoutStyles.NO_LAYOUT_NODE_RESIZING), true);
+		viewer.applyLayout();
 	}
 
 	@Override
 	public void setFocus() {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	public void resetViewLayout() {
+		viewer.applyLayout();
 	}
 
 }

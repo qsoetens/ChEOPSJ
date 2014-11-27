@@ -4,6 +4,7 @@ import hibernate.session.SessionHandler;
 import hibernate.session.api.ISession;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import be.ac.ua.ansymo.cheopsj.model.changes.Add;
@@ -12,6 +13,8 @@ import be.ac.ua.ansymo.cheopsj.model.changes.Change;
 import be.ac.ua.ansymo.cheopsj.model.changes.IChange;
 import be.ac.ua.ansymo.cheopsj.model.changes.Remove;
 import be.ac.ua.ansymo.cheopsj.model.changes.Subject;
+import be.ac.ua.ansymo.cheopsj.model.famix.FamixClass;
+import be.ac.ua.ansymo.cheopsj.model.famix.FamixPackage;
 
 public class ModelManagerChange {
 
@@ -112,6 +115,20 @@ public class ModelManagerChange {
 		return changeCount;
 	}
 	
+	public int getChangeCount(Subject sub) {
+		int changeCount = 0;
+		
+		try {
+			ISession lSession = SessionHandler.getHandler().getCurrentSession();
+			changeCount = lSession.query("select count(*) from Change as change inner join change.changeSubject as subject "
+					+ "where subject.id =" + sub.getId());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return changeCount;
+	}
+	
 	public int getAddCount() {
 		int addCount = 0;
 		try {
@@ -124,11 +141,39 @@ public class ModelManagerChange {
 		return addCount;
 	}
 	
+	public int getAddCount(Subject sub) {
+		int addCount = 0;
+		
+		try {
+			ISession lSession = SessionHandler.getHandler().getCurrentSession();
+			addCount = lSession.query("select count(*) from Add as add inner join add.changeSubject as subject "
+					+ "where subject.id =" + sub.getId());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return addCount;
+	}
+	
 	public int getRemoveCount() {
 		int removeCount = 0;
 		try {
 			ISession lSession = SessionHandler.getHandler().getCurrentSession();
 			removeCount = lSession.query("select count(*) from Remove");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return removeCount;
+	}
+	
+	public int getRemoveCount(Subject sub) {
+		int removeCount = 0;
+		
+		try {
+			ISession lSession = SessionHandler.getHandler().getCurrentSession();
+			removeCount = lSession.query("select count(*) from Remove as change inner join change.changeSubject as subject "
+					+ "where subject.id =" + sub.getId());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

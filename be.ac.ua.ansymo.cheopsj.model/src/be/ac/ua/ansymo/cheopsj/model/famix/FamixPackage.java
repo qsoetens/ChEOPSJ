@@ -204,5 +204,4 @@ public class FamixPackage extends FamixEntity {
 	public Image getIcon() {
 		return JavaUI.getSharedImages().getImage(ISharedImages.IMG_OBJS_PACKAGE);
 	}
-	
 }
