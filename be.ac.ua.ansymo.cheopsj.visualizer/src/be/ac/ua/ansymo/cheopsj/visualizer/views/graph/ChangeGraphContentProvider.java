@@ -117,10 +117,6 @@ public class ChangeGraphContentProvider implements IGraphEntityContentProvider, 
 		}
 	}
 
-<<<<<<< HEAD
-=======
-	@Override
->>>>>>> a57fb2214de6615e1b5131c7d6af7f2dcaf19100
 	public void refresh() {
 		viewer.refresh();
 	}

@@ -15,10 +15,7 @@ import org.eclipse.zest.core.viewers.IConnectionStyleProvider;
 import org.eclipse.zest.core.viewers.IFigureProvider;
 
 import be.ac.ua.ansymo.cheopsj.model.ModelManagerChange;
-<<<<<<< HEAD
 import be.ac.ua.ansymo.cheopsj.model.changes.Change;
-=======
->>>>>>> a57fb2214de6615e1b5131c7d6af7f2dcaf19100
 import be.ac.ua.ansymo.cheopsj.model.famix.FamixAttribute;
 import be.ac.ua.ansymo.cheopsj.model.famix.FamixClass;
 import be.ac.ua.ansymo.cheopsj.model.famix.FamixEntity;
@@ -53,22 +50,12 @@ public class ChangeGraphLabelProvider extends LabelProvider implements IConnecti
 		int[] changes = {0,0,0,0};
 
 		Collection<FamixClass> classes = pack.getClasses();
-<<<<<<< HEAD
 		for (FamixClass c : classes) {
 			changes[0] += c.getNumberOfChanges();
 			changes[1] += c.getNumberOfAdditions();
 			changes[2] += c.getNumberOfRemovals();
 			
-			/*try {
-=======
-		
-		for (FamixClass c : classes) {
-			changes[0] += this.changeManager.getChangeCount(c);
-			changes[1] += this.changeManager.getAddCount(c);
-			changes[2] += this.changeManager.getRemoveCount(c);
-			
 /*			try {
->>>>>>> a57fb2214de6615e1b5131c7d6af7f2dcaf19100
 				Collection<FamixAttribute> attribute_col = c.getAttributes();
 				for (FamixAttribute a : attribute_col) {
 					totalChanges += this.changeManager.getChangeCount(a);
@@ -146,7 +133,6 @@ public class ChangeGraphLabelProvider extends LabelProvider implements IConnecti
 			if (element instanceof FamixPackage)
 				changes = getPackageChanges((FamixPackage) element);
 			
-<<<<<<< HEAD
 			Change lastChange = ((FamixEntity)element).getLatestChange();
 			Date lchange = null;
 			if (lastChange == null) {
@@ -155,9 +141,6 @@ public class ChangeGraphLabelProvider extends LabelProvider implements IConnecti
 			} else {
 				lchange = lastChange.getTimeStamp();
 			}
-=======
-			Date lchange = this.changeManager.getLatestChange((FamixEntity)element).getTimeStamp();
->>>>>>> a57fb2214de6615e1b5131c7d6af7f2dcaf19100
 			System.out.println("CHANGEGRAPHLABELPROVIDER::GETFIGURE::BUILDING FIGURE");
 			Figure fig = new FamixFigure(changes, (FamixEntity)element, lchange);
 			fig.setSize(-1, -1);
