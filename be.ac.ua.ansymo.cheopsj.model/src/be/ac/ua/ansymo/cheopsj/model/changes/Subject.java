@@ -128,5 +128,29 @@ public abstract class Subject implements Serializable {
 		}
 		return latestChange;
 	}
+	
+	public int getNumberOfChanges() {
+		return this.affectingChanges.size();
+	}
+	
+	public int getNumberOfAdditions() {
+		int count = 0;
+		for (Change change : affectingChanges) {
+			if (change instanceof Add) {
+				count++;
+			}
+		}
+		return count;
+	}
+	
+	public int getNumberOfRemovals() {
+		int count = 0;
+		for (Change change : affectingChanges) {
+			if (change instanceof Remove) {
+				count++;
+			}
+		}
+		return count;
+	}
 
 }

@@ -4,9 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import be.ac.ua.ansymo.cheopsj.model.changes.Add;
+import be.ac.ua.ansymo.cheopsj.model.changes.AtomicChange;
 import be.ac.ua.ansymo.cheopsj.model.changes.Change;
 import be.ac.ua.ansymo.cheopsj.model.changes.IChange;
 import be.ac.ua.ansymo.cheopsj.model.changes.Remove;
+import be.ac.ua.ansymo.cheopsj.model.changes.Subject;
 
 public class ModelManagerChange {
 
@@ -53,8 +55,7 @@ public class ModelManagerChange {
 	public void addChange(Change change) {
 		//add change to list
 		changes.add(change);
-		//alert listeners that a change was added
-		
+		//alert listeners that a change was added		
 		getModelManagerListeners().fireChangeAdded(change);
 	}
 	
@@ -80,11 +81,71 @@ public class ModelManagerChange {
 		}
 		return changeCount + " changes; " + addCount + " additions and " + removeCount + " removals";
 	}
-	
+		
 	/*
 	 * For testing purposes only!
 	 */
 	public void clearModel() {
 		INSTANCE = new ModelManagerChange();
 	}
+	
+	/*public int getChangeCount(Subject sub) {
+		int changeCount = 0;
+		System.out.println("TOTAL NUMBER OF CHANGES = " + this.changes.size());
+		for (IChange change : this.changes) {
+			if (change instanceof AtomicChange) {
+				System.out.println("Change instanceof atomicchange");
+				System.out.println("SUB ID = " + sub.getID() + "\n"
+						+ "CHANGE NAME = " + ((AtomicChange)change).getName());
+				if (sub.getID().equals(((AtomicChange)change).getName())) {
+					changeCount++;
+				}
+			}
+		}
+		return changeCount;
+	}
+	
+	public int getAddCount(Subject sub) {
+		int addCount = 0;
+		for (IChange change : this.changes) {
+			if (change instanceof Add) {
+				if (sub.getID().equals(((AtomicChange)change).getName())) {
+					addCount++;
+				}
+			}
+		}
+		return addCount;
+	}
+	
+	public int getRemoveCount(Subject sub) {
+		int removeCount = 0;
+		for (IChange change : this.changes) {
+			if (change instanceof Remove) {
+				if (sub.getID().equals(((AtomicChange)change).getName())) {
+					removeCount++;
+				}
+			}
+		}
+		return removeCount;
+	}
+
+	public Change getLatestChange(Subject sub) {
+		Change latest = null;
+		
+		for (IChange change : this.changes) {
+			if (change instanceof AtomicChange) {
+				if (sub.getID().equals(((AtomicChange)change).getName())) {
+					if (latest == null) {
+						latest = (Change) change;
+					} else if (latest.getTimeStamp().after(((AtomicChange)change).getTimeStamp())) {
+						latest = (Change) change;
+					} else {
+						// Do nothing
+					}
+				}
+			}
+		}
+		
+		return latest;
+	}*/
 }
