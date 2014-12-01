@@ -1,6 +1,7 @@
 package be.ac.ua.ansymo.cheopsj.model;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import be.ac.ua.ansymo.cheopsj.model.changes.Add;
@@ -9,6 +10,8 @@ import be.ac.ua.ansymo.cheopsj.model.changes.Change;
 import be.ac.ua.ansymo.cheopsj.model.changes.IChange;
 import be.ac.ua.ansymo.cheopsj.model.changes.Remove;
 import be.ac.ua.ansymo.cheopsj.model.changes.Subject;
+import be.ac.ua.ansymo.cheopsj.model.famix.FamixClass;
+import be.ac.ua.ansymo.cheopsj.model.famix.FamixPackage;
 
 public class ModelManagerChange {
 
@@ -105,7 +108,25 @@ public class ModelManagerChange {
 		return changeCount;
 	}
 	
+<<<<<<< HEAD
 	public int getAddCount(Subject sub) {
+=======
+	public int getChangeCount(Subject sub) {
+		int changeCount = 0;
+		
+		try {
+			ISession lSession = SessionHandler.getHandler().getCurrentSession();
+			changeCount = lSession.query("select count(*) from Change as change inner join change.changeSubject as subject "
+					+ "where subject.id =" + sub.getId());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return changeCount;
+	}
+	
+	public int getAddCount() {
+>>>>>>> a57fb2214de6615e1b5131c7d6af7f2dcaf19100
 		int addCount = 0;
 		for (IChange change : this.changes) {
 			if (change instanceof Add) {
@@ -117,7 +138,25 @@ public class ModelManagerChange {
 		return addCount;
 	}
 	
+<<<<<<< HEAD
 	public int getRemoveCount(Subject sub) {
+=======
+	public int getAddCount(Subject sub) {
+		int addCount = 0;
+		
+		try {
+			ISession lSession = SessionHandler.getHandler().getCurrentSession();
+			addCount = lSession.query("select count(*) from Add as add inner join add.changeSubject as subject "
+					+ "where subject.id =" + sub.getId());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return addCount;
+	}
+	
+	public int getRemoveCount() {
+>>>>>>> a57fb2214de6615e1b5131c7d6af7f2dcaf19100
 		int removeCount = 0;
 		for (IChange change : this.changes) {
 			if (change instanceof Remove) {
@@ -128,6 +167,78 @@ public class ModelManagerChange {
 		}
 		return removeCount;
 	}
+<<<<<<< HEAD
+=======
+	
+	public int getRemoveCount(Subject sub) {
+		int removeCount = 0;
+		
+		try {
+			ISession lSession = SessionHandler.getHandler().getCurrentSession();
+			removeCount = lSession.query("select count(*) from Remove as change inner join change.changeSubject as subject "
+					+ "where subject.id =" + sub.getId());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return removeCount;
+	}
+	
+	
+	public Change getLatestChange(Subject sub){
+		List<AtomicChange> changes = null;
+		try {
+			ISession lSession = SessionHandler.getHandler().getCurrentSession();
+			 changes = lSession.query(
+					 "select change from AtomicChange as change inner join change.changeSubject as subject "
+					 + "where subject.id =" + sub.getId()
+					 +" order by change.timeStamp desc"
+					 ,AtomicChange.class);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		if(changes == null || changes.isEmpty())
+			return null;
+		else
+			return (Change)changes.get(0);
+	}
+	
+	public Add getLastestAddition(Subject sub){
+		List<Add> changes = null;
+		try {
+			ISession lSession = SessionHandler.getHandler().getCurrentSession();
+			 changes = lSession.query(
+					 "select change from Add as change inner join change.changeSubject as subject "
+					 + "where subject.id = " + sub.getId()
+					 +" order by change.timeStamp desc"
+					 ,Add.class);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		if(changes == null || changes.isEmpty())
+			return null;
+		else
+			return changes.get(0);
+	}
+	
+	public Remove getLatestRemoval(Subject sub){
+		List<Remove> changes = null;
+		try {
+			ISession lSession = SessionHandler.getHandler().getCurrentSession();
+			 changes = lSession.query(
+					 "select change from Remove as change inner join change.changeSubject as subject"
+					 + " where subject.id =" + sub.getId()
+					 +" order by change.timeStamp desc"
+					 ,Remove.class);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		if(changes == null || changes.isEmpty())
+			return null;
+		else
+			return changes.get(0);
+	}
+>>>>>>> a57fb2214de6615e1b5131c7d6af7f2dcaf19100
 
 	public Change getLatestChange(Subject sub) {
 		Change latest = null;

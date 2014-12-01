@@ -13,6 +13,7 @@ package be.ac.ua.ansymo.cheopsj.model.changes;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 
 public abstract class Subject implements Serializable {
 
