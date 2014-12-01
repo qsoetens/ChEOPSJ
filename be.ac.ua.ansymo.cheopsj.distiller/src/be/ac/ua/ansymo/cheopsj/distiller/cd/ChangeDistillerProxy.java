@@ -63,7 +63,7 @@ public class ChangeDistillerProxy {
 	
 	public void printChanges() {
         for (SourceCodeChange scc : changeDistiller.getSourceCodeChanges()) {
-            System.out.println(scc.getChangeType());
+            //System.out.println(scc.getChangeType());
         }
 	}
 	

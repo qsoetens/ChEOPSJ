@@ -18,7 +18,7 @@ import be.ac.ua.ansymo.cheopsj.changerecorders.MethodRecorder;
 import be.ac.ua.ansymo.cheopsj.changerecorders.PackageRecorder;
 import be.ac.ua.ansymo.cheopsj.changerecorders.StatementRecorder;
 import be.ac.ua.ansymo.cheopsj.distiller.asts.LocalVariableFinder;
-import be.ac.ua.ansymo.cheopsj.distiller.asts.MIVisitor;
+import be.ac.ua.ansymo.cheopsj.distiller.asts.MethodInvocationVisitor;
 import be.ac.ua.ansymo.cheopsj.model.ModelManager;
 
 public class ChangeExtractorAdditions {
@@ -89,7 +89,7 @@ public class ChangeExtractorAdditions {
 		if(bigType != null){
 			MethodDeclaration[] methods = bigType.getMethods();
 			for(MethodDeclaration method : methods){
-				MIVisitor visitor = new MIVisitor();
+				MethodInvocationVisitor visitor = new MethodInvocationVisitor();
 				method.accept(visitor);
 				for(MethodInvocation invocation: visitor.getMethodInvocations()){
 					StatementRecorder recorder = new MethodInvocationRecorder(invocation);

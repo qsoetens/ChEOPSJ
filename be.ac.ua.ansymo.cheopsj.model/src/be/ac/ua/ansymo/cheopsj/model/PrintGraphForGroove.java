@@ -1,8 +1,11 @@
 package be.ac.ua.ansymo.cheopsj.model;
 
 import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 
 import be.ac.ua.ansymo.cheopsj.model.changes.Add;
 import be.ac.ua.ansymo.cheopsj.model.changes.AtomicChange;
@@ -89,7 +92,7 @@ public class PrintGraphForGroove {
 
 			String timestampID = change.getID() + "a0";
 			printNodeInGrooveGraph(out, timestampID);
-			printEdgeInGrooveGraph(out, timestampID, timestampID, "int:"+change.getTimeStamp().getTime());
+			printEdgeInGrooveGraph(out, timestampID, timestampID, "real:"+change.getTimeStamp().getTime()+".0");
 			printEdgeInGrooveGraph(out, change.getID(), timestampID, "timestamp");
 		}
 		catch (IOException e) {
@@ -110,12 +113,12 @@ public class PrintGraphForGroove {
 				printNodeInGrooveGraph(out, nameID);
 
 				printEdgeInGrooveGraph(out, nameID, nameID, "string:&quot;"+((FamixEntity)famix).getName()+"&quot;");
-				
+
 				printEdgeInGrooveGraph(out, famix.getID(), nameID, "name");	
 			}else if(famix instanceof FamixInvocation){
 				//printEdgeInGrooveGraph(out, nameID, nameID, "string:&quot;"+((FamixInvocation)famix).getStringRepresentation()+":&quot;");
 			}
-			
+
 
 
 			if (famix instanceof FamixPackage) {

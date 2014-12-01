@@ -143,11 +143,9 @@ public class RelevantTestFinder {
 			AtomicChange methodAddition = findContainingMethodAddition(invocation);
 
 			if (methodAddition.getChangeSubject() instanceof FamixMethod) {
-				String methodName = ((FamixMethod) methodAddition.getChangeSubject()).getUniqueName();
-
-				// TODO account for Junit 4 tests (@Test)
-				if (methodName.contains("test")) {
-
+				String methodName = ((FamixMethod) methodAddition.getChangeSubject()).getUniqueName();				
+				//if (methodName.contains("test")) {
+				if(((FamixMethod)methodAddition.getChangeSubject()).isTest()){
 					if(!methodsAnalysed.contains(methodName)){
 						methodsAnalysed.add(methodName);
 						
@@ -205,8 +203,8 @@ public class RelevantTestFinder {
 				AtomicChange ach = (AtomicChange) ch;
 				if (ach.getChangeSubject() instanceof FamixInvocation) {
 					FamixInvocation inv = (FamixInvocation) ach.getChangeSubject();
-					if (inv.getCandidate().getUniqueName().equals(calledMethod.getUniqueName()))
-					//if(inv.getCandidates().contains(calledMethod))
+					//if (inv.getCandidate().getUniqueName().equals(calledMethod.getUniqueName()))
+					if(inv.getCandidates().contains(calledMethod))
 						invocations.add((Add) ach);
 				}
 			}
@@ -259,7 +257,7 @@ public class RelevantTestFinder {
 			}
 
 			int counter = 1;	
-			//out.write("There are " + relevantTests.size() + " relevant tests:" + '\n');
+			out.write("There are " + relevantTests.size() + " relevant tests:" + '\n');
 			for (String testCase : relevantTests.keySet()) {
 				for (String test : relevantTests.get(testCase)) {
 					out.write(counter + ": " + testCase + "." + test + '\n');

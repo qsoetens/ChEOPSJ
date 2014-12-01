@@ -77,7 +77,7 @@ public class ClassRecorder extends AbstractEntityRecorder {
 			e.printStackTrace();
 		}	
 		
-		try {
+		/*try {
 			if (element.hasChildren()) // see if there are any classes out there under this newly created package. this happens in case of a rename.
 			{
 				IField[] fieldList = element.getFields();
@@ -98,7 +98,7 @@ public class ClassRecorder extends AbstractEntityRecorder {
 		}
 		catch (JavaModelException e) {
 			//if there's an exception there, we're in a remove.
-		}
+		}*/
 	}
 
 	public ClassRecorder(TypeDeclaration declaration) {
@@ -260,7 +260,7 @@ public class ClassRecorder extends AbstractEntityRecorder {
 	@Override
 	protected void createAndLinkFamixElement() {
 		if (!manager.famixClassExists(uniqueName)) {
-			if(!manager.famixClassWithNameExists(name)){
+			//if(!manager.famixClassWithNameExists(name)){
 				famixClass = new FamixClass();
 
 				famixClass.setUniqueName(uniqueName);
@@ -269,7 +269,7 @@ public class ClassRecorder extends AbstractEntityRecorder {
 				setClassFlagsAndParent(famixClass);
 				famixClass.setName(name);
 				manager.addFamixElement(famixClass);
-			}else{
+			/*}else{
 				famixClass = manager.getFamixClassesWithName(name).get(0);
 				famixClass.setUniqueName(uniqueName);
 				if(famixClass.isDummy()){
@@ -280,7 +280,7 @@ public class ClassRecorder extends AbstractEntityRecorder {
 				}else{
 					parent = famixClass.getBelongsToPackage();
 				}
-			}
+			}*/
 		} else {
 			famixClass = manager.getFamixClass(uniqueName);
 			if(famixClass.isDummy()){

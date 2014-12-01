@@ -12,6 +12,7 @@
 
 package be.ac.ua.ansymo.cheopsj.testtool.handlers;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.eclipse.core.commands.AbstractHandler;
@@ -35,12 +36,14 @@ public class FindRelevantTests extends AbstractHandler {
 
 		RelevantTestFinder.findTests(selectedChanges);
 		RelevantTestFinder.printRelevantTests();
-		RelevantTestFinder.runTests();
+//		RelevantTestFinder.runTests();
 		
-		/*try {
+		/*
+		try {
 			PITRelevantTestFinder.findTests(selectedChanges);
 			//PITRelevantTestFinder.printToAntPITBuildConfiguration();
 			//PITRelevantTestFinder.printToMavenPITBuildConfiguration();
+			//PITRelevantTestFinder.printToMavenJunitBuildConfiguration();
 			PITRelevantTestFinder.printRelevantTests();
 		} catch (IOException e) {
 

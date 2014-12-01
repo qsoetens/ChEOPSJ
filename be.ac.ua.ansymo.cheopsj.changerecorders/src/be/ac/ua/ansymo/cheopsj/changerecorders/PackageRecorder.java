@@ -71,7 +71,7 @@ public class PackageRecorder extends AbstractEntityRecorder {
 
 		name = element.getElementName();
 
-		try {
+		/*try {
 			if (element.hasChildren()) // see if there are any classes out there under this newly created package. this happens in case of a rename.
 			{
 				IJavaElement[] childrenList = element.getChildren();
@@ -96,7 +96,7 @@ public class PackageRecorder extends AbstractEntityRecorder {
 		}
 		catch (JavaModelException e) {
 			//if there's an exception there, we're in a remove.
-		}
+		}*/
 	}
 
 	/**

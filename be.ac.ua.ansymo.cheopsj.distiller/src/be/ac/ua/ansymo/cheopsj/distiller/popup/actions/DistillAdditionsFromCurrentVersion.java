@@ -1,8 +1,6 @@
 package be.ac.ua.ansymo.cheopsj.distiller.popup.actions;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
@@ -18,9 +16,8 @@ import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTParser;
-import org.eclipse.jdt.core.dom.ASTVisitor;
 import org.eclipse.jdt.core.dom.CompilationUnit;
-import org.eclipse.jdt.core.dom.EnumDeclaration;
+import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.MethodInvocation;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.ErrorDialog;
@@ -42,9 +39,8 @@ import be.ac.ua.ansymo.cheopsj.changerecorders.InheritanceRecorder;
 import be.ac.ua.ansymo.cheopsj.changerecorders.MethodInvocationRecorder;
 import be.ac.ua.ansymo.cheopsj.changerecorders.MethodRecorder;
 import be.ac.ua.ansymo.cheopsj.changerecorders.PackageRecorder;
-import be.ac.ua.ansymo.cheopsj.distiller.asts.MIVisitor;
+import be.ac.ua.ansymo.cheopsj.distiller.asts.MethodInvocationVisitor;
 import be.ac.ua.ansymo.cheopsj.model.ModelManager;
-import be.ac.ua.ansymo.cheopsj.model.ModelManagerChange;
 import be.ac.ua.ansymo.cheopsj.model.ModelManagerListeners;
 import be.ac.ua.ansymo.cheopsj.model.changes.Add;
 
@@ -153,8 +149,9 @@ public class DistillAdditionsFromCurrentVersion implements IObjectActionDelegate
 				for (ICompilationUnit unit : mypackage.getCompilationUnits()) {
 
 					CompilationUnit parse = parse(unit);
-					MIVisitor visitor = new MIVisitor();
+					MethodInvocationVisitor visitor = new MethodInvocationVisitor();
 					parse.accept(visitor);
+							
 					for(MethodInvocation invocation : visitor.getMethodInvocations()){
 						MethodInvocationRecorder recorder = new MethodInvocationRecorder(invocation);
 						recorder.storeChange(new Add());
@@ -188,14 +185,14 @@ public class DistillAdditionsFromCurrentVersion implements IObjectActionDelegate
 					for(IType type: allTypes){
 						IMethod[] methods = type.getMethods();
 						IField[] fields = type.getFields();
-
+						
 						for(IMethod method: methods){
 							String classname = type.getFullyQualifiedName();
 							String methodname = method.getElementName();
 							if(!ModelManager.getInstance().famixMethodExists(classname + '.' + methodname)){
 								MethodRecorder recorder = new MethodRecorder(method);
 								recorder.storeChange(new Add());
-							}		
+							}
 						}
 
 						for(IField field: fields){

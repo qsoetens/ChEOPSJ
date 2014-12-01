@@ -1,5 +1,8 @@
 package be.ac.ua.ansymo.cheopsj.model;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
@@ -13,6 +16,16 @@ public class Activator extends AbstractUIPlugin {
 
 	// The shared instance
 	private static Activator plugin;
+	private static Timer timer;
+	
+	
+	private class AutoSaveModelTask extends TimerTask {
+		@Override
+		public void run() {
+			ModelManager.getInstance().saveModel();
+		}
+	}
+
 	
 	/**
 	 * The constructor
@@ -28,6 +41,11 @@ public class Activator extends AbstractUIPlugin {
 		super.start(context);
 		plugin = this;
 		ModelManager.getInstance().loadModel();
+		
+		timer = new Timer();
+		AutoSaveModelTask task = new AutoSaveModelTask();
+		timer.schedule(task,60000,60000);
+		//timer.schedule(task,300000,300000);
 	}
 
 	/*

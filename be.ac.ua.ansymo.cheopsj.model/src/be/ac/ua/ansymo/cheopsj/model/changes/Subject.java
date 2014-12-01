@@ -35,6 +35,11 @@ public abstract class Subject implements Serializable {
 		IDCounter++;
 	}
 	
+	//Carefull, this method shouldn't be used lightly.
+	public static void resetIDCounter(){
+		IDCounter = 0;
+	}
+	
 	public String getID(){
 		return uniqueID;
 	}

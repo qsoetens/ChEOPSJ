@@ -13,6 +13,7 @@ package be.ac.ua.ansymo.cheopsj.changerecorders;
 import java.util.Collection;
 import java.util.List;
 
+import org.eclipse.jdt.core.IAnnotation;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IType;
@@ -47,6 +48,7 @@ public class MethodRecorder extends AbstractEntityRecorder {
 	//TODO need to link method to return type
 	private int flags = 0;
 	private String name = "";
+	private boolean isTest = false;
 
 	private MethodRecorder(){
 		manager = ModelManager.getInstance();
@@ -60,7 +62,7 @@ public class MethodRecorder extends AbstractEntityRecorder {
 		//uniquename = classname + '.' + name;
 		uniquename = classname + '.' + toStringName(method);
 
-		System.out.println(uniquename);
+		//System.out.println(uniquename);
 
 		IJavaElement parentJavaElement = method.getParent();
 		if (parentJavaElement != null && parentJavaElement instanceof IType) {
@@ -72,6 +74,17 @@ public class MethodRecorder extends AbstractEntityRecorder {
 			//When the method is removed, the java model entity for this method no longer exists, so you can not access its flags anymore.
 			//e.printStackTrace();
 		}
+		
+		
+		IAnnotation annotation = method.getAnnotation("Test");
+		if(annotation.exists()){
+			//System.out.println("TEST: " + uniquename);
+			isTest = true;
+		}
+		
+		
+		
+		
 	}
 
 	private String toStringName(IMethod method) {
@@ -104,6 +117,10 @@ public class MethodRecorder extends AbstractEntityRecorder {
 		}
 
 		flags = method.getFlags();
+		
+		//TODO get @Test annotation out of method.MODIFIERS2_PROPERTY;
+		//method.MODIFIERS2_PROPERTY.
+		
 	}
 
 	private String toStringName(MethodDeclaration method){
@@ -195,9 +212,12 @@ public class MethodRecorder extends AbstractEntityRecorder {
 	}
 
 	private void setMethodFlagsAndParent() {
-		if (uniquename.contains("test")) {
+		
+		/*if (uniquename.contains("test")) {
 			famixMethod.setIsTest(true);
-		}
+		}*/
+				
+		famixMethod.setIsTest(isTest);
 
 		famixMethod.setFlags(flags);
 

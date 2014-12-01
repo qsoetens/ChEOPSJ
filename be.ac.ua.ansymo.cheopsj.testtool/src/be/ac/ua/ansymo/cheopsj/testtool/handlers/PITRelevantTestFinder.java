@@ -183,8 +183,8 @@ public class PITRelevantTestFinder {
 				AtomicChange ach = (AtomicChange) ch;
 				if (ach.getChangeSubject() instanceof FamixInvocation) {
 					FamixInvocation inv = (FamixInvocation) ach.getChangeSubject();
-					//if(inv.getCandidates().contains(calledMethod))
-					if (inv.getCandidate().getUniqueName().equals(calledMethod.getUniqueName()))
+					if(inv.getCandidates().contains(calledMethod))
+					//if (inv.getCandidate().getUniqueName().equals(calledMethod.getUniqueName()))
 						invocations.add((Add) ach);
 				}
 			}
@@ -327,6 +327,43 @@ public class PITRelevantTestFinder {
 			}
 		}
 		out.close();
+	}
+
+	public static void printToMavenJunitBuildConfiguration() throws IOException   {  
+		for (String sourceClass : relevantTests.keySet()) {
+
+			FileWriter fstream = new FileWriter("/Users/quinten/Desktop/poms/"+sourceClass+"_pom.xml");
+			BufferedWriter out = new BufferedWriter(fstream);
+
+			printStuffInFile(out, "/Users/quinten/git/ChEOPSJ/be.ac.ua.ansymo.cheopsj.testtool/stuffBeforeMavenJunit.txt");
+
+			out.write("<plugin>" + '\n' +
+					"<groupId>org.pitest</groupId>"+ '\n' +
+					"<artifactId>pitest-maven</artifactId>"+'\n' +
+					"<version>1.0.0</version>"+'\n' +
+					"<configuration>"+'\n');
+
+			out.write("<targetClasses>"+'\n' +
+					"<param>" + sourceClass + "</param>"+'\n' +
+					"</targetClasses>"+'\n');
+
+			out.write("<targetTests>"+'\n');
+			for (String testCase : relevantTests.get(sourceClass)) {
+				out.write("<param>"+testCase+"</param>"+'\n');
+			}
+			out.write("</targetTests>"+'\n');
+
+			out.write("<reportsDirectory>target/pit-reports/dynamic/"+sourceClass+"</reportsDirectory>"+'\n');
+
+			out.write(//"<excludedClasses>"+'\n' +
+					//"<param>net.sourceforge.pmd.cpd.XMLRendererTest</param>"+'\n' +
+					//"</excludedClasses>"+'\n' +
+					"</configuration>"+'\n' +
+					"</plugin>"+'\n');
+
+			printStuffInFile(out, "/Users/quinten/git/ChEOPSJ/be.ac.ua.ansymo.cheopsj.testtool/stuffAfterMavenJunit.txt");
+			out.close();
+		}
 	}
 
 }

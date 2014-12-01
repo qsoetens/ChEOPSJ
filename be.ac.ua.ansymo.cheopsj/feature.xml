@@ -2,7 +2,7 @@
 <feature
       id="be.ac.ua.ansymo.cheopsj"
       label="Cheopsj"
-      version="1.1.0"
+      version="1.1.2"
       provider-name="Ansymo University of Antwerp"
       plugin="be.ac.ua.ansymo.cheopsj.branding">
 
@@ -41,56 +41,56 @@
          id="be.ac.ua.ansymo.cheopsj.logger"
          download-size="0"
          install-size="0"
-         version="1.1.0"
+         version="1.1.2"
          unpack="false"/>
 
    <plugin
          id="be.ac.ua.ansymo.cheopsj.model"
          download-size="0"
          install-size="0"
-         version="1.1.0"
+         version="1.1.2"
          unpack="false"/>
 
    <plugin
          id="be.ac.ua.ansymo.cheopsj.testtool"
          download-size="0"
          install-size="0"
-         version="1.1.0"
+         version="1.1.2"
          unpack="false"/>
 
    <plugin
          id="be.ac.ua.ansymo.cheopsj.distiller"
          download-size="0"
          install-size="0"
-         version="1.1.0"
+         version="1.1.2"
          unpack="false"/>
 
    <plugin
          id="be.ac.ua.ansymo.cheopsj.branding"
          download-size="0"
          install-size="0"
-         version="1.1.0"
+         version="1.1.2"
          unpack="false"/>
 
    <plugin
          id="be.ac.ua.ansymo.cheopsj.model.ui"
          download-size="0"
          install-size="0"
-         version="1.1.0"
+         version="1.1.2"
          unpack="false"/>
 
    <plugin
          id="org.evolizer.changedistiller"
          download-size="0"
          install-size="0"
-         version="1.0.0"
+         version="1.1.2"
          unpack="false"/>
 
    <plugin
          id="be.ac.ua.ansymo.cheopsj.changerecorders"
          download-size="0"
          install-size="0"
-         version="1.1.0"
+         version="1.1.2"
          unpack="false"/>
 
 </feature>

@@ -163,6 +163,7 @@ public class ModelManager implements Serializable{
 		 */
 		INSTANCE = new ModelManager();
 		getModelManagerChange().clearModel();
+		Subject.resetIDCounter();
 	}
 
 	/*
@@ -253,7 +254,11 @@ public class ModelManager implements Serializable{
 	}
 
 	private File getModelFile() {
-		return Activator.getDefault().getStateLocation().append("changemodel.ser").toFile();
+		//TODO don't store changes in the workspace, but store them per project.
+		//return Activator.getDefault().getStateLocation().append("changemodel.ser").toFile();
+		
+		return new File("/Users/quinten/Desktop/EXPERIMENT/changemodel.ser");
+		
 	}
 
 	public Map<String, FamixPackage> getFamixPackagesMap() {
@@ -361,9 +366,10 @@ public class ModelManager implements Serializable{
 
 	public boolean famixClassWithNameExists(String className){
 		for (String key : famixClassesMap.keySet()) {
-			if(key.endsWith(className)){
+			String name = key.substring(key.lastIndexOf('.')+1);
+			if(name.equals(className)){
 				return true;
-			}   
+			}
 		}
 		return false;
 	}
@@ -379,7 +385,8 @@ public class ModelManager implements Serializable{
 	public List<FamixClass> getFamixClassesWithName(String className){
 		List<FamixClass> resultSet = new ArrayList<FamixClass>();
 		for (String key : famixClassesMap.keySet()) {
-			if(key.endsWith(className)){
+			String name = key.substring(key.lastIndexOf('.')+1);
+			if(name.equals(className)){
 				resultSet.add(famixClassesMap.get(key));
 			}   
 		}
