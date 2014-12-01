@@ -15,11 +15,13 @@ import be.ac.ua.ansymo.cheopsj.model.ModelManagerListener;
 import be.ac.ua.ansymo.cheopsj.model.changes.Change;
 import be.ac.ua.ansymo.cheopsj.model.changes.IChange;
 import be.ac.ua.ansymo.cheopsj.model.changes.Subject;
+import be.ac.ua.ansymo.cheopsj.model.famix.FamixClass;
 import be.ac.ua.ansymo.cheopsj.model.famix.FamixPackage;
 
 public class ChangeGraphContentProvider implements IGraphEntityContentProvider, ModelManagerListener {
 	private GraphViewer viewer = null;
 	private ModelManager manager = null;
+	private String packageToExpand = "";
 
 	/* =============================
 	 * IGRAPHCONTENTPROVIDER METHODS
@@ -56,6 +58,11 @@ public class ChangeGraphContentProvider implements IGraphEntityContentProvider, 
 		for (Subject elem : famixElems) {
 			if (elem instanceof FamixPackage) {
 				result.add(elem);
+			} else if (elem instanceof FamixClass) {
+				String packName = ((FamixClass) elem).getBelongsToPackage().getUniqueName();
+				if (packName.equals(this.packageToExpand)) {
+					result.add(elem);
+				}
 			}
 		}
 		
@@ -107,6 +114,21 @@ public class ChangeGraphContentProvider implements IGraphEntityContentProvider, 
 	public Object[] getConnectedTo(Object entity) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	/* ============================
+	 * CHANGE CONTENT METHODS
+	 * ============================
+	 */
+	public void setPackageNameToExpand(String pack) {
+		this.packageToExpand = pack;
+		System.out.println("I just set the member packageToExpand to " + this.packageToExpand);
+		refresh();
+	}
+	
+	public void removePackageNameToExpand() {
+		this.packageToExpand = "";
+		refresh();
 	}
 
 }

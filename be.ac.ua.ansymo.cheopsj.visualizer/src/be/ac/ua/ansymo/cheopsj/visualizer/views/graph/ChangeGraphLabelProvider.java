@@ -20,7 +20,7 @@ import be.ac.ua.ansymo.cheopsj.model.famix.FamixClass;
 import be.ac.ua.ansymo.cheopsj.model.famix.FamixEntity;
 import be.ac.ua.ansymo.cheopsj.model.famix.FamixMethod;
 import be.ac.ua.ansymo.cheopsj.model.famix.FamixPackage;
-import be.ac.ua.ansymo.cheopsj.visualizer.views.graph.figures.FPackageFigure;
+import be.ac.ua.ansymo.cheopsj.visualizer.views.graph.figures.FamixFigure;
 
 public class ChangeGraphLabelProvider extends LabelProvider implements IConnectionStyleProvider, IFigureProvider {
 
@@ -40,21 +40,20 @@ public class ChangeGraphLabelProvider extends LabelProvider implements IConnecti
 		return "node";
 	}
 	
-	private Image constructFamixImage(FamixEntity ent) {
-		System.out.println("CHANGEGRAPHLABELPROVIDER::CONSTRUCTFAMIXIMAGE::ACCESSED");
-		if (!(ent instanceof FamixPackage)) {
-			return null;
-		}
-		Collection<FamixClass> classes = ((FamixPackage) ent).getClasses();
-		double totalChanges = 0;
-		double addChanges = 0;
-		double deleteChanges = 0;
-		double modificationChanges = 0;
+	/**
+	 * Aggregate the number of changes that occured inside a package
+	 * @param pack - (FamixPackage) the package under consideration
+	 * @return changes - (int[]) the aggregated result (totalChanges, addChanges, deleteChanges, modificationChanges)
+	 */
+	private int[] getPackageChanges(FamixPackage pack) {		
+		int[] changes = {0,0,0,0};
+
+		Collection<FamixClass> classes = pack.getClasses();
 		
 		for (FamixClass c : classes) {
-			totalChanges += this.changeManager.getChangeCount(c);
-			addChanges += this.changeManager.getAddCount(c);
-			deleteChanges += this.changeManager.getRemoveCount(c);
+			changes[0] += this.changeManager.getChangeCount(c);
+			changes[1] += this.changeManager.getAddCount(c);
+			changes[2] += this.changeManager.getRemoveCount(c);
 			
 /*			try {
 				Collection<FamixAttribute> attribute_col = c.getAttributes();
@@ -81,64 +80,7 @@ public class ChangeGraphLabelProvider extends LabelProvider implements IConnecti
 				System.err.println(e.getMessage());
 			}*/
 		}
-		
-		System.out.println("Total changes == " + totalChanges);
-		System.out.println("Add changes == " + addChanges);
-		System.out.println("Delete changes == " + deleteChanges);
-		if (totalChanges == 0) {
-			return ent.getIcon();
-		} else {
-			Image icon = ent.getIcon();
-			int iwidth = icon.getBounds().width;
-			int iheight = icon.getBounds().height;
-		  
-			double sizeH = getSizeHeuristic(this.changeManager.getLatestChange(ent).getTimeStamp());
-			int imWidth = (int) (iwidth*sizeH);
-			int imHeight = (int) (iheight*sizeH);
-			Image img = new Image(null, imWidth,imHeight);
-			GC gc = new GC(img);
-			gc.setBackground(new org.eclipse.swt.graphics.Color(null, 0, 255, 0));
-			int addAngle = (int)(360*(addChanges/totalChanges));
-			System.out.println("Add angle == " + addAngle);
-		  	gc.fillArc(0, 0, imWidth, imHeight, 0, addAngle);
-		  	gc.setBackground(new org.eclipse.swt.graphics.Color(null, 255, 255, 0));
-		  	int modAngle = (int)(360*(modificationChanges/totalChanges));
-		  	gc.fillArc(0, 0, imWidth, imHeight, addAngle, modAngle);
-		  	gc.setBackground(new org.eclipse.swt.graphics.Color(null, 255, 0, 0));
-		  	int remAngle = (int)(360*(deleteChanges/totalChanges));
-		  	gc.fillArc(0, 0, imWidth, imHeight, addAngle+modAngle, remAngle);
-		  
-		  	int xcoord = (imWidth/2)-(iwidth/2);
-		  	int ycoord = (imHeight/2)-(iheight/2);
-		  	gc.drawImage(icon, xcoord, ycoord);
-		  
-		  	return img;
-		}
-	}
-	
-	static public Timestamp now() {
-		Calendar calendar = Calendar.getInstance();
-		java.util.Date now = calendar.getTime();
-		java.sql.Timestamp currentTimestamp = new java.sql.Timestamp(now.getTime());
-		return currentTimestamp;
-	}
-	
-	private double getSizeHeuristic(Date d) {
-		long HOUR = 360000;
-		long DAY = 86400000;
-		long WEEK = 604800000;
-		
-		long age = now().getTime() - d.getTime();
-		
-		if (age < HOUR) {
-			return 3.0;
-		} else if (age < DAY) {
-			return 2.5;
-		} else if (age < WEEK) {
-			return 2.0;
-		} else {
-			return 1.5;
-		}
+		return changes;
 	}
 	
 	/*
@@ -186,13 +128,18 @@ public class ChangeGraphLabelProvider extends LabelProvider implements IConnecti
 	public IFigure getFigure(Object element) {
 		System.out.println("CHANGEGRAPHLABELPROVIDER::GETFIGURE::ACCESSED");
 		if (element instanceof FamixEntity) {
-			Image img = constructFamixImage((FamixEntity) element);
-			Figure result = null;
-			if (element instanceof FamixPackage) {
-				result = new FPackageFigure(img, ((FamixEntity) element).getUniqueName());
-				result.setSize(-1, -1);
-			}
-			return result;
+			int[] changes = {0,0,0,0};
+			
+			if (element instanceof FamixPackage)
+				changes = getPackageChanges((FamixPackage) element);
+			
+			Date lchange = this.changeManager.getLatestChange((FamixEntity)element).getTimeStamp();
+			System.out.println("CHANGEGRAPHLABELPROVIDER::GETFIGURE::BUILDING FIGURE");
+			Figure fig = new FamixFigure(changes, (FamixEntity)element, lchange);
+			fig.setSize(-1, -1);
+			System.out.println("CHANGEGRAPHLABELPROVIDER::GETFIGURE:: FIGURE BUILT");
+			System.out.println("RETURNING FIGURE FOR ENTITY: " + ((FamixEntity)element).getUniqueName());
+			return fig;
 		}
 		return null;
 	}
