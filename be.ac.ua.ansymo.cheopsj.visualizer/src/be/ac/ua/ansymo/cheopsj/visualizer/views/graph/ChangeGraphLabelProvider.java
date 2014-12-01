@@ -37,7 +37,7 @@ public class ChangeGraphLabelProvider extends LabelProvider implements IConnecti
 	
 	@Override
 	public String getText(Object element) {
-		return "node";
+		return "";
 	}
 	
 	/**

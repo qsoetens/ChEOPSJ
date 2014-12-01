@@ -51,7 +51,6 @@ public class ChangeGraphContentProvider implements IGraphEntityContentProvider, 
 	
 	@Override
 	public Object[] getElements(Object input) {
-		System.out.println("CHANGEGRAPHCONTENTPROVIDER::GETELEMENTS::ACCESSED");
 		Collection<Object> result = new ArrayList<Object>();
 		
 		Collection<Subject> famixElems = manager.getFamixElements();
@@ -64,6 +63,19 @@ public class ChangeGraphContentProvider implements IGraphEntityContentProvider, 
 					result.add(elem);
 				}
 			}
+		}
+		
+		return result.toArray();
+	}
+	
+	@Override
+	public Object[] getConnectedTo(Object entity) {
+		Collection<Object> result = new ArrayList<Object>();
+		
+		if (entity instanceof FamixPackage) {
+			String packName = ((FamixPackage) entity).getUniqueName();
+			if (packName.equals(this.packageToExpand))
+				result.addAll(((FamixPackage) entity).getClasses());
 		}
 		
 		return result.toArray();
@@ -109,11 +121,10 @@ public class ChangeGraphContentProvider implements IGraphEntityContentProvider, 
 	public void refresh() {
 		viewer.refresh();
 	}
-
-	@Override
-	public Object[] getConnectedTo(Object entity) {
-		// TODO Auto-generated method stub
-		return null;
+	
+	public void updateAndRefresh() {
+		viewer.refresh();
+		viewer.applyLayout();
 	}
 	
 	/* ============================
@@ -123,7 +134,7 @@ public class ChangeGraphContentProvider implements IGraphEntityContentProvider, 
 	public void setPackageNameToExpand(String pack) {
 		this.packageToExpand = pack;
 		System.out.println("I just set the member packageToExpand to " + this.packageToExpand);
-		refresh();
+		updateAndRefresh();
 	}
 	
 	public void removePackageNameToExpand() {

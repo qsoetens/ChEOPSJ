@@ -6,6 +6,7 @@ import java.util.Collection;
 import org.eclipse.zest.core.widgets.GraphNode;
 import org.eclipse.zest.layouts.InvalidLayoutConfiguration;
 import org.eclipse.zest.layouts.algorithms.AbstractLayoutAlgorithm;
+import org.eclipse.zest.layouts.algorithms.RadialLayoutAlgorithm;
 import org.eclipse.zest.layouts.algorithms.TreeLayoutAlgorithm;
 import org.eclipse.zest.layouts.dataStructures.DisplayIndependentRectangle;
 import org.eclipse.zest.layouts.dataStructures.InternalNode;
@@ -15,6 +16,7 @@ import be.ac.ua.ansymo.cheopsj.model.changes.Add;
 import be.ac.ua.ansymo.cheopsj.model.changes.AtomicChange;
 import be.ac.ua.ansymo.cheopsj.model.changes.Remove;
 import be.ac.ua.ansymo.cheopsj.model.famix.FamixObject;
+import be.ac.ua.ansymo.cheopsj.model.famix.FamixPackage;
 
 public class ChangeGraphLayoutAlgorithm extends AbstractLayoutAlgorithm {
 
@@ -45,16 +47,17 @@ public class ChangeGraphLayoutAlgorithm extends AbstractLayoutAlgorithm {
 	protected void applyLayoutInternal(InternalNode[] entitiesToLayout, InternalRelationship[] relationshipsToConsider, double boundsX,
 			double boundsY, double boundsWidth, double boundsHeight) {
 		if (entitiesToLayout.length > 0) {
-			int totalProgress = 4;
+			int totalProgress = 3;
 
 			fireProgressEvent(1, totalProgress);
 			buildFamixTree(entitiesToLayout, relationshipsToConsider);
 
-			fireProgressEvent(2, totalProgress);
-			buildChangeFamixChanges(entitiesToLayout, relationshipsToConsider);
+			/*fireProgressEvent(2, totalProgress);
+			buildChangeFamixChanges(entitiesToLayout, relationshipsToConsider);*/
 
-			fireProgressEvent(3, totalProgress);
+			fireProgressEvent(2, totalProgress);
 			for (int i = 0; i < entitiesToLayout.length; i++) {
+				
 				entitiesToLayout[i].getLayoutEntity().setLocationInLayout(entitiesToLayout[i].getXInLayout(), entitiesToLayout[i].getYInLayout());
 			}
 			defaultFitWithinBounds(entitiesToLayout, layoutBound);
@@ -162,7 +165,7 @@ public class ChangeGraphLayoutAlgorithm extends AbstractLayoutAlgorithm {
 
 			famixRelationshipsArray = findFamixRelationships(relationshipsToConsider);
 
-			TreeLayoutAlgorithm layout = new TreeLayoutAlgorithm(this.style);
+			RadialLayoutAlgorithm layout = new RadialLayoutAlgorithm();
 
 			layout.applyLayout(famixObjectsArray, famixRelationshipsArray, this.xBound, this.yBound, this.widthBound, this.heightBound,
 					this.internalAsynchronous, this.internalContinuous);
@@ -245,7 +248,7 @@ public class ChangeGraphLayoutAlgorithm extends AbstractLayoutAlgorithm {
 	 */
 	@Override
 	protected int getTotalNumberOfLayoutSteps() {
-		return 4;
+		return 3;
 	}
 
 	/*
