@@ -153,5 +153,20 @@ public abstract class Subject implements Serializable {
 		}
 		return count;
 	}
+	
+	public int[] aggregateChanges() {
+		int[] changes = {0,0,0};
+		
+		changes[0] += getAffectingChanges().size();
+		for (Change change : getAffectingChanges()) {
+			if (change instanceof Add) {
+				changes[1]++;
+			} else if (change instanceof Remove) {
+				changes[2]++;
+			}
+		}
+		
+		return changes;
+	}
 
 }

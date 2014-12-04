@@ -18,6 +18,10 @@ import org.eclipse.jdt.ui.ISharedImages;
 import org.eclipse.jdt.ui.JavaUI;
 import org.eclipse.swt.graphics.Image;
 
+import be.ac.ua.ansymo.cheopsj.model.changes.Add;
+import be.ac.ua.ansymo.cheopsj.model.changes.Change;
+import be.ac.ua.ansymo.cheopsj.model.changes.Remove;
+
 public class FamixPackage extends FamixEntity {
 
 	/**
@@ -461,5 +465,27 @@ public class FamixPackage extends FamixEntity {
 	@Override
 	public Image getIcon() {
 		return JavaUI.getSharedImages().getImage(ISharedImages.IMG_OBJS_PACKAGE);
+	}
+	
+	public int[] aggregateChanges() {
+		int[] changes = {0,0,0};
+		
+		changes[0] += getAffectingChanges().size();
+		for (Change change : getAffectingChanges()) {
+			if (change instanceof Add) {
+				changes[1]++;
+			} else if (change instanceof Remove) {
+				changes[2]++;
+			}
+		}
+		
+		for (FamixClass c : this.classes) {
+			int[] cChanges = c.aggregateChanges();
+			changes[0] += cChanges[0];
+			changes[1] += cChanges[1];
+			changes[2] += cChanges[2];
+		}
+		
+		return changes;
 	}
 }

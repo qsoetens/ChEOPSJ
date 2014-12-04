@@ -32,14 +32,16 @@ public class FamixFigure extends Figure {
 	private Label label = null;
 	private FamixEntity fEnt = null;
 	private Date lastChange = null;
+	private String fType = "";
 	
-	public FamixFigure(int[] changes, FamixEntity ent, Date lchange) {
+	public FamixFigure(FamixEntity ent) {
 		this.fEnt = ent;
-		this.lastChange = lchange;
+		this.fType = ent.getFamixType();
+		this.lastChange = ent.getLatestChange().getTimeStamp();
 		this.label = new Label(this.fEnt.getUniqueName());
 		this.label.setLabelAlignment(Label.CENTER);
 		
-		this.fImg = constructFamixImage(changes);
+		this.fImg = constructFamixImage(ent.aggregateChanges());
 		
 		ToolbarLayout layout = new ToolbarLayout();
 		setLayoutManager(layout);
@@ -57,7 +59,6 @@ public class FamixFigure extends Figure {
 		double totalChanges = changes[0];
 		double addChanges = changes[1];
 		double deleteChanges = changes[2];
-		double modificationChanges = changes[3];
 		
 		System.out.println("Total changes == " + totalChanges);
 		System.out.println("Add changes == " + addChanges);
@@ -76,14 +77,10 @@ public class FamixFigure extends Figure {
 			GC gc = new GC(img);
 			gc.setBackground(new org.eclipse.swt.graphics.Color(null, 0, 255, 0));
 			int addAngle = (int)(360*(addChanges/totalChanges));
-			System.out.println("Add angle == " + addAngle);
 		  	gc.fillArc(0, 0, imWidth, imHeight, 0, addAngle);
-		  	gc.setBackground(new org.eclipse.swt.graphics.Color(null, 255, 255, 0));
-		  	int modAngle = (int)(360*(modificationChanges/totalChanges));
-		  	gc.fillArc(0, 0, imWidth, imHeight, addAngle, modAngle);
 		  	gc.setBackground(new org.eclipse.swt.graphics.Color(null, 255, 0, 0));
 		  	int remAngle = (int)(360*(deleteChanges/totalChanges));
-		  	gc.fillArc(0, 0, imWidth, imHeight, addAngle+modAngle, remAngle);
+		  	gc.fillArc(0, 0, imWidth, imHeight, addAngle, remAngle);
 		  
 		  	int xcoord = (imWidth/2)-(iwidth/2);
 		  	int ycoord = (imHeight/2)-(iheight/2);
@@ -120,5 +117,9 @@ public class FamixFigure extends Figure {
 	
 	public String getLabel() {
 		return this.label.getText();
+	}
+	
+	public String getType() {
+		return this.fType;
 	}
 }
