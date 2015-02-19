@@ -15,6 +15,12 @@
             class="be.ac.ua.ansymo.cheopsj.visualizer.views.graph.ChangeGraph"
             id="be.ac.ua.ansymo.cheopsj.visualizer.views.ChangeGraph">
       </view>
+      <view
+            category="be.ac.ua.ansymo.cheopsj.visualizer"
+            class="be.ac.ua.ansymo.cheopsj.visualizer.views.summary.ChangeSummary"
+            id="be.ac.ua.ansymo.cheopsj.visualizer.views.ChangeSummary"
+            name="ChangeSummary">
+      </view>
    </extension>
    <extension
          point="org.eclipse.ui.perspectiveExtensions">
@@ -25,6 +31,12 @@
                relative="org.eclipse.ui.views.ProblemView"
                relationship="right"
                id="be.ac.ua.ansymo.cheopsj.visualizer.views.ChangeGraph">
+         </view>
+         <view
+               id="be.ac.ua.ansymo.cheopsj.visualizer.views.ChangeSummary"
+               minimized="false"
+               relationship="right"
+               relative="org.eclipse.ui.views.ProblemView">
          </view>
       </perspectiveExtension>
    </extension>
@@ -41,12 +53,21 @@
             id="be.ac.ua.ansymo.cheopsj.commands.opengraph"
             name="Open Change Graph">
       </command>
+      <command
+            description="Open the ChEOPSJ Change Summary if it is not visible"
+            id="be.ac.ua.ansymo.cheopsj.commands.opensummary"
+            name="Open Change Summary">
+      </command>
    </extension>
    <extension
          point="org.eclipse.ui.handlers">
       <handler
             class="be.ac.ua.ansymo.cheopsj.visualizer.handlers.OpenChangeGraphHandler"
             commandId="be.ac.ua.ansymo.cheopsj.commands.opengraph">
+      </handler>
+      <handler
+            class="be.ac.ua.ansymo.cheopsj.visualizer.handlers.OpenChangeSummaryHandler"
+            commandId="be.ac.ua.ansymo.cheopsj.commands.opensummary">
       </handler>
    </extension>
    <extension
@@ -60,6 +81,12 @@
                   icon="icons/cheops.gif"
                   id="be.ac.ua.ansymo.cheopsj.toolbars.openChangeGraph"
                   tooltip="Open the ChEOPSJ Change Graph">
+            </command>
+            <command
+                  commandId="be.ac.ua.ansymo.cheopsj.commands.opensummary"
+                  id="be.ac.ua.ansymo.cheopsj.toolbars.openChangeSummary"
+                  style="push"
+                  tooltip="Open the ChEOPSJ Change Summary">
             </command>
          </toolbar>
       </menuContribution>
