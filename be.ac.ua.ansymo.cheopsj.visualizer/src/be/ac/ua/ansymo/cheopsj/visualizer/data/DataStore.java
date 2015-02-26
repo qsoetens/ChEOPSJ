@@ -41,19 +41,4 @@ public class DataStore {
 	public List<IChange> getChanges() {
 		return this.manager.getModelManagerChange().getChanges();
 	}
-	
-	/*private List<IChange> getSortedChanges() {
-		List<IChange> changes = this.manager.getModelManagerChange().getChanges();
-		List<IChange> sorted = new ArrayList<IChange>();
-		sorted.add(0, changes.get(0));
-		
-		// TODO Improve sorting algorithm
-		for (int i = 1; i < changes.size(); ++i) {
-			for (int j = 0; j < sorted.size(); ++j) {
-				
-			}
-		}
-		
-		return null;
-	}*/
 }

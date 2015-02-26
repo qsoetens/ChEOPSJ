@@ -21,6 +21,13 @@
             id="be.ac.ua.ansymo.cheopsj.visualizer.views.ChangeSummary"
             name="ChangeSummary">
       </view>
+      <view
+            category="be.ac.ua.ansymo.cheopsj.visualizer"
+            class="be.ac.ua.ansymo.cheopsj.visualizer.views.table.ChangeTable"
+            id="be.ac.ua.ansymo.cheopsj.visualizer.views.table.ChangeTable"
+            name="ChangeTable"
+            restorable="true">
+      </view>
    </extension>
    <extension
          point="org.eclipse.ui.perspectiveExtensions">
@@ -35,6 +42,12 @@
          <view
                id="be.ac.ua.ansymo.cheopsj.visualizer.views.ChangeSummary"
                minimized="false"
+               relationship="right"
+               relative="org.eclipse.ui.views.ProblemView">
+         </view>
+         <view
+               id="be.ac.ua.ansymo.cheopsj.visualizer.views.ChangeTable"
+               ratio="0.5"
                relationship="right"
                relative="org.eclipse.ui.views.ProblemView">
          </view>
@@ -58,6 +71,11 @@
             id="be.ac.ua.ansymo.cheopsj.commands.opensummary"
             name="Open Change Summary">
       </command>
+      <command
+            description="Open the ChEOPSJ Change Table if it is not visible"
+            id="be.ac.ua.ansymo.cheopsj.commands.opentable"
+            name="Open Change Table">
+      </command>
    </extension>
    <extension
          point="org.eclipse.ui.handlers">
@@ -68,6 +86,10 @@
       <handler
             class="be.ac.ua.ansymo.cheopsj.visualizer.handlers.OpenChangeSummaryHandler"
             commandId="be.ac.ua.ansymo.cheopsj.commands.opensummary">
+      </handler>
+      <handler
+            class="be.ac.ua.ansymo.cheopsj.visualizer.handlers.OpenChangeTableHandler"
+            commandId="be.ac.ua.ansymo.cheopsj.commands.opentable">
       </handler>
    </extension>
    <extension
@@ -87,6 +109,12 @@
                   id="be.ac.ua.ansymo.cheopsj.toolbars.openChangeSummary"
                   style="push"
                   tooltip="Open the ChEOPSJ Change Summary">
+            </command>
+            <command
+                  commandId="be.ac.ua.ansymo.cheopsj.commands.opentable"
+                  id="be.ac.ua.ansymo.cheopsj.toolbars.openChangeTable"
+                  style="push"
+                  tooltip="Open the ChEOPSJ Change Table">
             </command>
          </toolbar>
       </menuContribution>

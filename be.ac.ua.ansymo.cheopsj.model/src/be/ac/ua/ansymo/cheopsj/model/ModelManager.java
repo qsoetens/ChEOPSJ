@@ -257,7 +257,7 @@ public class ModelManager implements Serializable{
 		//TODO don't store changes in the workspace, but store them per project.
 		//return Activator.getDefault().getStateLocation().append("changemodel.ser").toFile();
 		
-		return new File("/Users/quinten/Desktop/EXPERIMENT/changemodel.ser");
+		return new File("/Users/nicolasdemarbaix/Desktop/EXPERIMENT/changemodel.ser");
 		
 	}
 
