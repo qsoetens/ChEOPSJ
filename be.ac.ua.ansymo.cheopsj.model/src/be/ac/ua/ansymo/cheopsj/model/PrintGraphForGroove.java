@@ -147,9 +147,9 @@ public class PrintGraphForGroove {
 				if(declaredClass != null)
 					printEdgeInGrooveGraph(out, famix.getID(), declaredClass.getID(), "declaredClass");
 			} else if (famix instanceof FamixInvocation) {
-				//FamixBehaviouralEntity candidate = ((FamixInvocation) famix).getCandidate();
-				//if(candidate != null)
-				for(FamixBehaviouralEntity candidate: ((FamixInvocation) famix).getCandidates())
+				FamixBehaviouralEntity candidate = ((FamixInvocation) famix).getCandidate();
+				if(candidate != null)
+				//for(FamixBehaviouralEntity candidate: ((FamixInvocation) famix).getCandidates())
 					printEdgeInGrooveGraph(out, famix.getID(), candidate.getID(), "candidate");
 				FamixMethod invokedby = (FamixMethod) ((FamixInvocation) famix).getInvokedBy();
 				printEdgeInGrooveGraph(out, famix.getID(), invokedby.getID(), "invokedBy");

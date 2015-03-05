@@ -55,7 +55,7 @@ public class ModelManager implements Serializable{
 
 	private Map<String, FamixClass> famixClassesMap;
 	private Map<String, FamixMethod> famixMethodsMap;
-	private Map<String, List<FamixMethod>> famixMethodListMap;
+	//private Map<String, List<FamixMethod>> famixMethodListMap;
 	private Map<String, FamixAttribute> famixFieldsMap;
 	private Map<String, FamixInvocation> famixInvocationsMap;
 	private Map<String, FamixLocalVariable> famixVariablesMap;
@@ -73,7 +73,7 @@ public class ModelManager implements Serializable{
 		famixClassesMap = new HashMap<String, FamixClass>();
 		famixMethodsMap = new HashMap<String, FamixMethod>();
 
-		famixMethodListMap = new HashMap<String, List<FamixMethod>>();
+		//famixMethodListMap = new HashMap<String, List<FamixMethod>>();
 
 		famixFieldsMap = new HashMap<String, FamixAttribute>();
 		famixInvocationsMap = new HashMap<String, FamixInvocation>();
@@ -109,10 +109,10 @@ public class ModelManager implements Serializable{
 		} else if (fe instanceof FamixMethod) {
 			famixMethodsMap.put(((FamixMethod) fe).getUniqueName(), (FamixMethod) fe);
 			//FIX NULLPOINTEREXCEPTION HERE!!!
-			if(!famixMethodListMap.containsKey(((FamixMethod) fe).getName())){
+			/*if(!famixMethodListMap.containsKey(((FamixMethod) fe).getName())){
 				famixMethodListMap.put(((FamixMethod) fe).getName(), new ArrayList<FamixMethod>());	
 			}
-			famixMethodListMap.get(((FamixMethod) fe).getName()).add((FamixMethod) fe);
+			famixMethodListMap.get(((FamixMethod) fe).getName()).add((FamixMethod) fe);*/
 
 
 		} else if (fe instanceof FamixAttribute) {
@@ -327,7 +327,7 @@ public class ModelManager implements Serializable{
 
 	//}
 
-
+/*
 	public List<FamixMethod> getFamixMethodsWithName(String calledMethodName) {
 		if(famixMethodListMap.containsKey(calledMethodName))
 			return famixMethodListMap.get(calledMethodName);
@@ -337,7 +337,7 @@ public class ModelManager implements Serializable{
 
 	public boolean famixMethodWithNameExists(String name){
 		return famixMethodListMap.containsKey(name);
-	}
+	}*/
 
 
 	/**

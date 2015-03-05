@@ -23,7 +23,7 @@ public abstract class StatementRecorder extends AbstractEntityRecorder {
 	protected String getContainingMethod(ASTNode node) {
 		//Go up till we find a MethodDeclaration, that's the method our invocation is declared in!
 		if (node instanceof MethodDeclaration) {
-			return getContainingClass(node) + '.' + toStringName((MethodDeclaration) node);
+			return getContainingClass(node) + '.' + ((MethodDeclaration) node).getName().getIdentifier();//toStringName((MethodDeclaration) node);
 		} else {
 			if(!(node instanceof CompilationUnit))
 				return getContainingMethod(node.getParent());
@@ -32,7 +32,7 @@ public abstract class StatementRecorder extends AbstractEntityRecorder {
 		}
 	}
 	
-	private String toStringName(MethodDeclaration method){
+/*	private String toStringName(MethodDeclaration method){
 		StringBuffer buffer = new StringBuffer();
 		buffer.append(method.getName().getIdentifier());
 		buffer.append('(');
@@ -49,7 +49,7 @@ public abstract class StatementRecorder extends AbstractEntityRecorder {
 		}
 		buffer.append(')');
 		return buffer.toString();
-	}
+	}*/
 
 	private String getContainingClass(ASTNode node) {
 		//Go up till we find a class, that's the class our invoking method is declared in!

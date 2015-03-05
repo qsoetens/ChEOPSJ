@@ -58,15 +58,16 @@ public class MethodRecorder extends AbstractEntityRecorder {
 	public MethodRecorder(IMethod method) {
 		this();
 		String classname = ((IType) method.getParent()).getFullyQualifiedName();
+		classname = classname.replace('$', '.');
 		name = method.getElementName();
-		//uniquename = classname + '.' + name;
-		uniquename = classname + '.' + toStringName(method);
+		uniquename = classname + '.' + name;
+		//uniquename = classname + '.' + toStringName(method);
 
 		//System.out.println(uniquename);
 
 		IJavaElement parentJavaElement = method.getParent();
 		if (parentJavaElement != null && parentJavaElement instanceof IType) {
-			parent = manager.getFamixClass(((IType) parentJavaElement).getFullyQualifiedName());
+			parent = manager.getFamixClass(classname);
 		}
 		try {
 			flags = method.getFlags();
@@ -87,7 +88,7 @@ public class MethodRecorder extends AbstractEntityRecorder {
 		
 	}
 
-	private String toStringName(IMethod method) {
+/*	private String toStringName(IMethod method) {
 		StringBuffer buffer = new StringBuffer();
 		buffer.append(method.getElementName());
 		buffer.append('(');
@@ -103,7 +104,7 @@ public class MethodRecorder extends AbstractEntityRecorder {
 		}
 		buffer.append(')');
 		return buffer.toString();
-	}
+	}*/
 
 	public MethodRecorder(MethodDeclaration method) {
 		this();
@@ -111,9 +112,9 @@ public class MethodRecorder extends AbstractEntityRecorder {
 		parent = findParentFamixEntity(method);
 		name = method.getName().getIdentifier();
 		if(parent != null){
-			uniquename = parent.getUniqueName() + "."  + toStringName(method);
+			uniquename = parent.getUniqueName() + "."  + name;//toStringName(method);
 		}else{
-			uniquename = toStringName(method);
+			uniquename = name; //toStringName(method);
 		}
 
 		flags = method.getFlags();
@@ -123,7 +124,7 @@ public class MethodRecorder extends AbstractEntityRecorder {
 		
 	}
 
-	private String toStringName(MethodDeclaration method){
+/*	private String toStringName(MethodDeclaration method){
 		StringBuffer buffer = new StringBuffer();
 		buffer.append(method.getName().getIdentifier());
 		buffer.append('(');
@@ -140,7 +141,7 @@ public class MethodRecorder extends AbstractEntityRecorder {
 		}
 		buffer.append(')');
 		return buffer.toString();
-	}
+	}*/
 
 	private FamixClass findParentFamixEntity(MethodDeclaration method) {
 		//find parent famix entity

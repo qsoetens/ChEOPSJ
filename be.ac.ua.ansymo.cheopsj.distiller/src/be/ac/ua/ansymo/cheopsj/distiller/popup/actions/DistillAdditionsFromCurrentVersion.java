@@ -19,6 +19,7 @@ import org.eclipse.jdt.core.dom.ASTParser;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.MethodInvocation;
+import org.eclipse.jdt.core.dom.VariableDeclaration;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
@@ -36,9 +37,11 @@ import org.eclipse.ui.PlatformUI;
 import be.ac.ua.ansymo.cheopsj.changerecorders.ClassRecorder;
 import be.ac.ua.ansymo.cheopsj.changerecorders.FieldRecorder;
 import be.ac.ua.ansymo.cheopsj.changerecorders.InheritanceRecorder;
+import be.ac.ua.ansymo.cheopsj.changerecorders.LocalVariableRecorder;
 import be.ac.ua.ansymo.cheopsj.changerecorders.MethodInvocationRecorder;
 import be.ac.ua.ansymo.cheopsj.changerecorders.MethodRecorder;
 import be.ac.ua.ansymo.cheopsj.changerecorders.PackageRecorder;
+import be.ac.ua.ansymo.cheopsj.distiller.asts.LocalVariableFinder;
 import be.ac.ua.ansymo.cheopsj.distiller.asts.MethodInvocationVisitor;
 import be.ac.ua.ansymo.cheopsj.model.ModelManager;
 import be.ac.ua.ansymo.cheopsj.model.ModelManagerListeners;
@@ -114,7 +117,7 @@ public class DistillAdditionsFromCurrentVersion implements IObjectActionDelegate
 				makeClassAdditions(packages);
 				makeClassInheritanceAdditions(packages);
 				makeClassMemberAdditions(packages);
-				makeLocalVarAdditions(packages);
+				//makeLocalVarAdditions(packages);
 				makeInvocationAdditions(packages);
 				
 				ModelManagerListeners.setAlertListeners(true);
@@ -172,7 +175,23 @@ public class DistillAdditionsFromCurrentVersion implements IObjectActionDelegate
 
 
 	private void makeLocalVarAdditions(IPackageFragment[] packages) throws JavaModelException {
+		for (IPackageFragment mypackage : packages) {
+			if (mypackage.getKind() == IPackageFragmentRoot.K_SOURCE) {
+				//store additions for each class inside the package.
+				for (ICompilationUnit unit : mypackage.getCompilationUnits()) {
 
+					CompilationUnit parse = parse(unit);
+					LocalVariableFinder visitor = new LocalVariableFinder();
+					parse.accept(visitor);
+							
+					for(VariableDeclaration var : visitor.getFoundVariables()){
+						//MethodInvocationRecorder recorder = new MethodInvocationRecorder(invocation);
+						LocalVariableRecorder recorder = new LocalVariableRecorder(var);
+						recorder.storeChange(new Add());
+					}
+				}
+			}
+		}
 	}
 
 	private void makeClassMemberAdditions(IPackageFragment[] packages) throws JavaModelException  {

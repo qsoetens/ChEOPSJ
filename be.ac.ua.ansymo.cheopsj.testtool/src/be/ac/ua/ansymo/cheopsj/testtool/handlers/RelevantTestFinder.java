@@ -143,8 +143,10 @@ public class RelevantTestFinder {
 			AtomicChange methodAddition = findContainingMethodAddition(invocation);
 
 			if (methodAddition.getChangeSubject() instanceof FamixMethod) {
-				String methodName = ((FamixMethod) methodAddition.getChangeSubject()).getUniqueName();				
-				//if (methodName.contains("test")) {
+				String methodName = ((FamixMethod) methodAddition.getChangeSubject()).getUniqueName();		
+				/*String pattern = "net\\.sourceforge\\.cruisecontrol\\..*Test\\.test.*()";
+				if(methodName.matches(pattern) || ((FamixMethod)methodAddition.getChangeSubject()).isTest()){
+				//if (methodName.contains("test")) {*/
 				if(((FamixMethod)methodAddition.getChangeSubject()).isTest()){
 					if(!methodsAnalysed.contains(methodName)){
 						methodsAnalysed.add(methodName);
@@ -203,8 +205,8 @@ public class RelevantTestFinder {
 				AtomicChange ach = (AtomicChange) ch;
 				if (ach.getChangeSubject() instanceof FamixInvocation) {
 					FamixInvocation inv = (FamixInvocation) ach.getChangeSubject();
-					//if (inv.getCandidate().getUniqueName().equals(calledMethod.getUniqueName()))
-					if(inv.getCandidates().contains(calledMethod))
+					if (inv.getCandidate().getUniqueName().equals(calledMethod.getUniqueName()))
+					//if(inv.getCandidates().contains(calledMethod))
 						invocations.add((Add) ach);
 				}
 			}
@@ -248,7 +250,7 @@ public class RelevantTestFinder {
 			BufferedWriter out = new BufferedWriter(fstream);
 
 
-			out.write("Selected Changes:" + '\n');
+			out.write("Selected Changes ("+selection.size()+"):" + '\n');
 			for(Object obj : selection){
 				if (obj instanceof AtomicChange) {
 					AtomicChange change = ((AtomicChange) obj);
@@ -257,10 +259,11 @@ public class RelevantTestFinder {
 			}
 
 			int counter = 1;	
-			out.write("There are " + relevantTests.size() + " relevant tests:" + '\n');
+			out.write("There are " + relevantTests.size() + " relevant testCases with the following tests:" + '\n');
 			for (String testCase : relevantTests.keySet()) {
 				for (String test : relevantTests.get(testCase)) {
-					out.write(counter + ": " + testCase + "." + test + '\n');
+					//out.write(counter + ": " + testCase + "." + test + '\n');
+					out.write(counter + ": " + test + '\n');
 					counter++;
 				}
 			}

@@ -63,6 +63,8 @@ public class FieldRecorder extends AbstractEntityRecorder {
 		declaredClass = findDeclaredClass(field);
 		
 		String classname = ((IType) field.getParent()).getFullyQualifiedName();
+		classname = classname.replace('$', '.');
+		
 		ContainingClass = manager.getFamixClass(classname);
 			
 		name = field.getElementName();

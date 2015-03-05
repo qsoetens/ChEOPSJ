@@ -1,2 +1,11 @@
+        sourceDir="src"
+        timeoutFactor="100"
+        timeoutConst="100000"
+        mutators="DEFAULTS"
+        excludedClasses="net.sourceforge.cruisecontrol.BuildLoopInformationBuilderTest,net.sourceforge.cruisecontrol.bootstrappers.ExecBootstrapperTest,net.sourceforge.cruisecontrol.builders.ExecBuilderTest,net.sourceforge.cruisecontrol.builders.PipedExecBuilderTest,net.sourceforge.cruisecontrol.util.GZippedStdoutBufferTest,net.sourceforge.cruisecontrol.util.StdoutBufferTest,net.sourceforge.cruisecontrol.functionaltest.BuildLoopMonitorTest,net.sourceforge.cruisecontrol.jmx.CruiseControlControllerJMXAdaptorGendocTest,net.sourceforge.cruisecontrol.jmx.DashboardControllerTest,net.sourceforge.cruisecontrol.util.BuildInformationHelperTest"/>
 
+    </target>
+    
+    
+    <!-- end of PITest part-->
 </project>
