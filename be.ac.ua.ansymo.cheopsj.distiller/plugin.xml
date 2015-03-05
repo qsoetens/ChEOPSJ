@@ -49,6 +49,13 @@
                label="Distill Additions"
                menubarPath="DistillerFromSVN.menu/group">
          </action>
+         <action
+               class="be.ac.ua.ansymo.cheopsj.distiller.popup.actions.CountMethodDeclarationsAndReferences"
+               enablesFor="1"
+               id="DistillerFromSVN.action3"
+               label="Count Method Identifiers"
+               menubarPath="DistillerFromSVN.menu/group">
+         </action>
       </objectContribution>
       
    </extension>

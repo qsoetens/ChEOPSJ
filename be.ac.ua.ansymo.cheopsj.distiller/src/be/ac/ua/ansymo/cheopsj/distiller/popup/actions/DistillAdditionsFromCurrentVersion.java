@@ -114,7 +114,7 @@ public class DistillAdditionsFromCurrentVersion implements IObjectActionDelegate
 				makeClassAdditions(packages);
 				makeClassInheritanceAdditions(packages);
 				makeClassMemberAdditions(packages);
-				makeLocalVarAdditions(packages);
+				//makeLocalVarAdditions(packages);
 				makeInvocationAdditions(packages);
 				
 				ModelManagerListeners.setAlertListeners(true);
@@ -209,7 +209,6 @@ public class DistillAdditionsFromCurrentVersion implements IObjectActionDelegate
 				}
 			}
 		}
-
 	}
 
 	private void makeNestedClassMemberAdditions(IType type) throws JavaModelException {

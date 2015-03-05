@@ -1,0 +1,12 @@
+					<mutators>
+                        <mutator>DEFAULTS</mutator>
+                    </mutators>
+                    <failWhenNoMutations>false</failWhenNoMutations>
+                    <timeoutFactor>100</timeoutFactor>
+                    <timeoutConstant>100000</timeoutConstant>
+                    <threads>4</threads>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>

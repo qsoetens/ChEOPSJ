@@ -129,7 +129,10 @@ public class PITRelevantTestFinder {
 					String methodName = ((FamixMethod) methodAddition.getChangeSubject()).getUniqueName();
 
 					// TODO account for Junit 4 tests (@Test)
-					if (methodName.contains("test")) {
+					//if (methodName.contains("test")) {
+					String pattern = "net\\.sourceforge\\.cruisecontrol\\..*Test\\.test.*()";
+					if(methodName.matches(pattern) || ((FamixMethod)methodAddition.getChangeSubject()).isTest()){
+					//if(((FamixMethod)methodAddition.getChangeSubject()).isTest()){
 
 						if(!methodsAnalysed.contains(methodName)){
 							methodsAnalysed.add(methodName);
@@ -184,7 +187,7 @@ public class PITRelevantTestFinder {
 				if (ach.getChangeSubject() instanceof FamixInvocation) {
 					FamixInvocation inv = (FamixInvocation) ach.getChangeSubject();
 					if(inv.getCandidates().contains(calledMethod))
-					//if (inv.getCandidate().getUniqueName().equals(calledMethod.getUniqueName()))
+						//if (inv.getCandidate().getUniqueName().equals(calledMethod.getUniqueName()))
 						invocations.add((Add) ach);
 				}
 			}
@@ -223,16 +226,13 @@ public class PITRelevantTestFinder {
 
 
 	//XXX Fix
-	public static void printToAntPITBuildConfiguration() throws IOException{
+	public static void printToAntCCPITBuildConfiguration() throws IOException{
 		for (String sourceClass : relevantTests.keySet()) {
-			if(!sourceClass.endsWith("Test")){
+			if(sourceClass!= null && !sourceClass.endsWith("Test")){
 				FileWriter fstream = new FileWriter("/Users/quinten/Desktop/builds/build_"+sourceClass+".xml");
 				BufferedWriter out = new BufferedWriter(fstream);
 
-				printStuffInFile(out, "/Users/quinten/Desktop/CHEOPSWorkspace/be.ac.ua.ansymo.cheopsj.testtool/stuffBeforeAnt.txt");
-
-
-				out.write("<pitest classPath=\"mutation.path\"" + '\n');
+				printStuffInFile(out, "/Users/quinten/git/ChEOPSJ/be.ac.ua.ansymo.cheopsj.testtool/stuffBeforeAntCC.txt");
 
 				out.write("targetClasses=\""+sourceClass+"\"" + '\n');
 
@@ -249,30 +249,22 @@ public class PITRelevantTestFinder {
 
 				out.write("\"" + '\n');
 
-				out.write("reportDir=\"${target}/pitReports/dynamic/"+ sourceClass +'\"'+'\n'); 
-				out.write("sourceDir=\"src\""+ '\n'); 
-				out.write("excludedClasses=\"net.sourceforge.cruisecontrol.util.StdoutBufferTest,net.sourceforge.cruisecontrol.bootstrappers.ExecBootstrapperTest,net.sourceforge.cruisecontrol.builders.ExecBuilderTest,net.sourceforge.cruisecontrol.MainTest\"/>"+ '\n');
+				out.write("reportDir=\"${target}/pitReports/POLY/"+ sourceClass +'\"'+'\n'); 
 
-				printStuffInFile(out, "/Users/quinten/Desktop/CHEOPSWorkspace/be.ac.ua.ansymo.cheopsj.testtool/stuffAfterAnt.txt");
+				printStuffInFile(out, "/Users/quinten/git/ChEOPSJ/be.ac.ua.ansymo.cheopsj.testtool/stuffAfterAntCC.txt");
 				out.close();
 			}
 		}
 	}
 
-	public static void printToMavenPITBuildConfiguration() throws IOException{
+	public static void printToMavenPMDPITBuildConfiguration() throws IOException{
 
 		for (String sourceClass : relevantTests.keySet()) {
 
 			FileWriter fstream = new FileWriter("/Users/quinten/Desktop/poms/"+sourceClass+"_pom.xml");
 			BufferedWriter out = new BufferedWriter(fstream);
 
-			printStuffInFile(out, "/Users/quinten/Desktop/CHEOPSWorkspace/be.ac.ua.ansymo.cheopsj.testtool/stuffBeforeMaven.txt");
-
-			out.write("<plugin>" + '\n' +
-					"<groupId>org.pitest</groupId>"+ '\n' +
-					"<artifactId>pitest-maven</artifactId>"+'\n' +
-					"<version>0.28</version>"+'\n' +
-					"<configuration>"+'\n');
+			printStuffInFile(out, "/Users/quinten/git/ChEOPSJ/be.ac.ua.ansymo.cheopsj.testtool/stuffBeforeMavenPMD.txt");
 
 			out.write("<targetClasses>"+'\n' +
 					"<param>" + sourceClass + "</param>"+'\n' +
@@ -284,15 +276,8 @@ public class PITRelevantTestFinder {
 			}
 			out.write("</targetTests>"+'\n');
 
-			out.write("<reportsDirectory>target/pit-reports/dynamic/"+sourceClass+"</reportsDirectory>"+'\n');
-
-			out.write("<excludedClasses>"+'\n' +
-					"<param>net.sourceforge.pmd.cpd.XMLRendererTest</param>"+'\n' +
-					"</excludedClasses>"+'\n' +
-					"</configuration>"+'\n' +
-					"</plugin>"+'\n');
-
-			printStuffInFile(out, "/Users/quinten/Desktop/CHEOPSWorkspace/be.ac.ua.ansymo.cheopsj.testtool/stuffAfterMaven.txt");
+			out.write("<reportsDirectory>target/pit-reports/POLY/"+sourceClass+"</reportsDirectory>"+'\n');
+			printStuffInFile(out, "/Users/quinten/git/ChEOPSJ/be.ac.ua.ansymo.cheopsj.testtool/stuffAfterMavenPMD.txt");
 			out.close();
 		}
 
@@ -308,10 +293,10 @@ public class PITRelevantTestFinder {
 	}
 
 	public static void printRelevantTests() throws IOException {
-		FileWriter fstream = new FileWriter("/Users/quinten/Desktop/relevantTests/out.txt");
+		FileWriter fstream = new FileWriter("/Users/quinten/Desktop/out.txt");
 		BufferedWriter out = new BufferedWriter(fstream);
 		for (String sourceClass : relevantTests.keySet()) {
-			if(!sourceClass.endsWith("Test")){				
+			if(sourceClass != null && !sourceClass.endsWith("Test")){				
 				String str = sourceClass + ',';
 				str += relevantTests.get(sourceClass).size();
 				str += ',';
@@ -329,19 +314,13 @@ public class PITRelevantTestFinder {
 		out.close();
 	}
 
-	public static void printToMavenJunitBuildConfiguration() throws IOException   {  
+	public static void printToMavenHistoriaBuildConfiguration() throws IOException   {  
 		for (String sourceClass : relevantTests.keySet()) {
 
 			FileWriter fstream = new FileWriter("/Users/quinten/Desktop/poms/"+sourceClass+"_pom.xml");
 			BufferedWriter out = new BufferedWriter(fstream);
 
-			printStuffInFile(out, "/Users/quinten/git/ChEOPSJ/be.ac.ua.ansymo.cheopsj.testtool/stuffBeforeMavenJunit.txt");
-
-			out.write("<plugin>" + '\n' +
-					"<groupId>org.pitest</groupId>"+ '\n' +
-					"<artifactId>pitest-maven</artifactId>"+'\n' +
-					"<version>1.0.0</version>"+'\n' +
-					"<configuration>"+'\n');
+			printStuffInFile(out, "/Users/quinten/git/ChEOPSJ/be.ac.ua.ansymo.cheopsj.testtool/stuffBeforeMavenHistoria.txt");
 
 			out.write("<targetClasses>"+'\n' +
 					"<param>" + sourceClass + "</param>"+'\n' +
@@ -353,17 +332,12 @@ public class PITRelevantTestFinder {
 			}
 			out.write("</targetTests>"+'\n');
 
-			out.write("<reportsDirectory>target/pit-reports/dynamic/"+sourceClass+"</reportsDirectory>"+'\n');
+			out.write("<reportsDirectory>target/pit-reportsPoly/"+sourceClass+"</reportsDirectory>"+'\n');
 
-			out.write(//"<excludedClasses>"+'\n' +
-					//"<param>net.sourceforge.pmd.cpd.XMLRendererTest</param>"+'\n' +
-					//"</excludedClasses>"+'\n' +
-					"</configuration>"+'\n' +
-					"</plugin>"+'\n');
-
-			printStuffInFile(out, "/Users/quinten/git/ChEOPSJ/be.ac.ua.ansymo.cheopsj.testtool/stuffAfterMavenJunit.txt");
+			printStuffInFile(out, "/Users/quinten/git/ChEOPSJ/be.ac.ua.ansymo.cheopsj.testtool/stuffAfterMavenHistoria.txt");
 			out.close();
 		}
 	}
+
 
 }

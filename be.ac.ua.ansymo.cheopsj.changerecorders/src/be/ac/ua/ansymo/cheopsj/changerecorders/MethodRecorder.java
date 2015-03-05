@@ -60,13 +60,14 @@ public class MethodRecorder extends AbstractEntityRecorder {
 		String classname = ((IType) method.getParent()).getFullyQualifiedName();
 		name = method.getElementName();
 		//uniquename = classname + '.' + name;
+		classname = classname.replace('$', '.');
 		uniquename = classname + '.' + toStringName(method);
 
 		//System.out.println(uniquename);
 
 		IJavaElement parentJavaElement = method.getParent();
 		if (parentJavaElement != null && parentJavaElement instanceof IType) {
-			parent = manager.getFamixClass(((IType) parentJavaElement).getFullyQualifiedName());
+			parent = manager.getFamixClass(classname);
 		}
 		try {
 			flags = method.getFlags();
@@ -81,6 +82,10 @@ public class MethodRecorder extends AbstractEntityRecorder {
 			//System.out.println("TEST: " + uniquename);
 			isTest = true;
 		}
+		
+		
+		
+		
 		
 		
 		
