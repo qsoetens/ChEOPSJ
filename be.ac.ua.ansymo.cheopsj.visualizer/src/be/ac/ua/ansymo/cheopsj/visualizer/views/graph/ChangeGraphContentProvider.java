@@ -58,6 +58,8 @@ public class ChangeGraphContentProvider implements IGraphEntityContentProvider, 
 			if (elem instanceof FamixPackage) {
 				result.add(elem);
 			} else if (elem instanceof FamixClass) {
+				if (((FamixClass) elem).getBelongsToPackage() == null)
+					continue;
 				String packName = ((FamixClass) elem).getBelongsToPackage().getUniqueName();
 				if (packName.equals(this.packageToExpand)) {
 					result.add(elem);

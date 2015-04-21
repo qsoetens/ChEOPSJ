@@ -32,12 +32,20 @@ public class ChangeTableDateFilter extends ViewerFilter {
 		}
 	}
 	
+	public void setDates(Date start, Date end) {
+		this.from = start;
+		this.to = end;
+		if (this.to.before(this.from)) {
+			this.to.setTime(this.from.getTime() + (24 * 60 * 60 * 1000));
+		}
+	}
+	
 	@Override
 	public boolean select(Viewer viewer, Object parentElement, Object element) {
 		if (this.from == null || this.to == null)
 			return true;
 		
-		Date elemDate = new Date(((IChange) element).getTimeStamp().getTime());
+		Date elemDate = ((IChange) element).getTimeStamp();
 		
 		if (this.from.before(elemDate) && this.to.after(elemDate)) {
 			return true;

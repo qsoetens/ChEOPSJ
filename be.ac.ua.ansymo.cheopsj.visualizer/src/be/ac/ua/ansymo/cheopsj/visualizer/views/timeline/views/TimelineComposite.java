@@ -14,86 +14,122 @@ import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Layout;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.ScrollBar;
 import org.eclipse.swt.widgets.Shell;
+import org.jfree.ui.VerticalAlignment;
+
+import be.ac.ua.ansymo.cheopsj.visualizer.data.DataStore;
+import be.ac.ua.ansymo.cheopsj.visualizer.data.TimelineData;
 
 public class TimelineComposite extends Composite {
 
 	private Timeline timeline = null;
-	public TimelineComposite(Composite parent, int style) {
-		super(parent, style);
-		this.setLayout(new FillLayout());
+	private TimelineLegend legend = null;
+	private DomainLabelView domainView = null;
+	private RangeLabelView rangeView = null;
+	
+	private TimelineData data_store = null;
+	
+	private int width = 0;
+	private int height = 0;
+	
+	public TimelineComposite(Composite parent, String entityName) {
+		super(parent, SWT.NONE);
+		this.setLayout(setupLayout());
+		this.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));
 		
+		this.data_store = DataStore.getInstance().constructTimelineData(entityName);
+		
+		if (this.data_store == null) {
+			this.data_store = new TimelineData(null, null, null, "");
+		}
 		this.initialize();
 	}
 	
-	private void initialize() {
+	private GridLayout setupLayout() {
+		GridLayout layout = new GridLayout();
+		layout.horizontalSpacing = 0;
+		layout.verticalSpacing = 0;
+		layout.numColumns = 3;
+		layout.marginBottom = 0;
+		layout.marginHeight = 0;
+		layout.marginLeft = 0;
+		layout.marginRight = 0;
+		layout.marginTop = 0;
+		layout.marginWidth = 0;
+		layout.makeColumnsEqualWidth = false;
+		return layout;
 	}
 	
-	public static void main(String[] args) {
-		final Display display = new Display();
-		final Shell shell = new Shell(display);
-		shell.setLayout(new FillLayout());
-		shell.setBackground(display.getSystemColor(SWT.COLOR_CYAN));
-		shell.setText("Canvas test");
+	private void initialize() {
 		
-		final Canvas canvas = new Canvas(shell, SWT.NO_REDRAW_RESIZE | SWT.H_SCROLL);
-		canvas.setForeground(display.getSystemColor(SWT.COLOR_BLACK));
-		canvas.setBackground(display.getSystemColor(SWT.COLOR_WHITE));
+		int domainSize = this.data_store.getChangeDateLabels().size();
+		int rangeSize = this.data_store.getNumberOfEntities();
+		int w = 75 * domainSize + 50;
+		int h = 35 * rangeSize + 50;
 		
-		final Point timelineSize = new Point(84600, 50);
-		final Point offset = new Point(0,0);
-		final ScrollBar hBar = canvas.getHorizontalBar();
+		this.rangeView = new RangeLabelView(this, h, rangeSize, this.data_store);
+		GridData rvData = new GridData();
+		rvData.verticalSpan = 2;
+		rvData.horizontalSpan = 1;
+		rvData.grabExcessHorizontalSpace = false;
+		rvData.grabExcessVerticalSpace = true;
+		rvData.horizontalAlignment = GridData.FILL;
+		rvData.verticalAlignment = GridData.FILL;
+		rvData.widthHint = 250;
+		this.rangeView.setLayoutData(rvData);
 		
-		canvas.addPaintListener(new PaintListener() {
-			
-			@Override
-			public void paintControl(PaintEvent e) {
-				for (int x = 100; x < timelineSize.x; x += 100) {
-					e.gc.drawLine(x + offset.x, 0, x + offset.x, 20);
-					e.gc.drawText(Integer.toString(x), x + offset.x, 30, true);
-				}
-			}
-		});
+		this.timeline = new Timeline(this, domainSize, rangeSize, w, h, this.data_store);
+		GridData tlData = new GridData();
+		tlData.verticalSpan = 2;
+		tlData.horizontalSpan = 2;
+		tlData.grabExcessHorizontalSpace = true;
+		tlData.grabExcessVerticalSpace = true;
+		tlData.horizontalAlignment = GridData.FILL;
+		tlData.verticalAlignment = GridData.FILL;
+		this.timeline.setLayoutData(tlData);
 		
-		hBar.addListener(SWT.Selection, new Listener() {
-			
-			@Override
-			public void handleEvent(Event event) {
-				int hSelection = hBar.getSelection();
-				int destX = -hSelection - offset.x;
-				canvas.scroll(destX, 0, 0, 0, timelineSize.x, timelineSize.y, false);
-				offset.x = -hSelection;
-			}
-		});
+		this.legend = new TimelineLegend(this, SWT.NONE);
+		GridData tgData = new GridData();
+		tgData.verticalSpan = 1;
+		tgData.horizontalSpan = 1;
+		tgData.widthHint = 250;
+		tgData.horizontalAlignment = GridData.FILL;
+		tgData.verticalAlignment = GridData.FILL;
+		legend.setLayoutData(tgData);
 		
-		canvas.addListener(SWT.Resize, new Listener() {
-			
-			@Override
-			public void handleEvent(Event event) {
-				Rectangle client = canvas.getClientArea();
-				hBar.setMaximum(timelineSize.x);
-				hBar.setThumb(Math.min(timelineSize.x, client.width));
-				int hPage = timelineSize.y - client.width;
-				int hSelection = hBar.getSelection();
-				if (hSelection >= hPage) {
-					if (hPage <= 0) {
-						hSelection = 0;
-					}
-					offset.x = -hSelection;
-				}
-				shell.redraw();
-			}
-		});
+		this.domainView = new DomainLabelView(this, w, domainSize, this.data_store);
+		GridData dvData = new GridData();
+		dvData.verticalSpan = 1;
+		dvData.horizontalSpan = 2;
+		dvData.grabExcessHorizontalSpace = true;
+		dvData.grabExcessVerticalSpace = false;
+		dvData.horizontalAlignment = GridData.FILL;
+		dvData.verticalAlignment = GridData.FILL;
+		this.domainView.setLayoutData(dvData);
 		
-		shell.open();
-		while(!shell.isDisposed()) {
-			if (!display.readAndDispatch()) {
-				display.sleep();
-			}
-		}
-		display.dispose();
+		this.width = 200 + w;
+		this.height = 100 + h;
 	}
-
+	
+	protected void scrollVertical(int step_size) {
+		this.timeline.scrollVertical(step_size);
+		this.rangeView.scrollVertical(step_size);
+	}
+	
+	protected void scrollHorizontal(int step_size) {
+		this.timeline.scrollHorizontal(step_size);
+		this.domainView.scrollHorizontal(step_size);
+	}
+	
+	public int getWidth() {
+		return this.width;
+	}
+	
+	public int getHeight() {
+		return this.height;
+	}
 }

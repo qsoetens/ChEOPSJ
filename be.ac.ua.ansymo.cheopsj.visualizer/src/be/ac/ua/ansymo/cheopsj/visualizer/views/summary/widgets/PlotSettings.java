@@ -1,10 +1,12 @@
 package be.ac.ua.ansymo.cheopsj.visualizer.views.summary.widgets;
 
+import java.io.File;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-import org.eclipse.jface.dialogs.IDialogSettings;
+import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.dialogs.DialogSettings;
@@ -23,10 +25,14 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.jfree.chart.axis.DateTickUnitType;
 
+import be.ac.ua.ansymo.cheopsj.visualizer.data.DataStore;
+import be.ac.ua.ansymo.cheopsj.visualizer.data.ViewPreferences;
+
 public class PlotSettings extends TitleAreaDialog {
 	// Colors
 	private static Color COLOR_WHITE = Display.getCurrent().getSystemColor(SWT.COLOR_WHITE);
 	private static Color COLOR_GRAY = Display.getCurrent().getSystemColor(SWT.COLOR_GRAY);
+	
 	
 	// Widgets
 	private DateTime beginDate = null;
@@ -45,7 +51,7 @@ public class PlotSettings extends TitleAreaDialog {
 	private Button showDel = null;
 	
 	// Store
-	private DialogSettings settings = null;
+	private ViewPreferences preferences = null;
 	
 	private int beginDate_year = 2015;
 	private int beginDate_month = 0;
@@ -80,40 +86,76 @@ public class PlotSettings extends TitleAreaDialog {
 	
 	@Override
 	public void create() {
+		this.preferences = DataStore.getInstance().getSummaryPreferences();
+		loadPreferences();
 		super.create();
-		this.settings = new DialogSettings("root");
 		
 		setTitle("Plot Settings");
 		setMessage("Please select the appropriate settings", IMessageProvider.INFORMATION);
 	}
 	
-	private void loadSettings() {
-		try {
-			settings.load("plotsettings.xml");
-			
-			this.beginDate_year = settings.getInt("beginDate_year");
-			this.beginDate_month = settings.getInt("beginDate_month");
-			this.beginDate_day = settings.getInt("beginDate_day");
-			this.beginDate_hour = settings.getInt("beginDate_hour");
-			this.beginDate_minute = settings.getInt("beginDate_minute");
-			
-			this.endDate_year = settings.getInt("endDate_year");
-			this.endDate_month = settings.getInt("endDate_month");
-			this.endDate_day = settings.getInt("endDate_day");
-			this.endDate_hour = settings.getInt("endDate_hour");
-			this.endDate_minute = settings.getInt("endDate_minute");
-			
-			this.rangeStart_store = settings.getInt("range_start");
-			this.rangeEnd_store = settings.getInt("range_end");
-			
-			this.parseDomainDetail(settings.get("domain_detail"));
-			this.rangeDetail_store = settings.getInt("range_detail");
-			
-			this.showAll_store = settings.getBoolean("show_all");
-			this.showAdd_store = settings.getBoolean("show_add");
-			this.showDel_store = settings.getBoolean("show_del");
-			
-		} catch (Exception e) {}
+	private void loadPreferences() {
+		if (this.preferences == null)
+			return;
+		
+		beginDate_year = (int) this.preferences.get("begin_date_year");
+		beginDate_month = (int) this.preferences.get("begin_date_month");
+		beginDate_day = (int) this.preferences.get("begin_date_day");
+		beginDate_hour = (int) this.preferences.get("begin_date_hour");
+		beginDate_minute = (int) this.preferences.get("begin_date_minute");
+		
+		endDate_year = (int) this.preferences.get("end_date_year");
+		endDate_month = (int) this.preferences.get("end_date_month");
+		endDate_day = (int) this.preferences.get("end_date_day");
+		endDate_hour = (int) this.preferences.get("end_date_hour");
+		endDate_minute = (int) this.preferences.get("end_date_minute");
+		
+		beginDate_store = (Date) this.preferences.get("date_from");
+		endDate_store = (Date) this.preferences.get("date_to");
+		
+		rangeStart_store = (int) this.preferences.get("range_start");
+		rangeEnd_store = (int) this.preferences.get("range_end");
+		
+		domainDetail_store = (DateTickUnitType) this.preferences.get("domain_detail_type");
+		domainDetail_multiple = (int) this.preferences.get("domain_detail_multiple");
+		
+		rangeDetail_store = (int) this.preferences.get("range_detail");
+		
+		showAll_store = (boolean) this.preferences.get("show_all");
+		showAdd_store = (boolean) this.preferences.get("show_add");
+		showDel_store = (boolean) this.preferences.get("show_del");
+	}
+	
+	private void savePreferences() {
+		this.preferences = new ViewPreferences();
+		
+		this.preferences.add("begin_date_year", beginDate.getYear());
+		this.preferences.add("begin_date_month", beginDate.getMonth());
+		this.preferences.add("begin_date_day", beginDate.getDay());
+		this.preferences.add("begin_date_hour", beginTime.getHours());
+		this.preferences.add("begin_date_minute", beginTime.getMinutes());
+		this.preferences.add("end_date_year", endDate.getYear());
+		this.preferences.add("end_date_month", endDate.getMonth());
+		this.preferences.add("end_date_day", endDate.getDay());
+		this.preferences.add("end_date_hour", endTime.getHours());
+		this.preferences.add("end_date_minute", endTime.getMinutes());
+		
+		this.preferences.add("date_from", this.beginDate_store);
+		this.preferences.add("date_to", this.endDate_store);
+		
+		this.preferences.add("range_start", rangeStart_store);
+		this.preferences.add("range_end", rangeEnd_store);
+		
+		this.preferences.add("domain_detail_type", domainDetail_store);
+		this.preferences.add("domain_detail_multiple", domainDetail_multiple);
+		
+		this.preferences.add("range_detail", rangeDetail_store);
+		
+		this.preferences.add("show_all", showAll_store);
+		this.preferences.add("show_add", showAdd_store);
+		this.preferences.add("show_del", showDel_store);
+		
+		DataStore.getInstance().setSummaryPreferences(this.preferences);
 	}
 	
 	@Override
@@ -156,6 +198,8 @@ public class PlotSettings extends TitleAreaDialog {
 		this.endTime = new DateTime(parent, SWT.BORDER | SWT.TIME);
 		this.endTime.setTime(this.endDate_hour, this.endDate_minute, 0);
 		this.endTime.setLayoutData(new GridData(GridData.FILL, GridData.FILL, false, false));
+		
+		
 	}
 	
 	private void createRange(Composite parent) {
@@ -260,38 +304,8 @@ public class PlotSettings extends TitleAreaDialog {
 	@Override
 	protected void okPressed() {
 		saveInput();
-		saveSettings();
+		savePreferences();
 		super.okPressed();
-	}
-	
-	private void saveSettings() {				
-		settings.put("beginDate_year", this.beginDate.getYear());
-		settings.put("beginDate_month", this.beginDate.getMonth());
-		settings.put("beginDate_day", this.beginDate.getDay());
-		settings.put("beginDate_hour", this.beginTime.getHours());
-		settings.put("beginDate_minute", this.beginTime.getMinutes());
-		
-		settings.put("endDate_year", this.endDate.getYear());
-		settings.put("endDate_month", this.endDate.getMonth());
-		settings.put("endDate_day", this.endDate.getDay());
-		settings.put("endDate_hour", this.endTime.getHours());
-		settings.put("endDate_minute", this.endTime.getMinutes());
-		
-		settings.put("range_start", this.rangeStart_store);
-		settings.put("range_end", this.rangeEnd_store);
-		
-		settings.put("domain_detail", getDomainDetailString());
-		settings.put("range_detail", this.rangeDetail_store);
-		
-		settings.put("show_all", this.showAll_store);
-		settings.put("show_add", this.showAdd_store);
-		settings.put("show_del", this.showDel_store);
-		
-		try {
-			settings.save("plotsettings.xml");
-		} catch (Exception e) {
-			// TODO: handle exception
-		}
 	}
 	
 	private String getDomainDetailString() {

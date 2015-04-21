@@ -20,7 +20,10 @@ public class ChangeTableLabelProvider extends LabelProvider implements ITableLab
 		case 2:
 			if (element instanceof AtomicChange) {
 				if (((AtomicChange)element).getChangeSubject() instanceof FamixEntity) {
-					return ((FamixEntity) ((AtomicChange) element).getChangeSubject()).getIcon();
+					Image icon = ((FamixEntity) ((AtomicChange) element).getChangeSubject()).getIcon();
+					if (icon == null) 
+						System.out.println("ICON WAS NULL");
+					return icon;
 				}
 			}
 		default:
@@ -32,15 +35,19 @@ public class ChangeTableLabelProvider extends LabelProvider implements ITableLab
 	public String getColumnText(Object element, int columnIndex) {
 		switch (columnIndex) {
 		case 0:
-			return null;
+			if (element instanceof IChange) return ((IChange) element).getChangeType();
 		case 1:
 			if (element instanceof IChange) return ((IChange) element).getName();
 		case 2:
-			return null;
+			if (element instanceof IChange) return ((IChange) element).getFamixType();
 		case 3:
 			if (element instanceof IChange) return ((IChange) element).getTimeStamp().toString();
+		case 4:
+			if (element instanceof IChange) return ((IChange) element).getUser();
+		case 5:
+			if (element instanceof IChange) return ((IChange) element).getIntent();
 		default:
-			return null;
+			return "";
 		}
 	}
 

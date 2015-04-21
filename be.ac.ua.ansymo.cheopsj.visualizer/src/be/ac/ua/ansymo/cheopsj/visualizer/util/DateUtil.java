@@ -20,6 +20,12 @@ public class DateUtil {
 		return cal.getTime();
 	}
 	
+	public Date constructDateAndTime(int year, int month, int day, int hour, int minute, int second) {
+		Calendar cal = Calendar.getInstance();
+		cal.set(year, month, day, hour, minute, second);
+		return cal.getTime();
+	}
+	
 	/**
 	 * Checks whether the date d1/m1/y1 happens before d2/m2/y2
 	 * Also returns true if the dates are equal
@@ -62,5 +68,43 @@ public class DateUtil {
 			}
 		}
 		return false;
+	}
+	
+	/**
+	 * Calculates the amount of days between the dates d1 and d2
+	 * The order of the objects does not influence the result. The dates are first checked for order
+	 * @param d1 - Date object 
+	 * @param d2 - Date object
+	 * @return The amount of days between d1 and d2
+	 */
+	public int daysBetween(Date d1, Date d2) {
+		boolean d1Befored2 = d1.before(d2);
+		
+		int DAY_IN_MILLIS = 1000 * 60 * 60 * 24;
+		
+		if (d1Befored2) {
+			return 1 + (int) (( d2.getTime() - d1.getTime()) / DAY_IN_MILLIS);
+		} else {
+			return 1 + (int) ((d1.getTime() - d2.getTime()) / DAY_IN_MILLIS);
+		}
+	}
+	
+	@SuppressWarnings("deprecation")
+	public String constructDateString(Date date) {
+		return date.getDate() + "-" + (date.getMonth()+1) + "-" + (date.getYear()+1900);
+	}
+	
+	public Date getNext(Date current) {
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(current);
+		cal.add(Calendar.DATE, 1);
+		return cal.getTime();
+	}
+	
+	public Date getPrevious(Date current) {
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(current);
+		cal.add(Calendar.DATE, -1);
+		return cal.getTime();
 	}
 }

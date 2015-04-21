@@ -12,9 +12,9 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Label;
 
 import be.ac.ua.ansymo.cheopsj.visualizer.data.DataStore;
+import be.ac.ua.ansymo.cheopsj.visualizer.data.SummaryData;
 
 public class CustomTableComposite extends Composite {
 	/**
@@ -93,9 +93,7 @@ public class CustomTableComposite extends Composite {
 	private static int CELL_HEIGHT = 20;
 	private GridData gData = null;
 	
-	// Model
-	DataStore data_store = DataStore.getInstance();
-
+	
 	public CustomTableComposite(Composite parent, int style) {
 		super(parent, SWT.BORDER);
 		
@@ -130,12 +128,33 @@ public class CustomTableComposite extends Composite {
 	}
 	
 	private void setupData() {
-		// TODO Change by access to data store
-		this.addRow("Packages", "20", "40", "30", "10");
-		this.addRow("Classes", "40", "80", "60", "20");
-		this.addRow("Methods", "120", "240", "180", "60");
-		this.addRow("", "", "", "", "");
-		this.addRow("Total", "180", "360", "270", "90");
+		SummaryData data = DataStore.getInstance().constructSummaryTableData();
+		this.addRow("Package", 
+					String.valueOf(data.getPackageCount()), 
+					String.valueOf(data.getPackageChangeCount()), 
+					String.valueOf(data.getPackageAdditions()), 
+					String.valueOf(data.getPackageRemovals()));
+		this.addRow("Class",
+					String.valueOf(data.getClassCount()),
+					String.valueOf(data.getClassChangeCount()),
+					String.valueOf(data.getClassAdditions()),
+					String.valueOf(data.getClassRemovals()));
+		this.addRow("Method",
+					String.valueOf(data.getMethodCount()),
+					String.valueOf(data.getMethodChangeCount()),
+					String.valueOf(data.getMethodAdditions()),
+					String.valueOf(data.getMethodRemovals()));
+		this.addRow("Attribute",
+					String.valueOf(data.getAttributeCount()),
+					String.valueOf(data.getAttributeChangeCount()),
+					String.valueOf(data.getAttributeAdditions()),
+					String.valueOf(data.getAttributeRemovals()));
+		this.addRow("","","","","");
+		this.addRow("Total",
+					String.valueOf(data.getTotalCount()),
+					String.valueOf(data.getTotalChangeCount()),
+					String.valueOf(data.getTotalAdditions()),
+					String.valueOf(data.getTotalRemovals()));
 	}
 	
 	private void addRow(String key, String elems, String changes, String adds, String dels) {

@@ -13,16 +13,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.TableColumn;
-import org.eclipse.swt.widgets.TableItem;
 
-import be.ac.ua.ansymo.cheopsj.visualizer.data.DataStore;
-
-public class SummaryComposite extends Composite {
-	// Model
-	private DataStore data_store = DataStore.getInstance();
-	
+public class SummaryComposite extends Composite {	
 	// Colors
 	private static Color COLOR_WHITE = Display.getCurrent().getSystemColor(SWT.COLOR_WHITE);
 	private static Color COLOR_GRAY = Display.getCurrent().getSystemColor(SWT.COLOR_GRAY);

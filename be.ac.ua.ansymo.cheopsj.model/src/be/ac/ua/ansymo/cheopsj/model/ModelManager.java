@@ -255,10 +255,8 @@ public class ModelManager implements Serializable{
 
 	private File getModelFile() {
 		//TODO don't store changes in the workspace, but store them per project.
-		//return Activator.getDefault().getStateLocation().append("changemodel.ser").toFile();
-		
-		return new File("/Users/nicolasdemarbaix/Desktop/EXPERIMENT/changemodel.ser");
-		
+		return Activator.getDefault().getStateLocation().append("changemodel.ser").toFile();
+				
 	}
 
 	public Map<String, FamixPackage> getFamixPackagesMap() {

@@ -166,6 +166,8 @@ public class FamixClass extends FamixEntity {
 				icon = JavaUI.getSharedImages().getImage(ISharedImages.IMG_OBJS_CLASS);
 			} else if (Flags.isPackageDefault(this.getFlags())) {
 				icon = JavaUI.getSharedImages().getImage(ISharedImages.IMG_OBJS_CLASS_DEFAULT);
+			} else {
+				icon = JavaUI.getSharedImages().getImage(ISharedImages.IMG_OBJS_CLASS);
 			}
 		}
 		// XXX decorate with stuff ... abstract, static etc

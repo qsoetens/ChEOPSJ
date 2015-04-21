@@ -10,6 +10,7 @@ import be.ac.ua.ansymo.cheopsj.model.ModelManagerChange;
 import be.ac.ua.ansymo.cheopsj.model.ModelManagerEvent;
 import be.ac.ua.ansymo.cheopsj.model.ModelManagerListener;
 import be.ac.ua.ansymo.cheopsj.model.ModelManagerListeners;
+import be.ac.ua.ansymo.cheopsj.model.changes.IChange;
 
 public class ChangeTableContentProvider implements IStructuredContentProvider, ModelManagerListener {
 
@@ -18,6 +19,11 @@ public class ChangeTableContentProvider implements IStructuredContentProvider, M
 	private ModelManager manager = null;
 	private ModelManagerChange change_manager = null;
 	private ModelManagerListeners listen_manager = null;
+	
+	//
+	private int changes = 0;
+	private int additions = 0;
+	private int removals = 0;
 	
 	private ChangeTableContentProvider() {
 		this.change_manager = ModelManagerChange.getInstance();
@@ -51,6 +57,10 @@ public class ChangeTableContentProvider implements IStructuredContentProvider, M
 	public Object[] getElements(Object inputElement) {
 		return this.change_manager.getChanges().toArray();
 	}
+	
+	public String getChangeSummary() {
+		return this.change_manager.getSummary();
+	}
 
 	@Override
 	public void changesAdded(ModelManagerEvent event) {
@@ -81,5 +91,7 @@ public class ChangeTableContentProvider implements IStructuredContentProvider, M
 	public String getSummary() {
 		return this.change_manager.getSummary();
 	}
+	
+	
 
 }
