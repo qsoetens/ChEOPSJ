@@ -44,6 +44,7 @@ public class DataStore {
 	// Preferences for the settings dialogs
 	private ViewPreferences summary_preferences = null;
 	private ViewPreferences table_preferences = null;
+	private Vector<String> user_names = null;
 	
 	// Modelmanager for accessing the underlying model.
 	private ModelManager manager = null;
@@ -64,6 +65,8 @@ public class DataStore {
 	 */
 	private DataStore() {
 		this.manager = ModelManager.getInstance();
+		this.user_names = new Vector<String>();
+		updateUserNames();
 	}
 	
 	// ---------------
@@ -212,6 +215,13 @@ public class DataStore {
 		int methodcount = 0;
 		int attcount = 0;
 		int other = 0;
+		
+		Map<String, int[]> type_map = new HashMap<String, int[]>();
+		type_map.put("Package", new int[] {0,0,0,0});
+		type_map.put("Class", new int[] {0,0,0,0});
+		type_map.put("Method", new int[] {0,0,0,0});
+		type_map.put("Attribute", new int[] {0,0,0,0});
+		type_map.put("Invocation", new int[] {0,0,0,0});
 
 		for (Subject sub : this.manager.getFamixEntities()) {
 			if (sub == null)
@@ -223,23 +233,13 @@ public class DataStore {
 			if (sub.getLatestChange().isDummy()) 
 				continue;
 						
-			if (sub.getFamixType().equals("Package")) {
-				packcount++;
-			} else if (sub.getFamixType().equals("Class")) {
-				classcount++;
-			} else if (sub.getFamixType().equals("Method")) {
-				methodcount++;
-			} else if (sub.getFamixType().equals("Attribute")) {
-				attcount++;
-			} else {
-				other++;
-			}
+			if (!type_map.containsKey(sub.getFamixType()))
+				type_map.put(sub.getFamixType(), new int[] {0,0,0,0});
+			
+			type_map.get(sub.getFamixType())[0]++;
 		}
 		return new SummaryData(this.manager.getModelManagerChange().getChanges(),
-							   packcount,
-							   classcount,
-							   methodcount,
-							   attcount);
+							   type_map);
 	}
 	
 	/**
@@ -433,5 +433,17 @@ public class DataStore {
 	 */
 	public ViewPreferences getTablePreferences() {
 		return this.table_preferences;
+	}
+	
+	public Vector<String> getUserNames() {
+		return this.user_names;
+	}
+	
+	public void updateUserNames() {
+		for (IChange change : this.manager.getModelManagerChange().getChanges()) {
+			if (!this.user_names.contains(change.getUser()) && !change.getUser().equals("")) {
+				this.user_names.add(change.getUser());
+			}
+		}
 	}
 }

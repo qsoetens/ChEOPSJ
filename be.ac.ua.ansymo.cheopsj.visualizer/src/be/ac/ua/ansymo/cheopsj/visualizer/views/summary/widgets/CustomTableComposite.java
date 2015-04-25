@@ -1,5 +1,7 @@
 package be.ac.ua.ansymo.cheopsj.visualizer.views.summary.widgets;
 
+import java.util.Map.Entry;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
@@ -129,32 +131,35 @@ public class CustomTableComposite extends Composite {
 	
 	private void setupData() {
 		SummaryData data = DataStore.getInstance().constructSummaryTableData();
-		this.addRow("Package", 
-					String.valueOf(data.getPackageCount()), 
-					String.valueOf(data.getPackageChangeCount()), 
-					String.valueOf(data.getPackageAdditions()), 
-					String.valueOf(data.getPackageRemovals()));
-		this.addRow("Class",
-					String.valueOf(data.getClassCount()),
-					String.valueOf(data.getClassChangeCount()),
-					String.valueOf(data.getClassAdditions()),
-					String.valueOf(data.getClassRemovals()));
-		this.addRow("Method",
-					String.valueOf(data.getMethodCount()),
-					String.valueOf(data.getMethodChangeCount()),
-					String.valueOf(data.getMethodAdditions()),
-					String.valueOf(data.getMethodRemovals()));
-		this.addRow("Attribute",
-					String.valueOf(data.getAttributeCount()),
-					String.valueOf(data.getAttributeChangeCount()),
-					String.valueOf(data.getAttributeAdditions()),
-					String.valueOf(data.getAttributeRemovals()));
+		int totalCount = 0;
+		int totalChangeCount = 0;
+		int totalAdditionCount = 0;
+		int totalRemovalCount = 0;
+		
+		for (Entry<String, int[]> entry : data.getTypeMap().entrySet()) {
+			int entCount = entry.getValue()[0];
+			int changeCount = entry.getValue()[1];
+			int addCount = entry.getValue()[2];
+			int remCount = entry.getValue()[3];
+			
+			totalCount += entCount;
+			totalChangeCount += changeCount;
+			totalAdditionCount += addCount;
+			totalRemovalCount += remCount;
+			
+			this.addRow(entry.getKey(),
+						String.valueOf(entCount),
+						String.valueOf(changeCount),
+						String.valueOf(addCount),
+						String.valueOf(remCount));
+		}
+		
 		this.addRow("","","","","");
 		this.addRow("Total",
-					String.valueOf(data.getTotalCount()),
-					String.valueOf(data.getTotalChangeCount()),
-					String.valueOf(data.getTotalAdditions()),
-					String.valueOf(data.getTotalRemovals()));
+					String.valueOf(totalCount),
+					String.valueOf(totalChangeCount),
+					String.valueOf(totalAdditionCount),
+					String.valueOf(totalRemovalCount));
 	}
 	
 	private void addRow(String key, String elems, String changes, String adds, String dels) {

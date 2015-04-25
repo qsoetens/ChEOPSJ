@@ -28,6 +28,7 @@ import org.eclipse.ui.part.ViewPart;
 
 import be.ac.ua.ansymo.cheopsj.model.ModelManager;
 import be.ac.ua.ansymo.cheopsj.model.changes.IChange;
+import be.ac.ua.ansymo.cheopsj.visualizer.data.DataStore;
 import be.ac.ua.ansymo.cheopsj.visualizer.listeners.TableMenuDetectListener;
 import be.ac.ua.ansymo.cheopsj.visualizer.views.table.filters.ChangeTableDateFilter;
 import be.ac.ua.ansymo.cheopsj.visualizer.views.table.filters.ChangeTableNameFilter;
@@ -105,6 +106,18 @@ public class ChangeTable extends ViewPart {
 		refresh.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
+				refresh();
+				updateSummaryLabel();
+			}
+		});
+		
+		Button clearText = new Button(parent, SWT.PUSH);
+		clearText.setText("Clear search query");
+		clearText.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				searchText.setText("");
+				filter_name.setSearchString("");
 				viewer.refresh();
 				updateSummaryLabel();
 			}
@@ -232,6 +245,7 @@ public class ChangeTable extends ViewPart {
 	}
 	
 	public void refresh() {
+		DataStore.getInstance().updateUserNames();
 		viewer.refresh();
 	}
 	
@@ -255,6 +269,7 @@ public class ChangeTable extends ViewPart {
 				this.filter_type.setChangeType(ctext);
 			}
 			this.filter_date.setDates(this.filter_settings.getDateFrom(), this.filter_settings.getDateTo());
+			
 			this.filter_user.setSearchString(this.filter_settings.getUserText());
 			
 			viewer.refresh();

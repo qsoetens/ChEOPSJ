@@ -53,6 +53,10 @@ public class ChangeGraph extends ViewPart {
 	private void setupListeners() {
 		graph.addMenuDetectListener(new ContextMenuDetectListener(this.graph, this.parent, (ChangeGraphContentProvider) this.viewer.getContentProvider()));	
 	}
+	
+	public void setFocusEntity(String focus) {
+		((ChangeGraphContentProvider)this.viewer.getContentProvider()).setFocusEntity(focus);
+	}
 
 	@Override
 	public void setFocus() {

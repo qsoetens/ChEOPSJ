@@ -18,12 +18,14 @@
       <view
             category="be.ac.ua.ansymo.cheopsj.visualizer"
             class="be.ac.ua.ansymo.cheopsj.visualizer.views.summary.ChangeSummary"
+            icon="icons/summary_small.png"
             id="be.ac.ua.ansymo.cheopsj.visualizer.views.ChangeSummary"
             name="ChangeSummary">
       </view>
       <view
             category="be.ac.ua.ansymo.cheopsj.visualizer"
             class="be.ac.ua.ansymo.cheopsj.visualizer.views.table.ChangeTable"
+            icon="icons/table_small.png"
             id="be.ac.ua.ansymo.cheopsj.visualizer.views.table.ChangeTable"
             name="ChangeTable"
             restorable="true">
@@ -121,19 +123,15 @@
          <toolbar
                id="be.ac.ua.ansymo.cheopsj.toolbars.main">
             <command
-                  commandId="be.ac.ua.ansymo.cheopsj.commands.opengraph"
-                  icon="icons/cheops.gif"
-                  id="be.ac.ua.ansymo.cheopsj.toolbars.openChangeGraph"
-                  tooltip="Open the ChEOPSJ Change Graph">
-            </command>
-            <command
                   commandId="be.ac.ua.ansymo.cheopsj.commands.opensummary"
+                  icon="icons/summary.png"
                   id="be.ac.ua.ansymo.cheopsj.toolbars.openChangeSummary"
                   style="push"
                   tooltip="Open the ChEOPSJ Change Summary">
             </command>
             <command
                   commandId="be.ac.ua.ansymo.cheopsj.commands.opentable"
+                  icon="icons/table.png"
                   id="be.ac.ua.ansymo.cheopsj.toolbars.openChangeTable"
                   style="push"
                   tooltip="Open the ChEOPSJ Change Table">

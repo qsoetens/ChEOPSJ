@@ -53,7 +53,7 @@ public class PlotSettings extends TitleAreaDialog {
 	// Store
 	private ViewPreferences preferences = null;
 	
-	private int beginDate_year = 2015;
+	private int beginDate_year = 1990;
 	private int beginDate_month = 0;
 	private int beginDate_day = 1;
 	private int beginDate_hour = 0;

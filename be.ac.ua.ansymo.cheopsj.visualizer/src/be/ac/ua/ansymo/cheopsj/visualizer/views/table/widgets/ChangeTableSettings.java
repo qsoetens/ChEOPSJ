@@ -1,6 +1,7 @@
 package be.ac.ua.ansymo.cheopsj.visualizer.views.table.widgets;
 
 import java.util.Date;
+import java.util.Vector;
 
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.dialogs.DialogSettings;
@@ -41,7 +42,7 @@ public class ChangeTableSettings extends TitleAreaDialog {
 	private Label dateToLabel = null;
 	private DateTime dateTo = null;
 	private Label userLabel = null;
-	private Text userText = null;
+	private Combo userText = null;
 	
 	// Result
 	private Date from = null;
@@ -122,6 +123,8 @@ public class ChangeTableSettings extends TitleAreaDialog {
 					dateTo.setTime(23, 59, 59);
 				}
 			}
+		} else {
+			dateFrom.setDate(1990, 0, 1);
 		}
 	}
 	
@@ -156,20 +159,29 @@ public class ChangeTableSettings extends TitleAreaDialog {
 		userLabel = new Label(parent, SWT.NONE);
 		userLabel.setText("User:");
 		
-		userText = new Text(parent, SWT.BORDER);
+		userText = new Combo(parent, SWT.BORDER);
+		String[] users = new String[DataStore.getInstance().getUserNames().size()+2];
+		for (int i = 0; i < DataStore.getInstance().getUserNames().size(); ++i) {
+			users[i+1] = DataStore.getInstance().getUserNames().get(i);
+		}
+		users[0] = "All";
+		users[users.length-1] = "Other...";
+		
+		userText.setItems(users);
+		userText.select(0);
+		
 		userText.setLayoutData(new GridData(GridData.FILL, GridData.FILL, false, false));
-		userText.setMessage("Enter username. Leave blank to display all users");
 		
 		if (this.preferences != null) {
 			if (this.preferences.get("user") != null) {
-				userText.setText((String) this.preferences.get("user"));
+				userText.select((int)this.preferences.get("user"));;
 			}
 		}
 	}
 	
 	private void save() {
 		this.change = this.changeCombo.getText();
-		this.user = this.userText.getText();
+		this.user = this.userText.getItem(this.userText.getSelectionIndex());
 		this.famix = this.famixCombo.getText();
 		this.from = DateUtil.getInstance().constructDateAndTime(dateFrom.getYear(), 
 					dateFrom.getMonth(), 
@@ -182,7 +194,7 @@ public class ChangeTableSettings extends TitleAreaDialog {
 		this.preferences.add("date_to", to);
 		this.preferences.add("change_index", this.changeCombo.getSelectionIndex());
 		this.preferences.add("famix_index", this.famixCombo.getSelectionIndex());
-		this.preferences.add("user", user);
+		this.preferences.add("user", userText.getSelectionIndex());
 		DataStore.getInstance().setTablePreferences(this.preferences);
 	}
 	

@@ -19,6 +19,7 @@ import be.ac.ua.ansymo.cheopsj.model.changes.Change;
 import be.ac.ua.ansymo.cheopsj.model.famix.FamixAttribute;
 import be.ac.ua.ansymo.cheopsj.model.famix.FamixClass;
 import be.ac.ua.ansymo.cheopsj.model.famix.FamixEntity;
+import be.ac.ua.ansymo.cheopsj.model.famix.FamixInvocation;
 import be.ac.ua.ansymo.cheopsj.model.famix.FamixMethod;
 import be.ac.ua.ansymo.cheopsj.model.famix.FamixPackage;
 import be.ac.ua.ansymo.cheopsj.visualizer.views.graph.figures.FamixFigure;
@@ -83,24 +84,12 @@ public class ChangeGraphLabelProvider extends LabelProvider implements IConnecti
 	public IFigure getFigure(Object element) {
 		System.out.println("CHANGEGRAPHLABELPROVIDER::GETFIGURE::ACCESSED");
 		if (element instanceof FamixEntity) {
-			int[] changes = {0,0,0,0};
-			
-			if (element instanceof FamixPackage)
-				changes = ((FamixPackage) element).aggregateChanges();
-			
-			Change lastChange = ((FamixEntity)element).getLatestChange();
-			Date lchange = null;
-			if (lastChange == null) {
-				lchange = Calendar.getInstance().getTime();
-				System.out.println("LCHANGE WAS NULL, SET MOST RECENT CHANGE STAMP TO NOW");
-			} else {
-				lchange = lastChange.getTimeStamp();
-			}
-			System.out.println("CHANGEGRAPHLABELPROVIDER::GETFIGURE::BUILDING FIGURE");
 			Figure fig = new FamixFigure((FamixEntity)element);
 			fig.setSize(-1, -1);
-			System.out.println("CHANGEGRAPHLABELPROVIDER::GETFIGURE:: FIGURE BUILT");
-			System.out.println("RETURNING FIGURE FOR ENTITY: " + ((FamixEntity)element).getUniqueName());
+			return fig;
+		} else if (element instanceof FamixInvocation) {
+			Figure fig = new FamixFigure((FamixInvocation)element);
+			fig.setSize(-1, -1);
 			return fig;
 		}
 		return null;

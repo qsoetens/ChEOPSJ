@@ -11,6 +11,7 @@ import be.ac.ua.ansymo.cheopsj.model.ModelManagerEvent;
 import be.ac.ua.ansymo.cheopsj.model.ModelManagerListener;
 import be.ac.ua.ansymo.cheopsj.model.ModelManagerListeners;
 import be.ac.ua.ansymo.cheopsj.model.changes.IChange;
+import be.ac.ua.ansymo.cheopsj.visualizer.data.DataStore;
 
 public class ChangeTableContentProvider implements IStructuredContentProvider, ModelManagerListener {
 
@@ -80,6 +81,7 @@ public class ChangeTableContentProvider implements IStructuredContentProvider, M
 	
 	private void updateView(ModelManagerEvent e) {
 		viewer.getTable().setRedraw(false);
+		DataStore.getInstance().updateUserNames();
 		try {
 			viewer.add(e.getNewChanges());
 			viewer.refresh();

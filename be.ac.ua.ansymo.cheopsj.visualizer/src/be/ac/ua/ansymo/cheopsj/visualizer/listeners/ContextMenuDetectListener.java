@@ -2,9 +2,11 @@ package be.ac.ua.ansymo.cheopsj.visualizer.listeners;
 
 import org.eclipse.draw2d.FreeformViewport;
 import org.eclipse.draw2d.IFigure;
+import org.eclipse.draw2d.ImageFigure;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MenuDetectEvent;
 import org.eclipse.swt.events.MenuDetectListener;
+import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Point;
@@ -13,6 +15,7 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.zest.core.widgets.Graph;
 
+import be.ac.ua.ansymo.cheopsj.visualizer.data.DataStore;
 import be.ac.ua.ansymo.cheopsj.visualizer.views.graph.ChangeGraphContentProvider;
 import be.ac.ua.ansymo.cheopsj.visualizer.views.graph.figures.FamixFigure;
 
@@ -63,33 +66,24 @@ public class ContextMenuDetectListener implements MenuDetectListener {
 		
 		// CONSTRUCT THE "SELECTED" MENU
 		this.selectionMenu = new Menu(this.parent.getShell(), SWT.POP_UP);
-		MenuItem expand = new MenuItem(this.selectionMenu, SWT.NONE);
-		expand.addSelectionListener(new SelectionListener() {
-			
+		MenuItem toParent = new MenuItem(this.selectionMenu, SWT.NONE);
+		toParent.setText("Go to parent...");
+		toParent.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				provider.setPackageNameToExpand(((FamixFigure)figure.getParent()).getLabel());
-			}
-			
-			@Override
-			public void widgetDefaultSelected(SelectionEvent e) {
-				// TODO implement if default behavior is added	
+				provider.goToParent();
 			}
 		});
-		expand.setText("Expand package");
-		MenuItem compress = new MenuItem(this.selectionMenu, SWT.NONE);
-		compress.setText("Compress Package");
-		compress.addSelectionListener(new SelectionListener() {
-			
+		MenuItem focusChild = new MenuItem(this.selectionMenu, SWT.NONE);
+		focusChild.setText("Go to child...");
+		focusChild.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				provider.removePackageNameToExpand();
-			}
-			
-			@Override
-			public void widgetDefaultSelected(SelectionEvent e) {
-				// TODO implement if default behavior is added
-				
+				if (figure instanceof ImageFigure) {
+					FamixFigure ff = (FamixFigure) ((ImageFigure)figure).getParent();
+					String entityID = ff.getEntityID();
+					provider.setFocusEntity(entityID);
+				}
 			}
 		});
 		MenuItem sep1 = new MenuItem(this.selectionMenu, SWT.SEPARATOR);

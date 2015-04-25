@@ -20,6 +20,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
 import be.ac.ua.ansymo.cheopsj.model.famix.FamixEntity;
+import be.ac.ua.ansymo.cheopsj.model.famix.FamixInvocation;
 
 /**
  * FPackageFigure class
@@ -31,6 +32,8 @@ public class FamixFigure extends Figure {
 	private Image fImg = null;
 	private Label label = null;
 	private FamixEntity fEnt = null;
+	private FamixInvocation fInv = null;
+	private boolean isInvocation = false;
 	private Date lastChange = null;
 	private String fType = "";
 	
@@ -55,14 +58,59 @@ public class FamixFigure extends Figure {
 		
 	}
 	
+	public FamixFigure(FamixInvocation ent) {
+		this.fInv = ent;
+		this.fType = fInv.getFamixType();
+		this.lastChange = fInv.getLatestChange().getTimeStamp();
+		String[] nameArr= fInv.getStringRepresentation().split("\\.");
+		if (nameArr.length == 0) {
+			this.label = new Label(this.fInv.getStringRepresentation());
+		} else {
+			this.label = new Label(nameArr[nameArr.length-1]);
+		}
+		this.label.setLabelAlignment(Label.CENTER);
+		
+		this.fImg = constructFamixInvocationImage(fInv.aggregateChanges());
+		
+		ToolbarLayout layout = new ToolbarLayout();
+		setLayoutManager(layout);
+		setOpaque(true);
+		setBorder(new LineBorder(ColorConstants.black, 1));
+		setBackgroundColor(ColorConstants.lightGray);
+				
+		ImageFigure imgFig = new ImageFigure(this.fImg);
+		add(imgFig);
+		add(this.label);
+	}
+	
+	private Image constructFamixInvocationImage(int[] changes) {
+		double totalChanges = changes[0];
+		double addChanges = changes[1];
+		double deleteChanges = changes[2];
+
+		int iwidth = 20;
+		int iheight = 20;
+	  
+		double sizeH = getSizeHeuristic(this.lastChange);
+		int imWidth = (int) (iwidth*sizeH);
+		int imHeight = (int) (iheight*sizeH);
+		Image img = new Image(null, imWidth,imHeight);
+		GC gc = new GC(img);
+		gc.setBackground(new org.eclipse.swt.graphics.Color(null, 0, 255, 0));
+		int addAngle = (int)(360*(addChanges/totalChanges));
+	  	gc.fillArc(0, 0, imWidth, imHeight, 0, addAngle);
+	  	gc.setBackground(new org.eclipse.swt.graphics.Color(null, 255, 0, 0));
+	  	int remAngle = (int)(360*(deleteChanges/totalChanges));
+	  	gc.fillArc(0, 0, imWidth, imHeight, addAngle, remAngle);
+	  
+	  	return img;
+	}
+	
 	private Image constructFamixImage(int[] changes) {
 		double totalChanges = changes[0];
 		double addChanges = changes[1];
 		double deleteChanges = changes[2];
-		
-		System.out.println("Total changes == " + totalChanges);
-		System.out.println("Add changes == " + addChanges);
-		System.out.println("Delete changes == " + deleteChanges);
+
 		if (totalChanges == 0) {
 			return this.fEnt.getIcon();
 		} else {
@@ -117,6 +165,14 @@ public class FamixFigure extends Figure {
 	
 	public String getLabel() {
 		return this.label.getText();
+	}
+	
+	public String getEntityID() {
+		if (isInvocation) {
+			return this.fInv.getStringRepresentation();
+		} else {
+			return this.fEnt.getUniqueName();
+		}
 	}
 	
 	public String getType() {
