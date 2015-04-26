@@ -234,7 +234,7 @@ public class PlotSettings extends TitleAreaDialog {
 		range.setText("Range tick step: ");
 		
 		this.rangeDetail = new Combo(parent, SWT.READ_ONLY);
-		this.rangeDetail.setItems(new String [] {"1", "5", "10", "25", "50", "100"});
+		this.rangeDetail.setItems(new String [] {"1", "5", "10", "25", "50", "100", "250", "500", "1000"});
 		this.rangeDetail.select(getRangeDetailIndex(this.rangeDetail_store));
 		this.rangeDetail.setLayoutData(new GridData(GridData.FILL, GridData.FILL, false, false, 2, 1));
 	}

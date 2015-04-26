@@ -160,6 +160,16 @@ public class ChangePlot extends ChartComposite {
 	public void updateRangeAxis(double start, double end, double tick) {
 		this.rangeAxis = new LowerBasedNumberAxis("Changes");
 		this.rangeAxis.setRange(start, end);
+		
+		int index = 0;
+		int [] tick_sizes = new int [] {1, 5, 10, 25,50, 100, 250, 500, 1000};
+		if (((end-start)/tick) > 32) {
+			while ((((end-start)/tick) > 32) && (index < tick_sizes.length)) {
+				tick = tick_sizes[index];
+				index++;
+			}
+		}
+		
 		this.rangeAxis.setTickUnit(new NumberTickUnit(tick));
 		this.plot.getXYPlot().setRangeAxis(this.rangeAxis);
 	}
