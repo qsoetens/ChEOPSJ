@@ -40,6 +40,14 @@ public class ChangeTimeline extends ViewPart {
 	
 	public void setSubjectID(String id) {
 		this.subjectID = id;
+		String[] nameArr = id.split("\\.");
+		String result = "";
+		if (nameArr.length == 0) {
+			result = id;
+		} else {
+			result = nameArr[nameArr.length-1];
+		}
+		this.setPartName("Timeline: " + result);
 	}
 	
 	@Override

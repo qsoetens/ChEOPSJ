@@ -5,6 +5,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MenuDetectEvent;
 import org.eclipse.swt.events.MenuDetectListener;
+import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.Composite;
@@ -12,9 +13,12 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
+import be.ac.ua.ansymo.cheopsj.visualizer.views.graph.ChangeGraph;
 import be.ac.ua.ansymo.cheopsj.visualizer.views.timeline.ChangeTimeline;
 
 public class TableMenuDetectListener implements MenuDetectListener {
@@ -83,7 +87,10 @@ public class TableMenuDetectListener implements MenuDetectListener {
 				String entityName = selectedItem.getText(1);
 				ChangeTimeline view;
 				try {
-					view = (ChangeTimeline) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(ChangeTimeline.ID);
+					IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+					if (page.findViewReference(ChangeTimeline.ID, entityName) != null)
+						return;
+					view = (ChangeTimeline) page.showView(ChangeTimeline.ID, entityName, IWorkbenchPage.VIEW_CREATE);
 					view.setSubjectID(entityName);
 					view.reCreatePartControl();
 				} catch (PartInitException e1) {
@@ -101,6 +108,30 @@ public class TableMenuDetectListener implements MenuDetectListener {
 			public void widgetDefaultSelected(SelectionEvent e) {
 				// TODO Auto-generated method stub
 				
+			}
+		});
+		MenuItem graph = new MenuItem(itemMenu, SWT.NONE);
+		graph.setText("Show in graph");
+		graph.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				String entityName = selectedItem.getText(1);
+				ChangeGraph view;
+				try {
+					IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+					if (page.findViewReference(ChangeGraph.ID, entityName) != null)
+						return;
+					view = (ChangeGraph) page.showView(ChangeGraph.ID, entityName, IWorkbenchPage.VIEW_CREATE);
+					view.setFocusEntity(entityName);
+				} catch (PartInitException e1) {
+					MessageDialog dialog = new MessageDialog(parent.getShell(), 
+							 								 "Error!",
+							 								 null,
+							 								 "Unable to open the graph view",
+							 								 MessageDialog.ERROR,
+							 								 new String [] {"Close"},
+							 								 0);
+				}
 			}
 		});
 		MenuItem sep2 = new MenuItem(itemMenu, SWT.SEPARATOR);

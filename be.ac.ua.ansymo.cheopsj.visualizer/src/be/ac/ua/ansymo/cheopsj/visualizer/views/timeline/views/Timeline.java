@@ -13,6 +13,7 @@ import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
+import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Color;
@@ -29,6 +30,9 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.ScrollBar;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
 
 import be.ac.ua.ansymo.cheopsj.model.changes.AtomicChange;
 import be.ac.ua.ansymo.cheopsj.model.changes.IChange;
@@ -36,6 +40,7 @@ import be.ac.ua.ansymo.cheopsj.visualizer.data.DataStore;
 import be.ac.ua.ansymo.cheopsj.visualizer.data.TimelineData;
 import be.ac.ua.ansymo.cheopsj.visualizer.data.TimelinePoint;
 import be.ac.ua.ansymo.cheopsj.visualizer.util.GraphicsUtils;
+import be.ac.ua.ansymo.cheopsj.visualizer.views.graph.ChangeGraph;
 import be.ac.ua.ansymo.cheopsj.visualizer.views.widgets.DependencyDialog;
 
 public class Timeline extends Composite {
@@ -263,6 +268,15 @@ public class Timeline extends Composite {
 						hideDepe.setEnabled(false);
 					}
 					MenuItem sep2 = new MenuItem(popupMenu, SWT.SEPARATOR);
+					MenuItem graph = new MenuItem(popupMenu, SWT.NONE);
+					graph.setText("Show in graph");
+					graph.addSelectionListener(new SelectionAdapter() {
+						@Override
+						public void widgetSelected(SelectionEvent e) {
+							showInGraph(selection.x, selection.y);
+						}
+					});
+					MenuItem sep3 = new MenuItem(popupMenu, SWT.SEPARATOR);
 				}
 				MenuItem exit = new MenuItem(popupMenu, SWT.NONE);
 				exit.setText("Exit");
@@ -583,5 +597,39 @@ public class Timeline extends Composite {
 		depdialog.setRelationData(dept_vec, depe_vec);
 		depdialog.create();
 		depdialog.open();
+	}
+	
+	private void showInGraph(int x, int y) {
+		String entityName = null;
+		
+		for (TimelinePoint point : this.data_store.getTimelinePoints()) {
+			if (Math.abs(point.getTimelinePoint().x - x) < 10) {
+				if (Math.abs(point.getTimelinePoint().y - y) < 10) {
+					entityName = point.getEntityID();
+					break;
+				}
+			}
+		}
+		
+		if (entityName == null) {
+			return;
+		}
+		
+		ChangeGraph view;
+		try {
+			IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+			if (page.findViewReference(ChangeGraph.ID, entityName) != null)
+				return;
+			view = (ChangeGraph) page.showView(ChangeGraph.ID, entityName, IWorkbenchPage.VIEW_CREATE);
+			view.setFocusEntity(entityName);
+		} catch (PartInitException e1) {
+			MessageDialog dialog = new MessageDialog(parent.getShell(), 
+					 								 "Error!",
+					 								 null,
+					 								 "Unable to open the graph view",
+					 								 MessageDialog.ERROR,
+					 								 new String [] {"Close"},
+					 								 0);
+		}
 	}
 }

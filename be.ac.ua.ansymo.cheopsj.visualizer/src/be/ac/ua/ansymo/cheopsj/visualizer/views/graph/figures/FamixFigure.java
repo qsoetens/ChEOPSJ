@@ -41,7 +41,12 @@ public class FamixFigure extends Figure {
 		this.fEnt = ent;
 		this.fType = ent.getFamixType();
 		this.lastChange = ent.getLatestChange().getTimeStamp();
-		this.label = new Label(this.fEnt.getUniqueName());
+		String[] nameArr = fEnt.getUniqueName().split("\\.");
+		if (nameArr.length == 0) {
+			this.label = new Label(fEnt.getUniqueName());
+		} else {
+			this.label = new Label(nameArr[nameArr.length-1]);
+		}
 		this.label.setLabelAlignment(Label.CENTER);
 		
 		this.fImg = constructFamixImage(ent.aggregateChanges());
@@ -177,5 +182,16 @@ public class FamixFigure extends Figure {
 	
 	public String getType() {
 		return this.fType;
+	}
+	
+	public boolean isInvocation() {
+		return this.isInvocation;
+	}
+	
+	public FamixEntity getEntity() {
+		return this.fEnt;
+	}
+	public FamixInvocation getInvocation() {
+		return this.fInv;
 	}
 }

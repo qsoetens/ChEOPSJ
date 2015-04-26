@@ -84,11 +84,13 @@ public class ChangeGraphContentProvider implements IGraphEntityContentProvider, 
 		for (Entry<String, FamixPackage> entry : this.manager.getFamixPackagesMap().entrySet()) {
 			if (entry.getValue().getUniqueName().equals(this.focusEntityID)) {
 				result.add(entry.getValue());
+				System.out.println("Result added for: " + entry.getValue().getUniqueName());
 			}
 			
 			if (entry.getValue().getBelongsToPackage() != null) {
 				if (entry.getValue().getBelongsToPackage().getUniqueName().equals(this.focusEntityID)) {
 					result.add(entry.getValue());
+					System.out.println("Result added for: " + entry.getValue().getUniqueName());
 				}
 			}
 		}
@@ -96,6 +98,7 @@ public class ChangeGraphContentProvider implements IGraphEntityContentProvider, 
 			if (entry.getValue().getBelongsToPackage() != null) {
 				if (entry.getValue().getBelongsToPackage().getUniqueName().equals(this.focusEntityID)) {
 					result.add(entry.getValue());
+					System.out.println("Result added for: " + entry.getValue().getUniqueName());
 				}
 			}
 		}
@@ -107,11 +110,13 @@ public class ChangeGraphContentProvider implements IGraphEntityContentProvider, 
 		for (Entry<String, FamixClass> entry : this.manager.getFamixClassesMap().entrySet()) {
 			if (entry.getValue().getUniqueName().equals(focusEntityID)) {
 				result.add(entry.getValue());
+				System.out.println("Result added for: " + entry.getValue().getUniqueName());
 			}
 			
 			if (entry.getValue().getBelongsToClass() != null) {
 				if (entry.getValue().getBelongsToClass().getUniqueName().equals(focusEntityID)) {
 					result.add(entry.getValue());
+					System.out.println("Result added for: " + entry.getValue().getUniqueName());
 				}
 			}
 		}
@@ -119,6 +124,7 @@ public class ChangeGraphContentProvider implements IGraphEntityContentProvider, 
 			if (entry.getValue().getBelongsToClass() != null) {
 				if (entry.getValue().getBelongsToClass().getUniqueName().equals(focusEntityID)) {
 					result.add(entry.getValue());
+					System.out.println("Result added for: " + entry.getValue().getUniqueName());
 				}
 			}
 		}
@@ -126,6 +132,7 @@ public class ChangeGraphContentProvider implements IGraphEntityContentProvider, 
 			if (entry.getValue().getBelongsToClass() != null) {
 				if (entry.getValue().getBelongsToClass().getUniqueName().equals(focusEntityID)) {
 					result.add(entry.getValue());
+					System.out.println("Result added for: " + entry.getValue().getUniqueName());
 				}
 			}
 		}
@@ -137,12 +144,14 @@ public class ChangeGraphContentProvider implements IGraphEntityContentProvider, 
 		for (Entry<String, FamixMethod> entry : this.manager.getFamixMethodsMap().entrySet()) {
 			if (entry.getValue().getUniqueName().equals(focusEntityID)) {
 				result.add(entry.getValue());
+				System.out.println("Result added for: " + entry.getValue().getUniqueName());
 			}
 		}
 		for (Entry<String, FamixInvocation> entry : this.manager.getFamixInvocationsMap().entrySet()) {
 			if (entry.getValue().getInvokedBy() != null) {
 				if (entry.getValue().getInvokedBy().getUniqueName().equals(focusEntityID)) {
 					result.add(entry.getValue());
+					System.out.println("Result added for: " + entry.getValue().getStringRepresentation());
 				}
 			}
 		}
@@ -155,6 +164,7 @@ public class ChangeGraphContentProvider implements IGraphEntityContentProvider, 
 		for (Entry<String, FamixAttribute> entry : this.manager.getFamixFieldsMap().entrySet()) {
 			if (entry.getValue().getUniqueName().equals(focusEntityID)) {
 				result.add(entry.getValue());
+				System.out.println("Result added for: " + entry.getValue().getUniqueName());
 			}
 		}
 		return result;
@@ -165,6 +175,7 @@ public class ChangeGraphContentProvider implements IGraphEntityContentProvider, 
 		for (Entry<String, FamixInvocation> entry : this.manager.getFamixInvocationsMap().entrySet()) {
 			if (entry.getValue().getStringRepresentation().equals(focusEntityID)) {
 				result.add(entry.getValue());
+				System.out.println("Result added for: " + entry.getValue().getStringRepresentation());
 			}
 		}
 		return result;
@@ -174,18 +185,31 @@ public class ChangeGraphContentProvider implements IGraphEntityContentProvider, 
 	public Object[] getConnectedTo(Object entity) {
 		Collection<Object> result = new ArrayList<Object>();
 		
+		if (entity instanceof FamixPackage) {
+			FamixPackage fp = (FamixPackage)entity;
+			if (focusEntityIsPackage) {
+				if (fp.getBelongsToPackage() != null) {
+					if (fp.getBelongsToPackage().getUniqueName().equals(focusEntityID)) {
+						result.add(fp.getBelongsToPackage());
+						System.out.println("Connection added from " + fp.getUniqueName() + " to " + fp.getBelongsToPackage().getUniqueName());
+					}
+				}
+			}
+		}
 		if (entity instanceof FamixClass) {
 			FamixClass fc = (FamixClass)entity;
 			if (focusEntityIsPackage) {
 				if (fc.getBelongsToPackage() != null) {
 					if (fc.getBelongsToPackage().getUniqueName().equals(focusEntityID)) {
-						result.add(fc);
+						result.add(fc.getBelongsToPackage());
+						System.out.println("Connection added from " + fc.getUniqueName() + " to " + fc.getBelongsToPackage().getUniqueName());
 					}
 				}
 			} else if (focusEntityIsClass) {
 				if (fc.getBelongsToClass() != null) {
 					if (fc.getBelongsToClass().getUniqueName().equals(focusEntityID)) {
-						result.add(fc);
+						result.add(fc.getBelongsToClass());
+						System.out.println("Connection added from " + fc.getUniqueName() + " to " + fc.getBelongsToClass().getUniqueName());
 					}
 				}
 			}
@@ -193,21 +217,24 @@ public class ChangeGraphContentProvider implements IGraphEntityContentProvider, 
 			FamixMethod fm = (FamixMethod)entity;
 			if (fm.getBelongsToClass() != null) {
 				if (fm.getBelongsToClass().getUniqueName().equals(focusEntityID)) {
-					result.add(fm);
+					result.add(fm.getBelongsToClass());
+					System.out.println("Connection added from " + fm.getUniqueName() + " to " + fm.getBelongsToClass().getUniqueName());
 				}
 			}
 		} else if (entity instanceof FamixAttribute) {
 			FamixAttribute fa = (FamixAttribute)entity;
 			if (fa.getBelongsToClass() != null) {
 				if (fa.getBelongsToClass().getUniqueName().equals(focusEntityID)) {
-					result.add(fa);
+					result.add(fa.getBelongsToClass());
+					System.out.println("Connection added from " + fa.getUniqueName() + " to " + fa.getBelongsToClass().getUniqueName());
 				}
 			}
 		} else if (entity instanceof FamixInvocation) {
 			FamixInvocation fi = (FamixInvocation)entity;
 			if (fi.getInvokedBy() != null) {
 				if (fi.getInvokedBy().getUniqueName().equals(focusEntityID)) {
-					result.add(fi);
+					result.add(fi.getInvokedBy());
+					System.out.println("Connection added from " + fi.getStringRepresentation() + " to " + fi.getInvokedBy().getUniqueName());
 				}
 			}
 		}
@@ -266,6 +293,7 @@ public class ChangeGraphContentProvider implements IGraphEntityContentProvider, 
 	 */
 	public void setFocusEntity(String focus) {
 		this.focusEntityID = focus;
+		System.out.println("NEW FOCUS ENTITY IS: " + focus);
 		for (Subject sub : this.manager.getFamixEntities()) {
 			if (sub instanceof FamixEntity) {
 				if (((FamixEntity)sub).getUniqueName().equals(focus)) {
@@ -277,9 +305,11 @@ public class ChangeGraphContentProvider implements IGraphEntityContentProvider, 
 				}
 			}
 		}
+		
 	}
 	
 	private void setCheck(String type) {
+		System.out.println("FOCUS ENTITY HAS TYPE: " + type);
 		allChecksToFalse();
 		if (type.equals("Package")) {
 			focusEntityIsPackage = true;
@@ -303,7 +333,40 @@ public class ChangeGraphContentProvider implements IGraphEntityContentProvider, 
 	}
 	
 	public void goToParent() {
-		
+		for (Subject sub : this.manager.getFamixEntities()) {
+			if (sub instanceof FamixPackage) {
+				FamixPackage fp = (FamixPackage)sub;
+				if (fp.getUniqueName().equals(focusEntityID)) {
+					if (fp.getBelongsToPackage() != null) {
+						this.setFocusEntity(fp.getBelongsToPackage().getUniqueName());
+					}
+				}
+			} else if (sub instanceof FamixClass) {
+				if (((FamixClass)sub).getUniqueName().equals(focusEntityID)) {
+					FamixClass fc = (FamixClass)sub;
+					if (fc.getBelongsToClass() != null) {
+						this.setFocusEntity(fc.getBelongsToClass().getUniqueName());
+					} else {
+						this.setFocusEntity(fc.getBelongsToPackage().getUniqueName());
+					}
+				}
+			} else if (sub instanceof FamixMethod) {
+				FamixMethod fm = (FamixMethod)sub;
+				if (fm.getUniqueName().equals(focusEntityID)) {
+					this.setFocusEntity(fm.getBelongsToClass().getUniqueName());
+				}
+				
+			} else if (sub instanceof FamixAttribute) {
+				FamixAttribute fa = (FamixAttribute)sub;
+				if (fa.getUniqueName().equals(focusEntityID)) {
+					this.setFocusEntity(fa.getBelongsToClass().getUniqueName());
+				}
+			} else if (sub instanceof FamixInvocation) {
+				if (((FamixInvocation)sub).getStringRepresentation().equals(focusEntityID)) {
+					this.setFocusEntity(((FamixInvocation)sub).getInvokedBy().getUniqueName());
+				}
+			}
+		}
 	}
 
 }

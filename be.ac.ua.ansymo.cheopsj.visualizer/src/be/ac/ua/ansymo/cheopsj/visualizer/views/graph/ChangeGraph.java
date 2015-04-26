@@ -38,7 +38,22 @@ public class ChangeGraph extends ViewPart {
 	@Override
 	public void createPartControl(Composite par) {
 		parent = par;
-		viewer = new GraphViewer(par, SWT.BORDER);
+	}
+	
+	private void setupListeners() {
+		graph.addMenuDetectListener(new ContextMenuDetectListener(this.graph, this.parent, (ChangeGraphContentProvider) this.viewer.getContentProvider()));	
+	}
+	
+	public void setFocusEntity(String focus) {
+		String[] nameArr = focus.split("\\.");
+		String result = "";
+		if (nameArr.length == 0) {
+			result = focus;
+		} else {
+			result = nameArr[nameArr.length-1];
+		}
+		this.setPartName("Graph: " + result);
+		viewer = new GraphViewer(this.parent, SWT.BORDER);
 		viewer.setContentProvider(new ChangeGraphContentProvider());
 		viewer.setLabelProvider(new ChangeGraphLabelProvider());
 		viewer.setInput(ModelManager.getInstance());
@@ -48,14 +63,8 @@ public class ChangeGraph extends ViewPart {
 		
 		this.graph = this.viewer.getGraphControl();
 		setupListeners();
-	}
-	
-	private void setupListeners() {
-		graph.addMenuDetectListener(new ContextMenuDetectListener(this.graph, this.parent, (ChangeGraphContentProvider) this.viewer.getContentProvider()));	
-	}
-	
-	public void setFocusEntity(String focus) {
-		((ChangeGraphContentProvider)this.viewer.getContentProvider()).setFocusEntity(focus);
+		((ChangeGraphContentProvider)this.viewer.getContentProvider()).setFocusEntity(focus);	
+		viewer.refresh();
 	}
 
 	@Override

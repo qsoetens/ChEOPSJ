@@ -181,7 +181,11 @@ public class ChangeTableSettings extends TitleAreaDialog {
 	
 	private void save() {
 		this.change = this.changeCombo.getText();
-		this.user = this.userText.getItem(this.userText.getSelectionIndex());
+		if (this.userText.getSelectionIndex() == 0) {
+			this.user = "";
+		} else {
+			this.user = this.userText.getItem(this.userText.getSelectionIndex());
+		}
 		this.famix = this.famixCombo.getText();
 		this.from = DateUtil.getInstance().constructDateAndTime(dateFrom.getYear(), 
 					dateFrom.getMonth(), 
