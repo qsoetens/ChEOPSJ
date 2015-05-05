@@ -244,12 +244,12 @@ public class ClassRecorder extends AbstractEntityRecorder {
 	
 	
 
-	/*public ClassRecorder(String name) {
-		manager = ModelManager.getInstance();
+	public ClassRecorder(String name) {
+		/*manager = ModelManager.getInstance();
 		famixClass = manager.getFamixClass(name);
 		parent = famixClass.getBelongsToPackage();
-		// causes nullpointerexceptions!!!
-	}*/
+		// causes nullpointerexceptions!!!*/
+	}
 
 	/*
 	 * (non-Javadoc)

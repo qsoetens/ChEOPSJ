@@ -16,7 +16,7 @@ public class Activator extends AbstractUIPlugin {
 
 	// The shared instance
 	private static Activator plugin;
-	private static Timer timer;
+	/*private static Timer timer;
 	
 	
 	private class AutoSaveModelTask extends TimerTask {
@@ -24,7 +24,7 @@ public class Activator extends AbstractUIPlugin {
 		public void run() {
 			ModelManager.getInstance().saveModel();
 		}
-	}
+	}*/
 
 	
 	/**
@@ -40,12 +40,12 @@ public class Activator extends AbstractUIPlugin {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		plugin = this;
-		ModelManager.getInstance().loadModel();
+		/*ModelManager.getInstance().loadModel();
 		
 		timer = new Timer();
 		AutoSaveModelTask task = new AutoSaveModelTask();
 		timer.schedule(task,60000,60000);
-		//timer.schedule(task,300000,300000);
+		//timer.schedule(task,300000,300000);*/
 	}
 
 	/*
@@ -53,7 +53,7 @@ public class Activator extends AbstractUIPlugin {
 	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.BundleContext)
 	 */
 	public void stop(BundleContext context) throws Exception {
-		ModelManager.getInstance().saveModel();
+		//ModelManager.getInstance().saveModel();
 		plugin = null;
 		super.stop(context);
 	}

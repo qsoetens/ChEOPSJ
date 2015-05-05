@@ -16,7 +16,6 @@ Require-Bundle: org.eclipse.ui,
  org.junit
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
-Export-Package: be.ac.ua.ansymo.cheopsj.visualizer.views.graph
 Bundle-ClassPath: lib/jcommon-1.0.23.jar,
  lib/jfreechart-1.0.19-experimental.jar,
  lib/jfreechart-1.0.19-swt.jar,
