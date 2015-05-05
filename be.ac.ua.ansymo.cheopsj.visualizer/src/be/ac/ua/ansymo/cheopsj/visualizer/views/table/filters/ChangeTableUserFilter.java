@@ -1,3 +1,9 @@
+/***************************************************
+ * Copyright (c) 2014 Nicolas Demarbaix
+ * 
+ * Contributors: 
+ * 		Nicolas Demarbaix - Initial Implementation
+ ***************************************************/
 package be.ac.ua.ansymo.cheopsj.visualizer.views.table.filters;
 
 import org.eclipse.jface.viewers.Viewer;
@@ -6,10 +12,19 @@ import org.eclipse.jface.viewers.ViewerFilter;
 import be.ac.ua.ansymo.cheopsj.model.changes.IChange;
 import be.ac.ua.ansymo.cheopsj.visualizer.data.DataStore;
 
+/**
+ * Change table filter for filtering user names
+ * @author nicolasdemarbaix
+ *
+ */
 public class ChangeTableUserFilter extends ViewerFilter {
 
 	private String searchString;
 	
+	/**
+	 * Set the search query for the filter
+	 * @param search (String) search query
+	 */
 	public void setSearchString(String search) {
 		this.searchString = ".*" + search + ".*";
 	}

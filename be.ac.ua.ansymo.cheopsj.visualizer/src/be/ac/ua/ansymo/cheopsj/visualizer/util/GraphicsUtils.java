@@ -30,6 +30,7 @@ public class GraphicsUtils {
  *          Note: Only one of the style UP or DOWN may be specified.
  *          </p>
  */
+@SuppressWarnings("unused")
 public static void drawVerticalText(String string, int x, int y, GC gc,
     int style) {
   // Get the current display
@@ -133,6 +134,7 @@ public static void drawVerticalImage(Image image, int x, int y, GC gc, int style
  *         Note: Only one of the style UP or DOWN may be specified.
  *         </p>
  */
+@SuppressWarnings("unused")
 public static Image createRotatedText(String text, Font font, Color foreground,
     Color background, int style) {
   // Get the current display

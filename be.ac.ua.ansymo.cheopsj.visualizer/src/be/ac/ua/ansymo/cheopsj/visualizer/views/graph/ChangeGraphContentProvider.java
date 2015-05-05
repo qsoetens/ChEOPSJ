@@ -1,3 +1,9 @@
+/***************************************************
+ * Copyright (c) 2014 Nicolas Demarbaix
+ * 
+ * Contributors: 
+ * 		Nicolas Demarbaix - Initial Implementation
+ ***************************************************/
 package be.ac.ua.ansymo.cheopsj.visualizer.views.graph;
 
 import java.util.ArrayList;
@@ -6,7 +12,6 @@ import java.util.Map.Entry;
 
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.zest.core.viewers.IGraphContentProvider;
 import org.eclipse.zest.core.viewers.GraphViewer;
 import org.eclipse.zest.core.viewers.IGraphEntityContentProvider;
 
@@ -23,6 +28,11 @@ import be.ac.ua.ansymo.cheopsj.model.famix.FamixInvocation;
 import be.ac.ua.ansymo.cheopsj.model.famix.FamixMethod;
 import be.ac.ua.ansymo.cheopsj.model.famix.FamixPackage;
 
+/**
+ * The content provider for the Change Graph view
+ * @author nicolasdemarbaix
+ *
+ */
 public class ChangeGraphContentProvider implements IGraphEntityContentProvider, ModelManagerListener {
 	private GraphViewer viewer = null;
 	private ModelManager manager = null;
@@ -40,7 +50,6 @@ public class ChangeGraphContentProvider implements IGraphEntityContentProvider, 
 	 */
 	@Override
 	public void dispose() {
-		// TODO Auto-generated method stub
 		
 	}
 
@@ -79,6 +88,10 @@ public class ChangeGraphContentProvider implements IGraphEntityContentProvider, 
 		return result.toArray();
 	}
 	
+	/**
+	 * Get all elements that should be displayed for the current focus element (in case of package)
+	 * @return (Collection<Object>) All famixobjects that should be displayed
+	 */
 	private Collection<Object> getElementsForPackageFocus() {
 		Collection<Object> result = new ArrayList<Object>();
 		for (Entry<String, FamixPackage> entry : this.manager.getFamixPackagesMap().entrySet()) {
@@ -105,6 +118,10 @@ public class ChangeGraphContentProvider implements IGraphEntityContentProvider, 
 		return result;
 	}
 	
+	/**
+	 * Get all elements that should be displayed for the current focus element (in case of class)
+	 * @return (Collection<Object>) All famixobjects that should be displayed
+	 */
 	private Collection<Object> getElementsForClassFocus() {
 		Collection<Object> result = new ArrayList<Object>();
 		for (Entry<String, FamixClass> entry : this.manager.getFamixClassesMap().entrySet()) {
@@ -139,6 +156,10 @@ public class ChangeGraphContentProvider implements IGraphEntityContentProvider, 
 		return result;
 	}
 	
+	/**
+	 * Get all elements that should be displayed for the current focus element (in case of method)
+	 * @return (Collection<Object>) All famixobjects that should be displayed
+	 */
 	private Collection<Object> getElementsForMethodFocus() {
 		Collection<Object> result = new ArrayList<Object>();
 		for (Entry<String, FamixMethod> entry : this.manager.getFamixMethodsMap().entrySet()) {
@@ -159,6 +180,10 @@ public class ChangeGraphContentProvider implements IGraphEntityContentProvider, 
 		return result;
 	}
 	
+	/**
+	 * Get all elements that should be displayed for the current focus element (in case of attribute)
+	 * @return (Collection<Object>) All famixobjects that should be displayed
+	 */
 	private Collection<Object> getElementsForAttributeFocus() {
 		Collection<Object> result = new ArrayList<Object>();
 		for (Entry<String, FamixAttribute> entry : this.manager.getFamixFieldsMap().entrySet()) {
@@ -170,6 +195,10 @@ public class ChangeGraphContentProvider implements IGraphEntityContentProvider, 
 		return result;
 	}
 	
+	/**
+	 * Get all elements that should be displayed for the current focus element (in case of invocation)
+	 * @return (Collection<Object>) All famixobjects that should be displayed
+	 */
 	private Collection<Object> getElementsForInvocationFocus() {
 		Collection<Object> result = new ArrayList<Object>();
 		for (Entry<String, FamixInvocation> entry : this.manager.getFamixInvocationsMap().entrySet()) {
@@ -262,6 +291,10 @@ public class ChangeGraphContentProvider implements IGraphEntityContentProvider, 
 		});		
 	}
 	
+	/**
+	 * Update the viewer when a modelmanager event occurs
+	 * @param event (ModelManagerEvent) the event
+	 */
 	@SuppressWarnings("restriction")
 	private void updateViewer(ModelManagerEvent event) {
 		// Use the setRedraw method to reduce flicker
@@ -278,10 +311,16 @@ public class ChangeGraphContentProvider implements IGraphEntityContentProvider, 
 		}
 	}
 
+	/**
+	 * Refresh the viewer
+	 */
 	public void refresh() {
 		viewer.refresh();
 	}
-	
+
+	/**
+	 * Refresh the viewer and re-apply the layout
+	 */
 	public void updateAndRefresh() {
 		viewer.refresh();
 		viewer.applyLayout();
@@ -291,9 +330,12 @@ public class ChangeGraphContentProvider implements IGraphEntityContentProvider, 
 	 * CHANGE CONTENT METHODS
 	 * ============================
 	 */
+	/**
+	 * Set the focus entity in the change graph content provider
+	 * @param focus (String) unique name of focus entity
+	 */
 	public void setFocusEntity(String focus) {
 		this.focusEntityID = focus;
-		System.out.println("NEW FOCUS ENTITY IS: " + focus);
 		for (Subject sub : this.manager.getFamixEntities()) {
 			if (sub instanceof FamixEntity) {
 				if (((FamixEntity)sub).getUniqueName().equals(focus)) {
@@ -308,8 +350,11 @@ public class ChangeGraphContentProvider implements IGraphEntityContentProvider, 
 		
 	}
 	
+	/**
+	 * Set the necessary checks for the getElements methods to distinguish between focus entity types
+	 * @param type (String) the type of the focus entity
+	 */
 	private void setCheck(String type) {
-		System.out.println("FOCUS ENTITY HAS TYPE: " + type);
 		allChecksToFalse();
 		if (type.equals("Package")) {
 			focusEntityIsPackage = true;
@@ -324,6 +369,9 @@ public class ChangeGraphContentProvider implements IGraphEntityContentProvider, 
 		}
 	}
 	
+	/**
+	 * Reset all checks
+	 */
 	private void allChecksToFalse() {
 		focusEntityIsPackage = false;
 		focusEntityIsClass = false;
@@ -332,6 +380,9 @@ public class ChangeGraphContentProvider implements IGraphEntityContentProvider, 
 		focusEntityIsInvocation = false;
 	}
 	
+	/**
+	 * Move the current focus to the parent entity of the focus entity
+	 */
 	public void goToParent() {
 		for (Subject sub : this.manager.getFamixEntities()) {
 			if (sub instanceof FamixPackage) {

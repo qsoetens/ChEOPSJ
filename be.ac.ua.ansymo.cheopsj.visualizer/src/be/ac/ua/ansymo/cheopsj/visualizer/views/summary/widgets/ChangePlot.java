@@ -1,11 +1,15 @@
+/***************************************************
+ * Copyright (c) 2014 Nicolas Demarbaix
+ * 
+ * Contributors: 
+ * 		Nicolas Demarbaix - Initial Implementation
+ ***************************************************/
 package be.ac.ua.ansymo.cheopsj.visualizer.views.summary.widgets;
 
-import java.awt.Color;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
 
-import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
@@ -13,9 +17,6 @@ import org.jfree.chart.axis.DateAxis;
 import org.jfree.chart.axis.DateTickUnit;
 import org.jfree.chart.axis.DateTickUnitType;
 import org.jfree.chart.axis.NumberTickUnit;
-import org.jfree.chart.plot.DefaultDrawingSupplier;
-import org.jfree.chart.plot.XYPlot;
-import org.jfree.chart.renderer.xy.XYItemRenderer;
 import org.jfree.data.time.Day;
 import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
@@ -25,11 +26,15 @@ import org.jfree.experimental.chart.swt.ChartComposite;
 import be.ac.ua.ansymo.cheopsj.visualizer.data.DataStore;
 import be.ac.ua.ansymo.cheopsj.visualizer.data.SummaryPlotData;
 
+/**
+ * The plot used in the Change Summary View
+ * @author nicolasdemarbaix
+ *
+ */
 public class ChangePlot extends ChartComposite {
 	private JFreeChart plot = null;
 	private LowerBasedNumberAxis rangeAxis = null;
 	private DateAxis domainAxis = null;
-	private GridData gData = null;
 	private boolean showAll = false;
 	private boolean showAdd = false;
 	private boolean showDel = false;
@@ -61,6 +66,10 @@ public class ChangePlot extends ChartComposite {
 		this.setChart(this.plot);
 	}
 	
+	/**
+	 * Create the data set for the plot
+	 * @return (XYDataset) the data set containing all change information for the plot
+	 */
 	private XYDataset createDataset() {
 		TimeSeries total_changes = new TimeSeries("Total changes");
 		TimeSeries add_changes = new TimeSeries("Additions");
@@ -88,6 +97,11 @@ public class ChangePlot extends ChartComposite {
 		return dataset;
 	}
 	
+	/**
+	 * Create the chart to be displayed in the plot
+	 * @param data (XYDataset) the dataset containing all change information
+	 * @return (JFreeChart) the chart to be displayed in the plot
+	 */
 	private JFreeChart createChart(XYDataset data) {
 		JFreeChart chart = ChartFactory.createTimeSeriesChart("Change History", "Date", "Changes", data);
 		this.domainAxis = (DateAxis) chart.getXYPlot().getDomainAxis();
@@ -99,6 +113,14 @@ public class ChangePlot extends ChartComposite {
 		return chart;
 	}
 	
+	/**
+	 * Calculate the multiple of the current tick type to not overdraw tick labels
+	 * @param start (java.util.Date) the start date of the displayed data
+	 * @param end (java.util.Date) the end date of the displayed data
+	 * @param tick_type (DateTickUnitType) the type of ticks that is being used
+	 * @param multiple (int) the current multiple of the tick type
+	 * @return (int) the resulting multiple of the tick type
+	 */
 	private int calculateTickTimes(Date start, Date end, DateTickUnitType tick_type, int multiple) {
 		int result = multiple;
 		long diff = end.getTime() - start.getTime();
@@ -121,11 +143,17 @@ public class ChangePlot extends ChartComposite {
 		return result;
 	}
 	
+	/**
+	 * Update the plot by rebuilding it and then redrawing the plot
+	 */
 	public void updatePlot() {
 		this.rebuildPlot();
 		this.redraw();
 	}
 	
+	/**
+	 * Rebuild the plot to conform the newly choosen settings
+	 */
 	private void rebuildPlot() {
 		JFreeChart chart = ChartFactory.createTimeSeriesChart("Change History", "Date", "Changes", createDataset());
 		chart.getXYPlot().setDomainAxis(this.domainAxis);
@@ -134,12 +162,26 @@ public class ChangePlot extends ChartComposite {
 		this.setChart(this.plot);
 	}
 	
+	/**
+	 * Define which data should be visible on the plot
+	 * @param all (boolean) whether the total changes plot should be displayed
+	 * @param add (boolean) whether the addition changes plot should be displayed
+	 * @param del (boolean) whether the removal changes plot should be displayed
+	 */
 	public void updateVisibleData(boolean all, boolean add, boolean del) {
 		this.showAll = all;
 		this.showAdd = add;
 		this.showDel = del;
 	}
 	
+	/**
+	 * Update the domain axis settings
+	 * @param tick_type (DateTickUnitType) the tick type
+	 * @param multiple (int) the multiple of the tick type
+	 * @param start (java.util.Date) the start date of the displayed data
+	 * @param end (java.util.Date) the end date of the displayed data
+	 * @param date_format (String) the format used for displaying the date labels
+	 */
 	public void updateDomainAxis(DateTickUnitType tick_type, int multiple, Date start, Date end, String date_format) {		
 		// Setup the tick unit for the domain axis
 		// The tick unit is based on the range and the tick unit type. 
@@ -174,6 +216,10 @@ public class ChangePlot extends ChartComposite {
 		this.plot.getXYPlot().setRangeAxis(this.rangeAxis);
 	}
 	
+	/**
+	 * Get the tick unit of the domain axis
+	 * @return (DateTickUnit) the domain tick unit
+	 */
 	public DateTickUnit getDomainDateTickUnit() {
 		return this.domainTickUnit;
 	}

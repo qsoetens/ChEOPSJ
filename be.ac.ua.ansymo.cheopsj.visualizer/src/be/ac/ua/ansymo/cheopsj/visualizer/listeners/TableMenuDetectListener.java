@@ -1,3 +1,9 @@
+/***************************************************
+ * Copyright (c) 2014 Nicolas Demarbaix
+ * 
+ * Contributors: 
+ * 		Nicolas Demarbaix - Initial Implementation
+ ***************************************************/
 package be.ac.ua.ansymo.cheopsj.visualizer.listeners;
 
 
@@ -13,7 +19,6 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
-import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
@@ -21,6 +26,11 @@ import org.eclipse.ui.PlatformUI;
 import be.ac.ua.ansymo.cheopsj.visualizer.views.graph.ChangeGraph;
 import be.ac.ua.ansymo.cheopsj.visualizer.views.timeline.ChangeTimeline;
 
+/**
+ * Menu detect listener for the Change Table tableviewer
+ * @author nicolasdemarbaix
+ *
+ */
 public class TableMenuDetectListener implements MenuDetectListener {
 
 	private Table table = null;
@@ -29,6 +39,11 @@ public class TableMenuDetectListener implements MenuDetectListener {
 	
 	private Menu itemMenu = null;
 	
+	/**
+	 * Public constructor
+	 * @param parent (Composite) the parent component
+	 * @param table (Table) the displayed table component of the tableviewer
+	 */
 	public TableMenuDetectListener(Composite parent, Table table) {
 		this.parent = parent;
 		this.table = table;
@@ -44,6 +59,10 @@ public class TableMenuDetectListener implements MenuDetectListener {
 		this.itemMenu.setVisible(true);
 	}
 	
+	/**
+	 * Construct the menu that will be displayed when a menu detect event occurs
+	 */
+	@SuppressWarnings({ "unused"})
 	private void constructMenu() {
 		this.itemMenu = new Menu(this.parent.getShell(), SWT.POP_UP);
 		MenuItem summary = new MenuItem(itemMenu, SWT.NONE);
@@ -71,10 +90,7 @@ public class TableMenuDetectListener implements MenuDetectListener {
 			}
 			
 			@Override
-			public void widgetDefaultSelected(SelectionEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
+			public void widgetDefaultSelected(SelectionEvent e) {}
 		});
 		
 		MenuItem sep1 = new MenuItem(itemMenu, SWT.SEPARATOR);
@@ -105,10 +121,7 @@ public class TableMenuDetectListener implements MenuDetectListener {
 			}
 			
 			@Override
-			public void widgetDefaultSelected(SelectionEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
+			public void widgetDefaultSelected(SelectionEvent e) {}
 		});
 		MenuItem graph = new MenuItem(itemMenu, SWT.NONE);
 		graph.setText("Show in graph");

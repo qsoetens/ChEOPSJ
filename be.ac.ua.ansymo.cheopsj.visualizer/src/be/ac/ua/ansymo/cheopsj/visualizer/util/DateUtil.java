@@ -1,9 +1,20 @@
+/***************************************************
+ * Copyright (c) 2014 Nicolas Demarbaix
+ * 
+ * Contributors: 
+ * 		Nicolas Demarbaix - Initial Implementation
+ ***************************************************/
 package be.ac.ua.ansymo.cheopsj.visualizer.util;
 
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+/**
+ * Util class for Date related functionality
+ * @author nicolasdemarbaix
+ *
+ */
 public class DateUtil {
 	private static DateUtil instance = null;
 	
@@ -14,12 +25,29 @@ public class DateUtil {
 		return instance;
 	}
 	
+	/**
+	 * Construct a Date object based on the given year, month and day
+	 * @param year (int) the given year
+	 * @param month (int) the given month
+	 * @param day (int) the given day
+	 * @return (java.util.Date) Date object
+	 */
 	public Date constructDate(int year, int month, int day) {
 		Calendar cal = new GregorianCalendar();
 		cal.set(year, month, day);
 		return cal.getTime();
 	}
 	
+	/**
+	 * Construct a Date object based on the given year, month, day, hour, minute and second
+	 * @param year (int) the given year
+	 * @param month (int) the given month
+	 * @param day (int) the given day
+	 * @param hour (int) the given hour
+	 * @param minute (int) the given minute
+	 * @param second (int) the given second
+	 * @return (java.util.Date) Date object
+	 */
 	public Date constructDateAndTime(int year, int month, int day, int hour, int minute, int second) {
 		Calendar cal = Calendar.getInstance();
 		cal.set(year, month, day, hour, minute, second);
@@ -89,11 +117,21 @@ public class DateUtil {
 		}
 	}
 	
+	/**
+	 * Construct a string representation of a given Date
+	 * @param date (java.util.Date) the given date
+	 * @return (String) string representation of the given date
+	 */
 	@SuppressWarnings("deprecation")
 	public String constructDateString(Date date) {
 		return date.getDate() + "-" + (date.getMonth()+1) + "-" + (date.getYear()+1900);
 	}
 	
+	/**
+	 * Get the successive date for a given instance
+	 * @param current (java.util.Date) the current date
+	 * @return (java.util.Date) the successive date
+	 */
 	public Date getNext(Date current) {
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(current);
@@ -101,6 +139,11 @@ public class DateUtil {
 		return cal.getTime();
 	}
 	
+	/**
+	 * Get the previous date for a given instance
+	 * @param current (java.util.Date) the current date
+	 * @return (java.util.Date) the previous date
+	 */
 	public Date getPrevious(Date current) {
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(current);

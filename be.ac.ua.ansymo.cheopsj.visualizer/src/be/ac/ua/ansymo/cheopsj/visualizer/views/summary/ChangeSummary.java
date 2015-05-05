@@ -17,6 +17,11 @@ import org.eclipse.ui.part.ViewPart;
 
 import be.ac.ua.ansymo.cheopsj.visualizer.views.summary.widgets.SummaryComposite;
 
+/**
+ * Change Summary view
+ * @author nicolasdemarbaix
+ *
+ */
 public class ChangeSummary extends ViewPart {
 	
 	public static final String ID = "be.ac.ua.ansymo.cheopsj.visualizer.views.ChangeSummary";
@@ -37,7 +42,6 @@ public class ChangeSummary extends ViewPart {
 
 	@Override
 	public void setFocus() {
-		// TODO Auto-generated method stub
 	}
 
 }

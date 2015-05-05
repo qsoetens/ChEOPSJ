@@ -6,19 +6,8 @@
  ***************************************************/
 package be.ac.ua.ansymo.cheopsj.visualizer.views.graph;
 
-import org.eclipse.draw2d.FreeformViewport;
-import org.eclipse.draw2d.IFigure;
-import org.eclipse.draw2d.ImageFigure;
-import org.eclipse.draw2d.Label;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.MenuDetectEvent;
-import org.eclipse.swt.events.MenuDetectListener;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.ui.part.*;
 import org.eclipse.zest.core.viewers.GraphViewer;
 import org.eclipse.zest.core.widgets.Graph;
@@ -26,8 +15,12 @@ import org.eclipse.zest.layouts.LayoutStyles;
 
 import be.ac.ua.ansymo.cheopsj.model.ModelManager;
 import be.ac.ua.ansymo.cheopsj.visualizer.listeners.ContextMenuDetectListener;
-import be.ac.ua.ansymo.cheopsj.visualizer.views.graph.figures.FamixFigure;
 
+/**
+ * The change graph view
+ * @author nicolasdemarbaix
+ *
+ */
 public class ChangeGraph extends ViewPart {
 	public static final String ID = "be.ac.ua.ansymo.cheopsj.visualizer.views.ChangeGraph";
 	
@@ -40,10 +33,19 @@ public class ChangeGraph extends ViewPart {
 		parent = par;
 	}
 	
+	/**
+	 * Add the necessary listeners to the graph
+	 */
+	@SuppressWarnings("static-access")
 	private void setupListeners() {
 		graph.addMenuDetectListener(new ContextMenuDetectListener(this.graph, this.parent, (ChangeGraphContentProvider) this.viewer.getContentProvider()));	
 	}
 	
+	/**
+	 * Set the current focus of the change graph to the entity with unique name 'focus'
+	 * @param focus (String) unique name of the neity
+	 */
+	@SuppressWarnings("static-access")
 	public void setFocusEntity(String focus) {
 		String[] nameArr = focus.split("\\.");
 		String result = "";
@@ -68,11 +70,12 @@ public class ChangeGraph extends ViewPart {
 	}
 
 	@Override
-	public void setFocus() {
-		// TODO Auto-generated method stub
-		
+	public void setFocus() {		
 	}
 	
+	/**
+	 * Reset the view by re-applying the layout
+	 */
 	public void resetViewLayout() {
 		viewer.applyLayout();
 	}

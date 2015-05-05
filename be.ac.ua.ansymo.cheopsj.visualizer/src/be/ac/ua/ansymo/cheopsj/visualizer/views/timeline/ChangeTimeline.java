@@ -1,21 +1,22 @@
+/***************************************************
+ * Copyright (c) 2014 Nicolas Demarbaix
+ * 
+ * Contributors: 
+ * 		Nicolas Demarbaix - Initial Implementation
+ ***************************************************/
 package be.ac.ua.ansymo.cheopsj.visualizer.views.timeline;
 
-import org.eclipse.jface.dialogs.Dialog;
-import org.eclipse.jface.window.Window;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.part.ViewPart;
 
 import be.ac.ua.ansymo.cheopsj.visualizer.views.timeline.views.TimelineComposite;
 
+/**
+ * Change Timeline View
+ * @author nicolasdemarbaix
+ *
+ */
 public class ChangeTimeline extends ViewPart {
 	
 	public static final String ID = "be.ac.ua.ansymo.cheopsj.visualizer.views.ChangeTimeline";
@@ -30,14 +31,21 @@ public class ChangeTimeline extends ViewPart {
 		if (subjectID == null) 
 			return;
 		
+		@SuppressWarnings("unused")
 		TimelineComposite tlc = new TimelineComposite(parent, subjectID);
-		System.err.println("Timeline Composite created");
 	}
 	
+	/**
+	 * Recreate the part control after the focus entity has been set
+	 */
 	public void reCreatePartControl() {
 		this.createPartControl(this.parent);
 	}
 	
+	/**
+	 * Set the id of the focus entity
+	 * @param id (String) unique name of entity
+	 */
 	public void setSubjectID(String id) {
 		this.subjectID = id;
 		String[] nameArr = id.split("\\.");
@@ -52,7 +60,6 @@ public class ChangeTimeline extends ViewPart {
 	
 	@Override
 	public void setFocus() {
-		// TODO Auto-generated method stub
 
 	}
 

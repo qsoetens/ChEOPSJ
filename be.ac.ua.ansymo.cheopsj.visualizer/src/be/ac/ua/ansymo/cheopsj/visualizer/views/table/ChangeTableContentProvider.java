@@ -1,3 +1,9 @@
+/***************************************************
+ * Copyright (c) 2014 Nicolas Demarbaix
+ * 
+ * Contributors: 
+ * 		Nicolas Demarbaix - Initial Implementation
+ ***************************************************/
 package be.ac.ua.ansymo.cheopsj.visualizer.views.table;
 
 import org.eclipse.jface.viewers.IStructuredContentProvider;
@@ -10,27 +16,34 @@ import be.ac.ua.ansymo.cheopsj.model.ModelManagerChange;
 import be.ac.ua.ansymo.cheopsj.model.ModelManagerEvent;
 import be.ac.ua.ansymo.cheopsj.model.ModelManagerListener;
 import be.ac.ua.ansymo.cheopsj.model.ModelManagerListeners;
-import be.ac.ua.ansymo.cheopsj.model.changes.IChange;
 import be.ac.ua.ansymo.cheopsj.visualizer.data.DataStore;
 
+/**
+ * Content provider for the Change Table view
+ * @author nicolasdemarbaix
+ *
+ */
 public class ChangeTableContentProvider implements IStructuredContentProvider, ModelManagerListener {
 
 	private TableViewer viewer = null;
+	@SuppressWarnings("unused")
 	private ChangeTable view = null;
 	private ModelManager manager = null;
 	private ModelManagerChange change_manager = null;
 	private ModelManagerListeners listen_manager = null;
 	
-	//
-	private int changes = 0;
-	private int additions = 0;
-	private int removals = 0;
-	
+	/**
+	 * Private constructor
+	 */
 	private ChangeTableContentProvider() {
 		this.change_manager = ModelManagerChange.getInstance();
 		this.listen_manager = ModelManagerListeners.getInstance();
 	}
 	
+	/**
+	 * Public Constructor
+	 * @param view (ChangeTable) Change Table view
+	 */
 	public ChangeTableContentProvider(ChangeTable view) {
 		this();
 		this.view = view;
@@ -38,8 +51,6 @@ public class ChangeTableContentProvider implements IStructuredContentProvider, M
 	
 	@Override
 	public void dispose() {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
@@ -59,6 +70,10 @@ public class ChangeTableContentProvider implements IStructuredContentProvider, M
 		return this.change_manager.getChanges().toArray();
 	}
 	
+	/**
+	 * Get the summary from the modelmanagerchange
+	 * @return (String) summary
+	 */
 	public String getChangeSummary() {
 		return this.change_manager.getSummary();
 	}
@@ -79,6 +94,10 @@ public class ChangeTableContentProvider implements IStructuredContentProvider, M
 		});
 	}
 	
+	/**
+	 * Update the view when an event occurs for the modelmanager
+	 * @param e (ModelManagerEvent) event in the modelmanager
+	 */
 	private void updateView(ModelManagerEvent e) {
 		viewer.getTable().setRedraw(false);
 		DataStore.getInstance().updateUserNames();
@@ -90,6 +109,10 @@ public class ChangeTableContentProvider implements IStructuredContentProvider, M
 		}
 	}
 	
+	/**
+	 * Get the summary from the modelmanagerchange
+	 * @return (String) summary
+	 */
 	public String getSummary() {
 		return this.change_manager.getSummary();
 	}

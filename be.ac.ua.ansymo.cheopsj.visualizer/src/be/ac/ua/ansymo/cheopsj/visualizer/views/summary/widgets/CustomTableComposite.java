@@ -1,3 +1,9 @@
+/***************************************************
+ * Copyright (c) 2014 Nicolas Demarbaix
+ * 
+ * Contributors: 
+ * 		Nicolas Demarbaix - Initial Implementation
+ ***************************************************/
 package be.ac.ua.ansymo.cheopsj.visualizer.views.summary.widgets;
 
 import java.util.Map.Entry;
@@ -6,7 +12,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
@@ -18,6 +23,11 @@ import org.eclipse.swt.widgets.Display;
 import be.ac.ua.ansymo.cheopsj.visualizer.data.DataStore;
 import be.ac.ua.ansymo.cheopsj.visualizer.data.SummaryData;
 
+/**
+ * The composite for a custom table for the Change Summary View
+ * @author nicolasdemarbaix
+ *
+ */
 public class CustomTableComposite extends Composite {
 	/**
 	 * 
@@ -28,7 +38,6 @@ public class CustomTableComposite extends Composite {
 		private String text = "";
 		private static final int MARGIN = 3;
 		private static int CELL_WIDTH = 136;
-		private static int CELL_HEIGHT = 5;
 		public RoundedLabel(Composite parent, int style) {
 			super(parent, style);
 			
@@ -63,15 +72,6 @@ public class CustomTableComposite extends Composite {
 			e.gc.drawText(text, MARGIN*8, 1);
 		}
 		
-		public String getText() {
-			return text;
-		}
-		
-		public void setText(String t) {
-			this.text = t;
-			redraw();
-		}	
-		
 		@Override
 		public Point computeSize(int wHint, int hHint, boolean changed) {
 			GC gc = new GC(this);
@@ -83,19 +83,17 @@ public class CustomTableComposite extends Composite {
 	
 	// Colors
 	private static Color COLOR_WHITE = Display.getCurrent().getSystemColor(SWT.COLOR_WHITE);
-	private static Color COLOR_GRAY = Display.getCurrent().getSystemColor(SWT.COLOR_GRAY);
-	private static Color COLOR_LIGHT_GRAY = Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW);
-	
-	// Fonts
-	private static Font FONT_HEADER = new Font(Display.getCurrent(), "SansSerif", 14, SWT.BOLD);
-	private static Font FONT_CELL = new Font(Display.getCurrent(), "SansSerif", 12, SWT.NONE);
 	
 	// Dimensions
 	private static int CELL_WIDTH = 112;
 	private static int CELL_HEIGHT = 20;
 	private GridData gData = null;
 	
-	
+	/**
+	 * Public constructor
+	 * @param parent (Composite) the parent component
+	 * @param style (int) the SWT graphics style
+	 */
 	public CustomTableComposite(Composite parent, int style) {
 		super(parent, SWT.BORDER);
 		
@@ -116,6 +114,9 @@ public class CustomTableComposite extends Composite {
 		this.setupData();
 	}
 	
+	/**
+	 * Setup the table header
+	 */
 	private void setupHeader() {
 		RoundedLabel h1 = new RoundedLabel(this, SWT.NONE, "");
 		h1.setLayoutData(this.gData);
@@ -129,6 +130,9 @@ public class CustomTableComposite extends Composite {
 		h6.setLayoutData(this.gData);		
 	}
 	
+	/**
+	 * Setup the table data
+	 */
 	private void setupData() {
 		SummaryData data = DataStore.getInstance().constructSummaryTableData();
 		int totalCount = 0;
@@ -162,6 +166,14 @@ public class CustomTableComposite extends Composite {
 					String.valueOf(totalRemovalCount));
 	}
 	
+	/**
+	 * Add a row to the table
+	 * @param key (String) the key for the row
+	 * @param elems (String) the number of entities for the type 'key'
+	 * @param changes (String) the number of changes for the type 'key'
+	 * @param adds (String) the number of additions for the type 'key'
+	 * @param dels (String) the number of removals for the type 'key'
+	 */
 	private void addRow(String key, String elems, String changes, String adds, String dels) {
 		RoundedLabel h1 = new RoundedLabel(this, SWT.NONE, key);
 		h1.setLayoutData(this.gData);

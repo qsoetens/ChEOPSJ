@@ -1,3 +1,9 @@
+/***************************************************
+ * Copyright (c) 2014 Nicolas Demarbaix
+ * 
+ * Contributors: 
+ * 		Nicolas Demarbaix - Initial Implementation
+ ***************************************************/
 package be.ac.ua.ansymo.cheopsj.visualizer.views.timeline.views;
 
 import org.eclipse.swt.SWT;
@@ -13,6 +19,11 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 
+/**
+ * Legend view for the timeline
+ * @author nicolasdemarbaix
+ *
+ */
 public class TimelineLegend extends Composite {
 	// IMAGES
 	private static Image img_addition = PlatformUI.getWorkbench().getSharedImages()
@@ -20,6 +31,11 @@ public class TimelineLegend extends Composite {
 	private static Image img_removal = PlatformUI.getWorkbench().getSharedImages()
 			.getImage(ISharedImages.IMG_ETOOL_DELETE);
 	
+	/**
+	 * Public Constructor
+	 * @param parent (Composite) parent component
+	 * @param style (int) SWT graphics style
+	 */
 	public TimelineLegend(Composite parent, int style) {
 		super(parent, SWT.BORDER);
 		this.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));

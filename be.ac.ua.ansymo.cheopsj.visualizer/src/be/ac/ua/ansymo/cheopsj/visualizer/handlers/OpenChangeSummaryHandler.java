@@ -1,3 +1,9 @@
+/***************************************************
+ * Copyright (c) 2014 Nicolas Demarbaix
+ * 
+ * Contributors: 
+ * 		Nicolas Demarbaix - Initial Implementation
+ ***************************************************/
 package be.ac.ua.ansymo.cheopsj.visualizer.handlers;
 
 import org.eclipse.core.commands.AbstractHandler;
@@ -10,6 +16,11 @@ import org.eclipse.ui.handlers.HandlerUtil;
 
 import be.ac.ua.ansymo.cheopsj.visualizer.views.summary.ChangeSummary;
 
+/**
+ * Handler for opening the change summary view
+ * @author nicolasdemarbaix
+ *
+ */
 public class OpenChangeSummaryHandler extends AbstractHandler {
 
 	@Override

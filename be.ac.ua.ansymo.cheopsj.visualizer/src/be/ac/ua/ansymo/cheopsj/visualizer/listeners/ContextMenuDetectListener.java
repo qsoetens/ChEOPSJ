@@ -1,3 +1,9 @@
+/***************************************************
+ * Copyright (c) 2014 Nicolas Demarbaix
+ * 
+ * Contributors: 
+ * 		Nicolas Demarbaix - Initial Implementation
+ ***************************************************/
 package be.ac.ua.ansymo.cheopsj.visualizer.listeners;
 
 import org.eclipse.draw2d.FreeformViewport;
@@ -23,11 +29,15 @@ import org.eclipse.zest.core.widgets.Graph;
 import be.ac.ua.ansymo.cheopsj.model.changes.IChange;
 import be.ac.ua.ansymo.cheopsj.model.famix.FamixEntity;
 import be.ac.ua.ansymo.cheopsj.model.famix.FamixInvocation;
-import be.ac.ua.ansymo.cheopsj.visualizer.data.DataStore;
 import be.ac.ua.ansymo.cheopsj.visualizer.views.graph.ChangeGraphContentProvider;
 import be.ac.ua.ansymo.cheopsj.visualizer.views.graph.figures.FamixFigure;
 import be.ac.ua.ansymo.cheopsj.visualizer.views.timeline.ChangeTimeline;
 
+/**
+ * Menu detect listener for the Change Graph
+ * @author nicolasdemarbaix
+ *
+ */
 public class ContextMenuDetectListener implements MenuDetectListener {
 	/*
 	 * Private members
@@ -42,6 +52,12 @@ public class ContextMenuDetectListener implements MenuDetectListener {
 	private Menu noSelectionMenu = null;
 	private Menu selectionMenu = null;
 	
+	/**
+	 * Public constructor
+	 * @param cont (org.eclipse.zest.core.widget.Graph) The control element
+	 * @param par (Composite) The parent element
+	 * @param prov (ChangeGraphContentProvider) the content provider for the change graph
+	 */
 	public ContextMenuDetectListener(Graph cont, Composite par, ChangeGraphContentProvider prov) {
 		this.control = cont;
 		this.parent = par;
@@ -49,9 +65,6 @@ public class ContextMenuDetectListener implements MenuDetectListener {
 		this.constructMenus();
 	}
 	
-	/**
-	 * 
-	 */
 	@Override
 	public void menuDetected(MenuDetectEvent e) {
 		if (e.detail == 0)
@@ -67,6 +80,10 @@ public class ContextMenuDetectListener implements MenuDetectListener {
 		}
 	}
 	
+	/**
+	 * Construct the menus that will be displayed on a menu detect event
+	 */
+	@SuppressWarnings("unused")
 	private void constructMenus() {
 		// CONSTRUCT THE "NOTHING SELECTED" MENU
 		this.noSelectionMenu = new Menu(this.parent.getShell(), SWT.POP_UP);
@@ -175,10 +192,7 @@ public class ContextMenuDetectListener implements MenuDetectListener {
 			}
 			
 			@Override
-			public void widgetDefaultSelected(SelectionEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
+			public void widgetDefaultSelected(SelectionEvent e) {}
 		});
 		MenuItem sep = new MenuItem(this.selectionMenu, SWT.SEPARATOR);
 		MenuItem exit2 = new MenuItem(this.selectionMenu, SWT.NONE);

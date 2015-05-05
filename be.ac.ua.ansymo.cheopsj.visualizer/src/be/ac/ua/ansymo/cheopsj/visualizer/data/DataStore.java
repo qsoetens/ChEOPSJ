@@ -1,16 +1,18 @@
+/***************************************************
+ * Copyright (c) 2014 Nicolas Demarbaix
+ * 
+ * Contributors: 
+ * 		Nicolas Demarbaix - Initial Implementation
+ ***************************************************/
 package be.ac.ua.ansymo.cheopsj.visualizer.data;
 
-import java.sql.Struct;
-import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Vector;
 
 import be.ac.ua.ansymo.cheopsj.model.ModelManager;
@@ -19,11 +21,8 @@ import be.ac.ua.ansymo.cheopsj.model.changes.Change;
 import be.ac.ua.ansymo.cheopsj.model.changes.IChange;
 import be.ac.ua.ansymo.cheopsj.model.changes.Subject;
 import be.ac.ua.ansymo.cheopsj.model.famix.FamixAssociation;
-import be.ac.ua.ansymo.cheopsj.model.famix.FamixAttribute;
 import be.ac.ua.ansymo.cheopsj.model.famix.FamixClass;
 import be.ac.ua.ansymo.cheopsj.model.famix.FamixEntity;
-import be.ac.ua.ansymo.cheopsj.model.famix.FamixMethod;
-import be.ac.ua.ansymo.cheopsj.model.famix.FamixObject;
 import be.ac.ua.ansymo.cheopsj.model.famix.FamixPackage;
 
 /**
@@ -39,7 +38,6 @@ public class DataStore {
 	// Static identifiers for elements.
 	private static String FAMIX_PACKAGE = "Package";
 	private static String FAMIX_CLASS = "Class";
-	private static String FAMIX_METHOD = "Method";
 	
 	// Preferences for the settings dialogs
 	private ViewPreferences summary_preferences = null;
@@ -210,12 +208,6 @@ public class DataStore {
 	 * @return (SummaryData) Wrapper data set for the summary view
 	 */
 	public SummaryData constructSummaryTableData() {
-		int packcount = 0;
-		int classcount = 0;
-		int methodcount = 0;
-		int attcount = 0;
-		int other = 0;
-		
 		Map<String, int[]> type_map = new HashMap<String, int[]>();
 		type_map.put("Package", new int[] {0,0,0,0});
 		type_map.put("Class", new int[] {0,0,0,0});
@@ -435,10 +427,18 @@ public class DataStore {
 		return this.table_preferences;
 	}
 	
+	/**
+	 * Get the names of all users that committed to the project
+	 * @return (Vector<String>) List of usernames
+	 */
 	public Vector<String> getUserNames() {
 		return this.user_names;
 	}
 	
+	/**
+	 * Update the current list of user names by checking whether a user that has performed
+	 * a change is not yet present in the list.
+	 */
 	public void updateUserNames() {
 		for (IChange change : this.manager.getModelManagerChange().getChanges()) {
 			if (!this.user_names.contains(change.getUser()) && !change.getUser().equals("")) {

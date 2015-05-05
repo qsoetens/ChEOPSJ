@@ -1,9 +1,13 @@
+/***************************************************
+ * Copyright (c) 2014 Nicolas Demarbaix
+ * 
+ * Contributors: 
+ * 		Nicolas Demarbaix - Initial Implementation
+ ***************************************************/
 package be.ac.ua.ansymo.cheopsj.visualizer.data;
 
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -17,19 +21,31 @@ import be.ac.ua.ansymo.cheopsj.model.famix.FamixAssociation;
 import be.ac.ua.ansymo.cheopsj.model.famix.FamixEntity;
 import be.ac.ua.ansymo.cheopsj.visualizer.util.DateUtil;
 
+/**
+ * Wrapper class for the data used in the timeline
+ * @author nicolasdemarbaix
+ *
+ */
 public class TimelineData {
 	private Map<String, List<IChange>> mec; // MEC = Map Element Change
 
-	private Vector<TimelinePoint> point_vector;
+	private Vector<TimelinePoint> point_vector; // all points that have been used on the timeline view
 	
-	private Vector<String> entity_names;
-	private Vector<String> change_dates;
-	private String focusEntity;
+	private Vector<String> entity_names; // names of all entities visible on the timeline
+	private Vector<String> change_dates; // dates of all changes visible on the timeline
+	private String focusEntity; // the name of the entity on which the user is focusing
 	
 	private Date earliestChangeDate = null;
 	private Date currentChangeDate = null;
 	private Date latestChangeDate = null;
 	
+	/**
+	 * Public constructor
+	 * @param data (Map<String, List<IChange>>) Data set of all entities and their corresponding changes
+	 * @param earliest (java.util.Date) earliest change date
+	 * @param latest (java.util.Date) latest change date
+	 * @param focus (String) name of the entity under focus
+	 */
 	public TimelineData(Map<String, List<IChange>> data, Date earliest, Date latest, String focus) {
 		this.mec = data;
 		this.earliestChangeDate = earliest;
@@ -51,6 +67,15 @@ public class TimelineData {
 		this.change_dates = new Vector<String>();
 	}
 	
+	/**
+	 * Public constructor
+	 * @param data (Map<String, List<IChange>>) Data set of all entities and their corresponding changes
+	 * @param earliest (java.util.Date) earliest change date
+	 * @param latest (java.util.Date) latest change date
+	 * @param focus (String) name of the entity under focus
+	 * @param date_vec (Vector<java.util.Date>) List of all dates to be displayed in the time line
+	 */
+	@SuppressWarnings("deprecation")
 	public TimelineData(Map<String, List<IChange>> data, Date earliest, Date latest, String focus, 
 						Vector<Date> date_vec) {
 		this(data, earliest, latest, focus);
@@ -65,23 +90,36 @@ public class TimelineData {
 		}
 	}
 	
+	/**
+	 * Get all the changes for a certain entity
+	 * @param key (String) unique name of the entity
+	 * @return (List<IChange>) All changes for entity 'key'
+	 */
 	public List<IChange> getChangesForKey(String key) {
 		return this.mec.get(key);
 	}
 	
+	/**
+	 * Get the Entity Change Map 
+	 * @return (Map<String, List<IChange>>) The Entity Change Map for the current time line
+	 */
 	public Map<String, List<IChange>> getMEC() {
 		return this.mec;
 	}
 	
-	private Date getNextDate(Date current) {
-		return DateUtil.getInstance().getNext(current);
-	}
-	
+	/**
+	 * Get the next date based on the current change date
+	 * @return (java.util.Date) next change date
+	 */
 	public Date getNextDate() {
 		this.currentChangeDate = DateUtil.getInstance().getNext(this.currentChangeDate);
 		return this.currentChangeDate;
 	}
 	
+	/**
+	 * Check whether the currentChangeDate does not equal the last change date
+	 * @return (Boolean) true if a next date can be found given the specified conditions
+	 */
 	public boolean hasNextDate() {
 		if (this.currentChangeDate == null) {
 			return false;
@@ -93,6 +131,10 @@ public class TimelineData {
 		return true;
 	}
 	
+	/**
+	 * Get the number of days between the earliest and the latest recorded change
+	 * @return (int) the number of days
+	 */
 	public int getDaysBetween() {
 		if (this.earliestChangeDate == null || this.latestChangeDate == null) {
 			return 0;
@@ -101,26 +143,54 @@ public class TimelineData {
 		return DateUtil.getInstance().daysBetween(this.earliestChangeDate, this.latestChangeDate);
 	}
 	
+	/**
+	 * Get the total number of entities for this timeline
+	 * @return (int) total number of entities
+	 */
 	public int getNumberOfEntities() {
 		return this.mec.entrySet().size();
 	}
 	
+	/**
+	 * Get the unique name of an entity given its index for the list of entity names
+	 * @param index (int) list index
+	 * @return (String) unique name of entity
+	 */
 	public String getEntityIDForIndex(int index) {
 		return this.entity_names.get(index);
 	}
 	
+	/**
+	 * Get the unique name of the focus entity for this timeline
+	 * @return (String) unique name of entity
+	 */
 	public String getEntityOfFocus() {
 		return this.focusEntity;
 	}
 	
+	/**
+	 * Add a point to this timeline
+	 * @param data (TimelinePoint) the point to add
+	 */
 	public void addTimelinePoint(TimelinePoint data) {
 		this.point_vector.add(data);
 	}
 	
+	/**
+	 * Get the labels of all change dates
+	 * @return (Vector<String>) Change date labels
+	 */
 	public Vector<String> getChangeDateLabels() {
 		return this.change_dates;
 	}
 	
+	/**
+	 * Get the change for a given entity name and change date
+	 * @param entID (String) unique name of entity
+	 * @param cDate (String) string representation of the change date
+	 * @return (IChange) the corresponding change
+	 */
+	@SuppressWarnings("deprecation")
 	public IChange getChangeForKey(String entID, String cDate) {
 		List<IChange> changes = this.mec.get(entID);
 		if (changes == null) {
@@ -138,6 +208,12 @@ public class TimelineData {
 		return null;
 	}
 	
+	/**
+	 * Get all the dependencies of a change for a certain entity and change date
+	 * @param entID (String) unique name of entity
+	 * @param cDate (String) string representation of the change date
+	 * @return (Vector<IChange>) All dependencies of the given change
+	 */
 	public Vector<IChange> getDependenciesForKey(String entID, String cDate) {
 		IChange change = this.getChangeForKey(entID, cDate);
 		if (change == null) {
@@ -154,6 +230,12 @@ public class TimelineData {
 		return dep;		
 	}
 	
+	/**
+	 * Get all dependent changes of a change for a certain entity and change date
+	 * @param entID (String) unique name of entity
+	 * @param cDate (String) string representation of the change date
+	 * @return (Vector<IChange>) All dependents of the given change
+	 */
 	public Vector<IChange> getDependentsForKey(String entID, String cDate) {
 		IChange change = this.getChangeForKey(entID, cDate);
 		if (change == null) {
@@ -170,6 +252,11 @@ public class TimelineData {
 		return dep;	
 	}
 	
+	/**
+	 * Get the point on the timeline for a certain change
+	 * @param change (IChange) the change under consideration
+	 * @return (org.eclipse.swt.graphics.Point) The point on the view
+	 */
 	public Point getPointForChange(IChange change) {
 		Date cDate = change.getTimeStamp();
 		
@@ -188,6 +275,13 @@ public class TimelineData {
 		return null;
 	}
 	
+	/**
+	 * Check whether a change occurred for a certain entity on a certain date
+	 * @param entID (String) unique name of entity
+	 * @param sDate (String) string representation of the change date
+	 * @return (boolean) true if the change exists
+	 */
+	@SuppressWarnings("deprecation")
 	public boolean changeOccured(String entID, String sDate) {
 		for (IChange change : this.mec.get(entID)) {
 			Date date = change.getTimeStamp();
@@ -201,29 +295,24 @@ public class TimelineData {
 		return false;
 	}
 	
-	public void printTimelinePoints() {
-		for (int i = 0; i < this.point_vector.size(); ++i) {
-			System.out.println(this.point_vector.get(i).toString());
-		}
-		System.out.println("DATA STORE CONTAINS " + this.point_vector.size() + " TIMELINE POINTS");
-	}
-	
+	/**
+	 * Get all the points of the timeline
+	 * @return (Vector<TimelinePoint>) time line points
+	 */
 	public Vector<TimelinePoint> getTimelinePoints() {
 		return this.point_vector;
 	}
 	
+	/**
+	 * Get the location on the time line view of all dependents of a certain change
+	 * @param entID (String) unique entity name
+	 * @param cDate (String) string representation of the change date
+	 * @return (Vector<org.eclipse.swt.graphics.Point>) All points on the time line view for the given change
+	 */
+	@SuppressWarnings({ "deprecation" })
 	public Vector<Point> getDependentsLocations(String entID, String cDate) {
 		Vector<Point> dep_loc = new Vector<Point>();
-		
-		/*for (DependencyData data : this.dependency_vector) {
-			String source = ((FamixEntity) ((AtomicChange) data.getSource()).getChangeSubject()).getUniqueName();
-			Date d = data.getSource().getTimeStamp();
-			String sDate = d.getDate() + "-" + (d.getMonth() +1) 
-					+ "-" + (d.getYear()+1900);;
-			if (source.equals(entID) && cDate.equals(sDate)) {
-				dep_loc.add(this.getPointForChange(data.getTarget()));
-			}
-		}*/
+
 		IChange change = null;
 		for (IChange c : this.mec.get(entID)) {
 			Date d = c.getTimeStamp();
@@ -250,17 +339,15 @@ public class TimelineData {
 		return dep_loc;
 	}
 	
+	/**
+	 * Get the location on the time line view of all dependencies of a certain change
+	 * @param entID (String) unique entity name
+	 * @param cDate (String) string representation of the change date
+	 * @return (Vector<org.eclipse.swt.graphics.Point>) All points on the time line view for the given change
+	 */
+	@SuppressWarnings("deprecation")
 	public Vector<Point> getDependenciesLocations(String entID, String cDate) {
 		Vector<Point> dep_loc = new Vector<Point>();
-		/*for (DependencyData data : this.dependency_vector) {
-			String target = ((FamixEntity) ((AtomicChange) data.getTarget()).getChangeSubject()).getUniqueName();
-			Date d = data.getTarget().getTimeStamp();
-			String sDate = d.getDate() + "-" + (d.getMonth() +1) 
-					+ "-" + (d.getYear()+1900);;
-			if (target.equals(entID) && cDate.equals(sDate)) {
-				dep_loc.add(this.getPointForChange(data.getSource()));
-			}
-		}*/
 		IChange change = null;
 		for (IChange c : this.mec.get(entID)) {
 			Date d = c.getTimeStamp();
@@ -287,6 +374,12 @@ public class TimelineData {
 		return dep_loc;
 	}
 	
+	/**
+	 * Get the location of the focus entity
+	 * @param entID (String) unique name of entity
+	 * @param cDate (String) string representation of the change date
+	 * @return (org.eclipse.swt.graphics.Point) location on the time line for the given change (can be null)
+	 */
 	public Point getPointForFocusEntity(String entID, String cDate) {
 		
 		for (TimelinePoint tlp : this.point_vector) {

@@ -1,15 +1,17 @@
+/***************************************************
+ * Copyright (c) 2014 Nicolas Demarbaix
+ * 
+ * Contributors: 
+ * 		Nicolas Demarbaix - Initial Implementation
+ ***************************************************/
 package be.ac.ua.ansymo.cheopsj.visualizer.views.summary.widgets;
 
-import java.io.File;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
-import org.eclipse.jface.dialogs.DialogSettings;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridLayout;
@@ -28,11 +30,14 @@ import org.jfree.chart.axis.DateTickUnitType;
 import be.ac.ua.ansymo.cheopsj.visualizer.data.DataStore;
 import be.ac.ua.ansymo.cheopsj.visualizer.data.ViewPreferences;
 
+/**
+ * Settings dialog class for changing the Change Summary View Plot settings
+ * @author nicolasdemarbaix
+ *
+ */
 public class PlotSettings extends TitleAreaDialog {
 	// Colors
 	private static Color COLOR_WHITE = Display.getCurrent().getSystemColor(SWT.COLOR_WHITE);
-	private static Color COLOR_GRAY = Display.getCurrent().getSystemColor(SWT.COLOR_GRAY);
-	
 	
 	// Widgets
 	private DateTime beginDate = null;
@@ -80,6 +85,10 @@ public class PlotSettings extends TitleAreaDialog {
 	private boolean showAdd_store = false;
 	private boolean showDel_store = false;
 	
+	/**
+	 * Public Constructor
+	 * @param parentShell (Shell) the parent component
+	 */
 	public PlotSettings(Shell parentShell) {
 		super(parentShell);
 	}
@@ -94,6 +103,9 @@ public class PlotSettings extends TitleAreaDialog {
 		setMessage("Please select the appropriate settings", IMessageProvider.INFORMATION);
 	}
 	
+	/**
+	 * Load the previously set preferences if they exist
+	 */
 	private void loadPreferences() {
 		if (this.preferences == null)
 			return;
@@ -126,6 +138,9 @@ public class PlotSettings extends TitleAreaDialog {
 		showDel_store = (boolean) this.preferences.get("show_del");
 	}
 	
+	/**
+	 * Save the currently set preferences when the dialog closes
+	 */
 	private void savePreferences() {
 		this.preferences = new ViewPreferences();
 		
@@ -176,6 +191,10 @@ public class PlotSettings extends TitleAreaDialog {
 		return area;
 	}
 	
+	/**
+	 * Create the date related widgets
+	 * @param parent (Composite) parent component
+	 */
 	private void createDate(Composite parent) {
 		Label begin = new Label(parent, SWT.NONE);
 		begin.setText("Begin Date:");
@@ -202,6 +221,10 @@ public class PlotSettings extends TitleAreaDialog {
 		
 	}
 	
+	/**
+	 * Create the range axis related widgets
+	 * @param parent (Composite) parent component
+	 */
 	private void createRange(Composite parent) {
 		Label range = new Label(parent, SWT.NONE);
 		range.setText("Range:");
@@ -221,6 +244,10 @@ public class PlotSettings extends TitleAreaDialog {
 		this.rangeEnd.setLayoutData(new GridData(GridData.FILL, GridData.FILL, false, false));
 	}
 	
+	/**
+	 * Create plot axis detail widgets
+	 * @param parent (Composite) parent component
+	 */
 	private void createPlotDetail(Composite parent) {
 		Label domain = new Label(parent, SWT.NONE);
 		domain.setText("Domain tick step: ");
@@ -239,6 +266,11 @@ public class PlotSettings extends TitleAreaDialog {
 		this.rangeDetail.setLayoutData(new GridData(GridData.FILL, GridData.FILL, false, false, 2, 1));
 	}
 	
+	/**
+	 * Get the index of the combobox domain detail widget based on its description
+	 * @param detail (String) description of the detail
+	 * @return (int) index of the detail in the combobox
+	 */
 	private int getDomainDetailIndex(String detail) {
 		if (detail.equals("Month")) {
 			return 0;
@@ -253,6 +285,11 @@ public class PlotSettings extends TitleAreaDialog {
 		}
 	}
 	
+	/**
+	 * Get the index of the combobox range detail widget based on its value
+	 * @param val (int) value of the detail
+	 * @return (int) index of the detail in the combobox
+	 */
 	private int getRangeDetailIndex(int val) {
 		switch (val) {
 		case 1:
@@ -273,6 +310,10 @@ public class PlotSettings extends TitleAreaDialog {
 		
 	}
 	
+	/**
+	 * Create the check widgets
+	 * @param parent (Composite) parent component
+	 */
 	private void createChecks(Composite parent) {
 		Label all = new Label(parent, SWT.NONE);
 		all.setText("Show the plot for all changes");
@@ -308,6 +349,10 @@ public class PlotSettings extends TitleAreaDialog {
 		super.okPressed();
 	}
 	
+	/**
+	 * Get the string value of the current selected domain detail
+	 * @return (String) domain detail
+	 */
 	private String getDomainDetailString() {
 		if (this.domainDetail_store == DateTickUnitType.MONTH) {
 			return "Month";
@@ -325,6 +370,9 @@ public class PlotSettings extends TitleAreaDialog {
 		return "Month";
 	}
 	
+	/**
+	 * Save the input to be retreived when the dialog closes
+	 */
 	private void saveInput() {
 		// Save the date window information
 		Calendar cal = new GregorianCalendar();
@@ -355,6 +403,11 @@ public class PlotSettings extends TitleAreaDialog {
 		this.showDel_store = this.showDel.getSelection();
 	}
 	
+	/**
+	 * Parse the range based on the contents of the fill in fields
+	 * @param start (String) range start
+	 * @param end (String) range end
+	 */
 	private void parseRange(String start, String end) {
 		try {
 			this.rangeStart_store = Integer.valueOf(start);
@@ -370,6 +423,10 @@ public class PlotSettings extends TitleAreaDialog {
 		}
 	}
 	
+	/**
+	 * Parse the domain detail to retreive the correct DateTickUnitType
+	 * @param detail (String) the selected domain detail
+	 */
 	private void parseDomainDetail(String detail) {
 		if (detail.equals("Month")) {
 			this.domainDetail_store = DateTickUnitType.MONTH;
@@ -389,6 +446,10 @@ public class PlotSettings extends TitleAreaDialog {
 		}
 	}
 	
+	/**
+	 * Parse the range detail to retreive the correct value
+	 * @param detail (String) the selected range detail
+	 */
 	private void parseRangeDetail(String detail) {
 		try {
 			this.rangeDetail_store = Integer.valueOf(detail);
@@ -400,42 +461,72 @@ public class PlotSettings extends TitleAreaDialog {
 	/*
 	 * GETTER METHODS
 	 */
+	/**
+	 * @return (java.util.Date) begin date of the plot
+	 */
 	public Date getBeginDate() {
 		return this.beginDate_store;
 	}
 	
+	/**
+	 * @return (java.util.Date) end date of the plot
+	 */
 	public Date getEndDate() {
 		return this.endDate_store;
 	}
 	
+	/**
+	 * @return (int) lower range axis value
+	 */
 	public int getRangeStart() {
 		return this.rangeStart_store;
 	}
 	
+	/**
+	 * @return (int) upper range axis value
+	 */
 	public int getRangeEnd() {
 		return this.rangeEnd_store;
 	}
 	
+	/**
+	 * @return (DateTickUnitType) domain detail value
+	 */
 	public DateTickUnitType getDomainDetail() {
 		return this.domainDetail_store;
 	}
 	
+	/**
+	 * @return (int) multiple of the tick type
+	 */
 	public int getDomainDetailMultiple() {
 		return this.domainDetail_multiple;
 	}
 	
+	/**
+	 * @return (int) get the detail of the range axis
+	 */
 	public int getRangeDetail() {
 		return this.rangeDetail_store;
 	}
 	
+	/**
+	 * @return (boolean) show the total changes plot
+	 */
 	public boolean getShowAllChecked() {
 		return this.showAll_store;
 	}
 	
+	/**
+	 * @return (boolean) show the addition changes plot
+	 */
 	public boolean getShowAddChecked() {
 		return this.showAdd_store;
 	}
 	
+	/**
+	 * @return (boolean) show the removal changes plot
+	 */
 	public boolean getShowDelChecked() {
 		return this.showDel_store;
 	}

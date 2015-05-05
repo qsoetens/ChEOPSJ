@@ -1,3 +1,9 @@
+/***************************************************
+ * Copyright (c) 2014 Nicolas Demarbaix
+ * 
+ * Contributors: 
+ * 		Nicolas Demarbaix - Initial Implementation
+ ***************************************************/
 package be.ac.ua.ansymo.cheopsj.visualizer.views.graph;
 
 import java.util.ArrayList;
@@ -7,17 +13,17 @@ import org.eclipse.zest.core.widgets.GraphNode;
 import org.eclipse.zest.layouts.InvalidLayoutConfiguration;
 import org.eclipse.zest.layouts.algorithms.AbstractLayoutAlgorithm;
 import org.eclipse.zest.layouts.algorithms.RadialLayoutAlgorithm;
-import org.eclipse.zest.layouts.algorithms.TreeLayoutAlgorithm;
 import org.eclipse.zest.layouts.dataStructures.DisplayIndependentRectangle;
 import org.eclipse.zest.layouts.dataStructures.InternalNode;
 import org.eclipse.zest.layouts.dataStructures.InternalRelationship;
 
-import be.ac.ua.ansymo.cheopsj.model.changes.Add;
-import be.ac.ua.ansymo.cheopsj.model.changes.AtomicChange;
-import be.ac.ua.ansymo.cheopsj.model.changes.Remove;
 import be.ac.ua.ansymo.cheopsj.model.famix.FamixObject;
-import be.ac.ua.ansymo.cheopsj.model.famix.FamixPackage;
 
+/**
+ * Layout algorithm for the Change Graph View
+ * @author nicolasdemarbaix
+ *
+ */
 public class ChangeGraphLayoutAlgorithm extends AbstractLayoutAlgorithm {
 
 	private double xBound;
@@ -30,10 +36,15 @@ public class ChangeGraphLayoutAlgorithm extends AbstractLayoutAlgorithm {
 	private InternalNode[] famixObjectsArray;
 	private InternalRelationship[] famixRelationshipsArray;
 	
+	/**
+	 * Public constructor
+	 * @param styles (int) Layout styles
+	 */
 	public ChangeGraphLayoutAlgorithm(int styles) {
 		super(styles);
 		this.style = styles;
 	}
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -62,96 +73,6 @@ public class ChangeGraphLayoutAlgorithm extends AbstractLayoutAlgorithm {
 			}
 			defaultFitWithinBounds(entitiesToLayout, layoutBound);
 		}
-	}
-
-	/**
-	 * @param entitiesToLayout
-	 * @param relationshipsToConsider
-	 */
-	private void buildChangeFamixChanges(InternalNode[] entitiesToLayout, InternalRelationship[] relationshipsToConsider) {
-		for (InternalNode famixNode : famixObjectsArray) {
-			InternalNode[] changesOfFamixObject = findChangesOfThisFamixObject(relationshipsToConsider, famixNode);
-			/*
-			 * InternalRelationship[] relationsOfFamixObject =
-			 * findRelationsOfThisFamixObject( relationshipsToConsider,
-			 * famixNode, changesOfFamixObject);
-			 */
-
-			/*
-			 * TreeLayoutAlgorithm layout = new TreeLayoutAlgorithm(
-			 * this.styles);
-			 */
-
-			for (InternalNode node : changesOfFamixObject) {
-				if (((GraphNode) node.getLayoutEntity().getGraphData()).getData() instanceof Add) {
-					node.setLocationInLayout(famixNode.getXInLayout() + famixNode.getWidthInLayout() - node.getWidthInLayout() / 2,
-							famixNode.getYInLayout() + famixNode.getHeightInLayout() * 2);
-				}
-				if (((GraphNode) node.getLayoutEntity().getGraphData()).getData() instanceof Remove) {
-					node.setLocationInLayout(famixNode.getXInLayout() - node.getWidthInLayout() / 2,
-							famixNode.getYInLayout() + famixNode.getHeightInLayout() * 2);
-				}
-			}
-
-			/*
-			 * double xBound = famixNode.getXInLayout() + 30; double yBound =
-			 * famixNode.getYInLayout() + 30; double hBound =
-			 * famixNode.getHeightInLayout() + 40; double wBound =
-			 * famixNode.getWidthInLayout() + 40;
-			 */
-		}
-	}
-
-	/**
-	 * @param relationshipsToConsider
-	 * @param famixNode
-	 * @param changesOfFamixObject
-	 * @return
-	 */
-	/*
-	 * private InternalRelationship[] findRelationsOfThisFamixObject(
-	 * InternalRelationship[] relationshipsToConsider, InternalNode famixNode,
-	 * InternalNode[] changesOfFamixObject) {
-	 * 
-	 * Collection<InternalRelationship> relsToConsider = new
-	 * ArrayList<InternalRelationship>();
-	 * 
-	 * for (InternalRelationship relationship : relationshipsToConsider) {
-	 * InternalNode sourceNode = relationship.getSource(); InternalNode destNode
-	 * = relationship.getDestination();
-	 * 
-	 * if (destNode.equals(famixNode) &&
-	 * sourceNode.getLayoutEntity().getGraphData() instanceof GraphNode) {
-	 * GraphNode sNode = (GraphNode) sourceNode.getLayoutEntity()
-	 * .getGraphData(); if (sNode.getData() instanceof AtomicChange) {
-	 * relsToConsider.add(relationship); } } }
-	 * 
-	 * return convertToArrayOfRelationships(relsToConsider); }
-	 */
-
-	/**
-	 * @param entitiesToLayout
-	 * @param famixNode
-	 * @return
-	 */
-	private InternalNode[] findChangesOfThisFamixObject(InternalRelationship[] relationshipsToConsider, InternalNode famixNode) {
-
-		Collection<InternalNode> nodesToConsider = new ArrayList<InternalNode>();
-		nodesToConsider.add(famixNode);
-
-		for (InternalRelationship relationship : relationshipsToConsider) {
-			InternalNode sourceNode = relationship.getSource();
-			InternalNode destNode = relationship.getDestination();
-
-			if (destNode.equals(famixNode) && sourceNode.getLayoutEntity().getGraphData() instanceof GraphNode) {
-				GraphNode sNode = (GraphNode) sourceNode.getLayoutEntity().getGraphData();
-				if (sNode.getData() instanceof AtomicChange) {
-					nodesToConsider.add(sourceNode);
-				}
-			}
-		}
-
-		return convertToArrayOfNodes(nodesToConsider);
 	}
 
 	/**

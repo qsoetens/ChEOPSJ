@@ -1,29 +1,24 @@
+/***************************************************
+ * Copyright (c) 2014 Nicolas Demarbaix
+ * 
+ * Contributors: 
+ * 		Nicolas Demarbaix - Initial Implementation
+ ***************************************************/
 package be.ac.ua.ansymo.cheopsj.visualizer.views.timeline.views;
 
-import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.ScrolledComposite;
-import org.eclipse.swt.events.PaintEvent;
-import org.eclipse.swt.events.PaintListener;
-import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Layout;
-import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.ScrollBar;
-import org.eclipse.swt.widgets.Shell;
-import org.jfree.ui.VerticalAlignment;
-
 import be.ac.ua.ansymo.cheopsj.visualizer.data.DataStore;
 import be.ac.ua.ansymo.cheopsj.visualizer.data.TimelineData;
 
+/**
+ * Composite class for the timeline
+ * @author nicolasdemarbaix
+ *
+ */
 public class TimelineComposite extends Composite {
 
 	private Timeline timeline = null;
@@ -36,6 +31,11 @@ public class TimelineComposite extends Composite {
 	private int width = 0;
 	private int height = 0;
 	
+	/**
+	 * Public constructor
+	 * @param parent (Composite) parent component
+	 * @param entityName (String) focus entity unique name
+	 */
 	public TimelineComposite(Composite parent, String entityName) {
 		super(parent, SWT.NONE);
 		this.setLayout(setupLayout());
@@ -49,6 +49,10 @@ public class TimelineComposite extends Composite {
 		this.initialize();
 	}
 	
+	/**
+	 * Setup the layout for the composite
+	 * @return (GridLayout) composite layout
+	 */
 	private GridLayout setupLayout() {
 		GridLayout layout = new GridLayout();
 		layout.horizontalSpacing = 0;
@@ -64,6 +68,9 @@ public class TimelineComposite extends Composite {
 		return layout;
 	}
 	
+	/**
+	 * Initialize the composite
+	 */
 	private void initialize() {
 		
 		int domainSize = this.data_store.getChangeDateLabels().size();
@@ -115,20 +122,36 @@ public class TimelineComposite extends Composite {
 		this.height = 100 + h;
 	}
 	
+	/**
+	 * Scroll all views vertically
+	 * @param step_size (int) amount to scroll
+	 */
 	protected void scrollVertical(int step_size) {
 		this.timeline.scrollVertical(step_size);
 		this.rangeView.scrollVertical(step_size);
 	}
 	
+	/**
+	 * Scroll all views horizontally
+	 * @param step_size (int) amount to scroll
+	 */
 	protected void scrollHorizontal(int step_size) {
 		this.timeline.scrollHorizontal(step_size);
 		this.domainView.scrollHorizontal(step_size);
 	}
 	
+	/**
+	 * Get width of timeline composite
+	 * @return (int) width
+	 */
 	public int getWidth() {
 		return this.width;
 	}
 	
+	/**
+	 * Get height of timeline composite
+	 * @return (int) height
+	 */
 	public int getHeight() {
 		return this.height;
 	}

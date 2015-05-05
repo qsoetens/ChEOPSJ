@@ -1,3 +1,9 @@
+/***************************************************
+ * Copyright (c) 2014 Nicolas Demarbaix
+ * 
+ * Contributors: 
+ * 		Nicolas Demarbaix - Initial Implementation
+ ***************************************************/
 package be.ac.ua.ansymo.cheopsj.visualizer.views.table;
 
 import org.eclipse.jface.viewers.ITableLabelProvider;
@@ -8,6 +14,11 @@ import be.ac.ua.ansymo.cheopsj.model.changes.AtomicChange;
 import be.ac.ua.ansymo.cheopsj.model.changes.IChange;
 import be.ac.ua.ansymo.cheopsj.model.famix.FamixEntity;
 
+/**
+ * Label provider for the Change Table view
+ * @author nicolasdemarbaix
+ *
+ */
 public class ChangeTableLabelProvider extends LabelProvider implements ITableLabelProvider {
 
 	@Override

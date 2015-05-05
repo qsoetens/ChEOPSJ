@@ -1,3 +1,9 @@
+/***************************************************
+ * Copyright (c) 2014 Nicolas Demarbaix
+ * 
+ * Contributors: 
+ * 		Nicolas Demarbaix - Initial Implementation
+ ***************************************************/
 package be.ac.ua.ansymo.cheopsj.visualizer.views.widgets;
 
 import java.util.Date;
@@ -9,19 +15,21 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.TabFolder;
-import org.eclipse.swt.widgets.TabItem;
 
 import be.ac.ua.ansymo.cheopsj.model.changes.AtomicChange;
 import be.ac.ua.ansymo.cheopsj.model.changes.IChange;
 
+/**
+ * Dialog to display the dependencies of a change
+ * @author nicolasdemarbaix
+ *
+ */
 public class DependencyDialog extends TitleAreaDialog {
 
 	private String entID = "";
@@ -34,12 +42,25 @@ public class DependencyDialog extends TitleAreaDialog {
 	Vector<IChange> dependencies = null;
 	Vector<IChange> dependents = null;
 	
+	/**
+	 * Public constructor
+	 * @param parentShell (Shell) parent component
+	 */
 	public DependencyDialog(Shell parentShell) {
 		super(parentShell);
 		dependencies = new Vector<IChange>();
 		dependents = new Vector<IChange>();		
 	}
 	
+	/**
+	 * Set the data for the focus entity
+	 * @param ID (String) unique name of entity
+	 * @param date (String) string representation of the change date
+	 * @param cType (String) change type
+	 * @param fType (String) famix type
+	 * @param user (String) user that change the entity
+	 * @param commit (String) commit message
+	 */
 	public void setEntityData(String ID, String date, String cType, String fType, String user, String commit) {
 		this.entID = ID;
 		this.cDate = date;
@@ -49,6 +70,11 @@ public class DependencyDialog extends TitleAreaDialog {
 		this.commitMessage = commit;
 	}
 	
+	/**
+	 * Set the relation data
+	 * @param dept_vec (Vector<IChange>) list of dependents for the focus change
+	 * @param depe_vec (Vector<IChange>) list of dependencies for the focus change
+	 */
 	public void setRelationData(Vector<IChange> dept_vec, Vector<IChange> depe_vec) {
 		this.dependencies = depe_vec;
 		this.dependents = dept_vec;
@@ -65,6 +91,10 @@ public class DependencyDialog extends TitleAreaDialog {
 		return body;
 	}
 	
+	/**
+	 * Setup the layout of the dialog
+	 * @return (GridLayout) dialog layout
+	 */
 	private GridLayout setupLayout() {
 		GridLayout layout = new GridLayout();
 		layout.numColumns = 1;
@@ -76,6 +106,10 @@ public class DependencyDialog extends TitleAreaDialog {
 		return layout;
 	}
 	
+	/**
+	 * Setup the dialog itself
+	 * @param parent (Composite) parent component
+	 */
 	private void setupBody(Composite parent) {
 		Label info = new Label(parent, SWT.NONE);
 		info.setText("Source change information: \n" 
@@ -116,6 +150,10 @@ public class DependencyDialog extends TitleAreaDialog {
 		viewer2.getTable().setSize(viewer.getTable().getSize().x, 100);
 	}
 	
+	/**
+	 * Create a table for the viewer
+	 * @param viewer (TableViewer) the given viewer
+	 */
 	private void createTable(TableViewer viewer) {
 		TableViewerColumn changeCol = new TableViewerColumn(viewer, SWT.NONE);
 		changeCol.getColumn().setText("Change type");
@@ -161,6 +199,7 @@ public class DependencyDialog extends TitleAreaDialog {
 		dateCol.getColumn().setText("Change date");
 		dateCol.getColumn().setWidth(100);
 		dateCol.setLabelProvider(new ColumnLabelProvider() {
+			@SuppressWarnings("deprecation")
 			@Override
 			public String getText(Object element) {
 				IChange change = (IChange)element;

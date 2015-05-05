@@ -1,3 +1,9 @@
+/***************************************************
+ * Copyright (c) 2014 Nicolas Demarbaix
+ * 
+ * Contributors: 
+ * 		Nicolas Demarbaix - Initial Implementation
+ ***************************************************/
 package be.ac.ua.ansymo.cheopsj.visualizer.views.table;
 
 import java.util.Comparator;
@@ -7,10 +13,6 @@ import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.KeyAdapter;
-import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.events.MenuDetectEvent;
-import org.eclipse.swt.events.MenuDetectListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridLayout;
@@ -35,7 +37,12 @@ import be.ac.ua.ansymo.cheopsj.visualizer.views.table.filters.ChangeTableNameFil
 import be.ac.ua.ansymo.cheopsj.visualizer.views.table.filters.ChangeTableTypeFilter;
 import be.ac.ua.ansymo.cheopsj.visualizer.views.table.filters.ChangeTableUserFilter;
 import be.ac.ua.ansymo.cheopsj.visualizer.views.table.widgets.ChangeTableSettings;
-// TODO put "settings" in a settings dialog. Leave search present
+
+/**
+ * Change Table view
+ * @author nicolasdemarbaix
+ *
+ */
 public class ChangeTable extends ViewPart {
 	public static final String ID = "be.ac.ua.ansymo.cheopsj.visualizer.views.table.ChangeTable";	
 	
@@ -46,6 +53,7 @@ public class ChangeTable extends ViewPart {
 	private TableViewerColumn famixTypeColumn = null;
 	private TableViewerColumn changeDateColumn = null;
 	private TableViewerColumn userColumn = null;
+	@SuppressWarnings("unused")
 	private TableViewerColumn intentColumn = null;
 	
 	private ChangeTableSorter sorter = null;
@@ -62,6 +70,9 @@ public class ChangeTable extends ViewPart {
 	private Label summaryLabel = null;
 	private Text searchText = null;
 	
+	/**
+	 * Public Constructor
+	 */
 	public ChangeTable() {
 		this.contentProvider = new ChangeTableContentProvider(this);
 		this.labelProvider = new ChangeTableLabelProvider();
@@ -141,6 +152,10 @@ public class ChangeTable extends ViewPart {
 		this.viewer.setFilters(new ViewerFilter [] {this.filter_date, this.filter_name, this.filter_type, this.filter_user});
 	}
 	
+	/**
+	 * Create the table viewer for the Change Table view
+	 * @param parent (Composite) parent component
+	 */
 	private void createViewer(Composite parent) {
 		viewer = new TableViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.BORDER);
 		createColumns(parent, viewer);
@@ -166,10 +181,19 @@ public class ChangeTable extends ViewPart {
 		createTableSorter();
 	}
 	
+	/**
+	 * Get the viewer 
+	 * @return (TableViewer) viewer
+	 */
 	public TableViewer getViewer() {
 		return this.viewer;
 	}
 	
+	/**
+	 * Create the columns of the table
+	 * @param parent (Composite) parent component
+	 * @param viewer (TableViewer) viewer component
+	 */
 	private void createColumns(final Composite parent, final TableViewer viewer) {
 		String [] headers = {"Change Type", "Name", "Type", "Date", "User", "Intent"};
 		int [] bounds = {100, 100, 100, 100, 100, 100};
@@ -187,6 +211,13 @@ public class ChangeTable extends ViewPart {
 		intentColumn = createTableViewerColumn(headers[5], bounds[5], 0);
 	}
 	
+	/**
+	 * Create a column for the tableviewer
+	 * @param title (String) header label
+	 * @param bound (int) the preferred width of the column
+	 * @param colNumber (int) column number
+	 * @return
+	 */
 	private TableViewerColumn createTableViewerColumn(String title, int bound, final int colNumber) {
 		final TableViewerColumn viewerColumn = new TableViewerColumn(viewer, SWT.NONE);
 		final TableColumn column = viewerColumn.getColumn();
@@ -197,6 +228,9 @@ public class ChangeTable extends ViewPart {
 		return viewerColumn;
 	}
 	
+	/**
+	 * Create the sorter for the table
+	 */
 	@SuppressWarnings("unchecked")
 	private void createTableSorter() {
 		Comparator<IChange> changeTypeComparator = new Comparator<IChange>() {
@@ -244,11 +278,17 @@ public class ChangeTable extends ViewPart {
 		viewer.getControl().setFocus();
 	}
 	
+	/**
+	 * Refresh the tableviewer
+	 */
 	public void refresh() {
 		DataStore.getInstance().updateUserNames();
 		viewer.refresh();
 	}
 	
+	/**
+	 * Open the filter settings dialog and update the view
+	 */
 	private void openFilterSettings() {
 		if (this.filter_settings == null) {
 			this.filter_settings = new ChangeTableSettings(new Shell(Display.getCurrent()));
@@ -274,10 +314,6 @@ public class ChangeTable extends ViewPart {
 			
 			viewer.refresh();
 			boolean canUseSummary = false;
-			//Date first_change_date = null;
-			//Date last_change_date = null;
-			//boolean canUseSummary = (ftext.equals("All")) && (ctext.equals("All")) && (filter_settings.getDateFrom().before(first_change_date))
-			//							&& (filter_settings.getDateTo().after(last_change_date)) && (filter_settings.getUserText().equals(""));
 			if (canUseSummary) {
 				summaryLabel.setText(this.contentProvider.getChangeSummary());
 			} else {
@@ -288,6 +324,9 @@ public class ChangeTable extends ViewPart {
 		}
 	}
 	
+	/**
+	 * Update the summary label
+	 */
 	private void updateSummaryLabel() {
 		int changes = 0;
 		int additions = 0;

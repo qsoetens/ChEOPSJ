@@ -1,3 +1,9 @@
+/***************************************************
+ * Copyright (c) 2014 Nicolas Demarbaix
+ * 
+ * Contributors: 
+ * 		Nicolas Demarbaix - Initial Implementation
+ ***************************************************/
 package be.ac.ua.ansymo.cheopsj.visualizer.handlers;
 
 import org.eclipse.core.commands.AbstractHandler;
@@ -8,9 +14,13 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.handlers.HandlerUtil;
 
-import be.ac.ua.ansymo.cheopsj.visualizer.views.summary.ChangeSummary;
 import be.ac.ua.ansymo.cheopsj.visualizer.views.table.ChangeTable;
 
+/**
+ * Handler for openingen the change table
+ * @author nicolasdemarbaix
+ *
+ */
 public class OpenChangeTableHandler extends AbstractHandler {
 
 	@Override

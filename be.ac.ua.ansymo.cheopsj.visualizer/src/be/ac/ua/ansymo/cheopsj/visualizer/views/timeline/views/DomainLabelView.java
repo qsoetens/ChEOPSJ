@@ -1,8 +1,10 @@
+/***************************************************
+ * Copyright (c) 2014 Nicolas Demarbaix
+ * 
+ * Contributors: 
+ * 		Nicolas Demarbaix - Initial Implementation
+ ***************************************************/
 package be.ac.ua.ansymo.cheopsj.visualizer.views.timeline.views;
-
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.PaintEvent;
@@ -19,19 +21,20 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.ScrollBar;
-import org.eclipse.swt.widgets.Shell;
-
 import be.ac.ua.ansymo.cheopsj.visualizer.data.TimelineData;
 import be.ac.ua.ansymo.cheopsj.visualizer.util.GraphicsUtils;
 
+/**
+ * The view for the domain labels of the timeline
+ * @author nicolasdemarbaix
+ *
+ */
 public class DomainLabelView extends Composite {
 	
 	private static Color COLOR_TICK = new Color(Display.getCurrent(), 0,0,0);
 	private static int TICK_SIZE = 4;
 	private static int DOMAIN_SPACING = 75;
 	private static int PADDING_DEFAULT = 25;
-	
-	private static SimpleDateFormat format = new SimpleDateFormat("dd-mm-yyyy");
 	
 	private Composite parent = null;
 	private Canvas canvas = null;
@@ -46,6 +49,13 @@ public class DomainLabelView extends Composite {
 	
 	private TimelineData data_store = null;
 
+	/**
+	 * Public constructor
+	 * @param parent (Composite) parent component
+	 * @param width (int) widht of the view
+	 * @param size (int) size of the data set
+	 * @param data (TimelineData) the dataset for the domain view
+	 */
 	public DomainLabelView(Composite parent, int width, int size, TimelineData data) {
 		super(parent, SWT.BORDER);
 		this.setLayout(new FillLayout());
@@ -64,6 +74,9 @@ public class DomainLabelView extends Composite {
 		initialize();
 	}
 	
+	/**
+	 * Initialize the view
+	 */
 	private void initialize() {
 		this.hBar = this.canvas.getHorizontalBar();
 		this.hBar.setVisible(false);
@@ -73,6 +86,9 @@ public class DomainLabelView extends Composite {
 		this.shouldRedrawImage = true;
 	}
 	
+	/**
+	 * Setup the listeners for the view
+	 */
 	private void setupListeners() {
 		this.canvas.addPaintListener(new PaintListener() {
 			
@@ -106,9 +122,12 @@ public class DomainLabelView extends Composite {
 		});
 	}
 	
+	/**
+	 * Paint the view
+	 * @param e (PaintEvent) the event that causes the paint method to fire
+	 */
 	private void paint(PaintEvent e) {
 		if (shouldRedrawImage) {
-			//this.domainlabel_image = new Image(Display.getCurrent(), this.canvas_size.x, this.canvas_size.y);
 			GC gc = new GC(domainlabel_image);
 			gc.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
 			gc.fillRectangle(gc.getClipping());
@@ -124,17 +143,6 @@ public class DomainLabelView extends Composite {
 				gc.setForeground(COLOR_TICK);
 				gc.drawLine(x0, y0, x1, y1);
 			}
-			
-			/*for (int i = 0; i < this.domain_size; ++i) {
-				Image label = GraphicsUtils.createRotatedText(i + "th Marker", 
-															  gc.getFont(), 
-															  new Color(Display.getCurrent(), 255,10,10), 
-															  gc.getBackground(), 
-															  SWT.UP);
-				gc.drawImage(label, 
-							 PADDING_DEFAULT + (i * DOMAIN_SPACING) + offset.x - label.getBounds().width/2, 
-							 2*TICK_SIZE);
-			}*/
 			for (int k = 0; k < this.data_store.getChangeDateLabels().size(); ++k) {
 				String date_string = this.data_store.getChangeDateLabels().get(k);
 				Image label = GraphicsUtils.createRotatedText(date_string, 
@@ -152,6 +160,10 @@ public class DomainLabelView extends Composite {
 		e.gc.drawImage(domainlabel_image, offset.x, offset.y);
 	}
 	
+	/**
+	 * Scroll the domainlabel view horizontally
+	 * @param selection (int) the amount to scroll
+	 */
 	public void scrollHorizontal(int selection) {
 		int destX = -selection - offset.x;
 		this.canvas.scroll(destX, 

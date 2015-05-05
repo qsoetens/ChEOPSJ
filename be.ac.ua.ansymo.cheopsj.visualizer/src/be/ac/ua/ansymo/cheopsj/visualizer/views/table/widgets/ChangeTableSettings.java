@@ -1,34 +1,33 @@
+/***************************************************
+ * Copyright (c) 2014 Nicolas Demarbaix
+ * 
+ * Contributors: 
+ * 		Nicolas Demarbaix - Initial Implementation
+ ***************************************************/
 package be.ac.ua.ansymo.cheopsj.visualizer.views.table.widgets;
 
 import java.util.Date;
-import java.util.Vector;
-
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.jface.dialogs.DialogSettings;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.DateTime;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Text;
-
 import be.ac.ua.ansymo.cheopsj.visualizer.data.DataStore;
 import be.ac.ua.ansymo.cheopsj.visualizer.data.ViewPreferences;
 import be.ac.ua.ansymo.cheopsj.visualizer.util.DateUtil;
 
+/**
+ * Change Table Settings dialog
+ * @author nicolasdemarbaix
+ *
+ */
 public class ChangeTableSettings extends TitleAreaDialog {
-
-	// COLORS
-	private static Color COLOR_WHITE = Display.getCurrent().getSystemColor(SWT.COLOR_WHITE);
-
 	// Settings
 	private ViewPreferences preferences = null;
 	
@@ -51,6 +50,10 @@ public class ChangeTableSettings extends TitleAreaDialog {
 	private String famix = "";
 	private String user = "";
 	
+	/**
+	 * Public constructor
+	 * @param parentShell (Shell) parent component
+	 */
 	public ChangeTableSettings(Shell parentShell) {
 		super(parentShell);
 	}
@@ -92,6 +95,10 @@ public class ChangeTableSettings extends TitleAreaDialog {
 		super.okPressed();
 	}
 	
+	/**
+	 * Create the date related widgets
+	 * @param parent (Composite) parent component
+	 */
 	@SuppressWarnings("deprecation")
 	private void createDate(Composite parent) {
 		dateFromLabel = new Label(parent, SWT.NONE);
@@ -128,6 +135,10 @@ public class ChangeTableSettings extends TitleAreaDialog {
 		}
 	}
 	
+	/**
+	 * Created selection related widgets
+	 * @param parent (Composite) parent component
+	 */
 	private void createCombo(Composite parent) {
 		changeLabel = new Label(parent, SWT.NONE);
 		changeLabel.setText("Change Type: ");
@@ -155,6 +166,10 @@ public class ChangeTableSettings extends TitleAreaDialog {
 		}
 	}
 	
+	/**
+	 * Create user settings related widgets
+	 * @param parent (Composite) parent component
+	 */
 	private void createUserText(Composite parent) {
 		userLabel = new Label(parent, SWT.NONE);
 		userLabel.setText("User:");
@@ -179,6 +194,9 @@ public class ChangeTableSettings extends TitleAreaDialog {
 		}
 	}
 	
+	/**
+	 * Save the dialog values for retreival after the dialog closes
+	 */
 	private void save() {
 		this.change = this.changeCombo.getText();
 		if (this.userText.getSelectionIndex() == 0) {
@@ -205,18 +223,33 @@ public class ChangeTableSettings extends TitleAreaDialog {
 	/*
 	 * GETTERS
 	 */
+	/**
+	 * @return (String) change type
+	 */
 	public String getChangeText() {
 		return this.change;
 	}
+	/**
+	 * @return (String) famix type
+	 */
 	public String getFamixText() {
 		return this.famix;
 	}
+	/**
+	 * @return (java.util.Date) start date
+	 */
 	public Date getDateFrom() {
 		return this.from;
 	}
+	/**
+	 * @return (java.util.Date) end date
+	 */
 	public Date getDateTo() {
 		return this.to;
 	}
+	/**
+	 * @return (String) user name
+	 */
 	public String getUserText() {
 		return this.user;
 	}

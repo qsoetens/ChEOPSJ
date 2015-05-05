@@ -1,9 +1,20 @@
+/***************************************************
+ * Copyright (c) 2014 Nicolas Demarbaix
+ * 
+ * Contributors: 
+ * 		Nicolas Demarbaix - Initial Implementation
+ ***************************************************/
 package be.ac.ua.ansymo.cheopsj.visualizer.views.timeline.views;
 
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Layout;
 
+/**
+ * Layout for the timelinecomposite
+ * @author nicolasdemarbaix
+ *
+ */
 public class TimelineLayout extends Layout {
 
 	@Override

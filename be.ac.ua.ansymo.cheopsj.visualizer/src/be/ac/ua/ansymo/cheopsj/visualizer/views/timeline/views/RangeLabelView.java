@@ -1,3 +1,9 @@
+/***************************************************
+ * Copyright (c) 2014 Nicolas Demarbaix
+ * 
+ * Contributors: 
+ * 		Nicolas Demarbaix - Initial Implementation
+ ***************************************************/
 package be.ac.ua.ansymo.cheopsj.visualizer.views.timeline.views;
 
 import org.eclipse.swt.SWT;
@@ -15,17 +21,18 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.ScrollBar;
-import org.eclipse.swt.widgets.Shell;
-
 import be.ac.ua.ansymo.cheopsj.visualizer.data.TimelineData;
-import be.ac.ua.ansymo.cheopsj.visualizer.util.GraphicsUtils;
 
+/**
+ * The range label view for the timeline
+ * @author nicolasdemarbaix
+ *
+ */
 public class RangeLabelView extends Composite {
 
 	private static int RANGE_SPACING = 35;
 	private static Color COLOR_LINE = new Color(Display.getCurrent(), 255,255,255);	
 	private static Color COLOR_LABEL = new Color(Display.getCurrent(), 0, 0, 0);
-	private static int TICK_SIZE = 4;
 	private static int PADDING_DEFAULT = 25;
 	
 	private Canvas canvas = null;
@@ -44,6 +51,13 @@ public class RangeLabelView extends Composite {
 	
 	private TimelineData data_store = null;
 	
+	/**
+	 * Public constructor
+	 * @param parent (Composite) parent component
+	 * @param height (int) the height of the view
+	 * @param range (int) the size of the dataset
+	 * @param data (TimelineData) the dataset of the view
+	 */
 	public RangeLabelView(Composite parent, int height, int range, TimelineData data) {
 		super(parent, SWT.BORDER);
 		this.setLayout(new FillLayout());
@@ -59,18 +73,24 @@ public class RangeLabelView extends Composite {
 		this.rangelabel_image = new Image(Display.getCurrent(), this.canvas_size.x, this.canvas_size.y);
 	}
 	
+	/**
+	 * Initialize the view
+	 * @param height (int) the height of the view
+	 */
 	private void initialize(int height) {
 		this.canvas_size.y = height;
 		this.vBar = this.canvas.getVerticalBar();
 		this.hBar = this.canvas.getHorizontalBar();
 		this.vBar.setVisible(false);
-		this.hBar.setVisible(false);
+		this.hBar.setVisible(true);
 				
 		this.setupListeners();		
 	}
 	
+	/**
+	 * Setup the listeners for the view
+	 */
 	private void setupListeners() {
-		// TODO add hBar and hBarListener
 		this.canvas.addPaintListener(new PaintListener() {
 
 			@Override
@@ -129,6 +149,10 @@ public class RangeLabelView extends Composite {
 		});
 	}
 	
+	/**
+	 * Paint the view
+	 * @param e (PaintEvent) event that causes the paint method to fire
+	 */
 	private void paint(PaintEvent e) {
 		if (this.shouldRedrawImage) {
 			this.rangelabel_image = new Image(Display.getCurrent(), this.canvas_size.x, this.canvas_size.y);
@@ -161,6 +185,10 @@ public class RangeLabelView extends Composite {
 		e.gc.drawImage(this.rangelabel_image, this.offset.x, this.offset.y);
 	}
 	
+	/**
+	 * Scroll the view vertically
+	 * @param selection (int) the amount to scroll
+	 */
 	public void scrollVertical(int selection) {
 		int destY = -selection - offset.y;
 		this.canvas.scroll(0, 

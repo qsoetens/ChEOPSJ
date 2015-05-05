@@ -1,3 +1,9 @@
+/***************************************************
+ * Copyright (c) 2014 Nicolas Demarbaix
+ * 
+ * Contributors: 
+ * 		Nicolas Demarbaix - Initial Implementation
+ ***************************************************/
 package be.ac.ua.ansymo.cheopsj.visualizer.views.summary.widgets;
 
 import org.eclipse.jface.window.Window;
@@ -14,15 +20,17 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
+/**
+ * Composite class for the change summary
+ * @author nicolasdemarbaix
+ *
+ */
 public class SummaryComposite extends Composite {	
 	// Colors
 	private static Color COLOR_WHITE = Display.getCurrent().getSystemColor(SWT.COLOR_WHITE);
-	private static Color COLOR_GRAY = Display.getCurrent().getSystemColor(SWT.COLOR_GRAY);
 	
 	// Fonts
 	private static Font FONT_TITLE = new Font(Display.getCurrent(), "SansSerif", 15, SWT.BOLD);
-	private static Font FONT_LABEL = new Font(Display.getCurrent(), "SansSerif", 12, 0);
-	private static Font FONT_LABEL_ITALIC = new Font(Display.getCurrent(), "SansSerif", 12, SWT.ITALIC);
 	
 	// Buttons
 	private Button open_plot_settings = null;
@@ -36,6 +44,12 @@ public class SummaryComposite extends Composite {
 	// Plot
 	private ChangePlot plot = null;
 	
+	/**
+	 * Public constructor
+	 * @param parent (Composite) parent component
+	 * @param style (int) SWT graphics style
+	 */
+	@SuppressWarnings("unused")
 	public SummaryComposite(Composite parent, int style) {
 		super(parent, style);
 		
@@ -91,6 +105,9 @@ public class SummaryComposite extends Composite {
 		this.plot.setLayoutData(gData_plot);		
 	}
 	
+	/**
+	 * Open the settings dialog and apply the updated settings
+	 */
 	private void openPlotSettings() {
 		if (this.plot_settings == null) {
 			this.plot_settings = new PlotSettings(new Shell(Display.getCurrent()));

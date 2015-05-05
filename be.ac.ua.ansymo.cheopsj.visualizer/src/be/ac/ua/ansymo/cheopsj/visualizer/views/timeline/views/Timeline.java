@@ -1,14 +1,17 @@
+/***************************************************
+ * Copyright (c) 2014 Nicolas Demarbaix
+ * 
+ * Contributors: 
+ * 		Nicolas Demarbaix - Initial Implementation
+ ***************************************************/
 package be.ac.ua.ansymo.cheopsj.visualizer.views.timeline.views;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Vector;
 
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.MenuDetectEvent;
-import org.eclipse.swt.events.MenuDetectListener;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.PaintEvent;
@@ -36,17 +39,19 @@ import org.eclipse.ui.PlatformUI;
 
 import be.ac.ua.ansymo.cheopsj.model.changes.AtomicChange;
 import be.ac.ua.ansymo.cheopsj.model.changes.IChange;
-import be.ac.ua.ansymo.cheopsj.visualizer.data.DataStore;
 import be.ac.ua.ansymo.cheopsj.visualizer.data.TimelineData;
 import be.ac.ua.ansymo.cheopsj.visualizer.data.TimelinePoint;
-import be.ac.ua.ansymo.cheopsj.visualizer.util.GraphicsUtils;
 import be.ac.ua.ansymo.cheopsj.visualizer.views.graph.ChangeGraph;
 import be.ac.ua.ansymo.cheopsj.visualizer.views.widgets.DependencyDialog;
 
+/**
+ * The timeline view itself
+ * @author nicolasdemarbaix
+ *
+ */
 public class Timeline extends Composite {
 	// Static Values
 	private static Color COLOR_GRID = new Color(Display.getCurrent(), 200, 200, 200);
-	private static Color COLOR_TICK = new Color(Display.getCurrent(), 0,0,0);
 	private static Color COLOR_LINE = new Color(Display.getCurrent(), 255,255,255);
 	private static Color COLOR_DEPENDENTS = new Color(Display.getCurrent(), 240,22,22);
 	private static Color COLOR_DEPENDENCIES = new Color(Display.getCurrent(), 22,240,22);
@@ -55,7 +60,6 @@ public class Timeline extends Composite {
 	private static int RANGE_SPACING = 35;
 	
 	private static int PADDING_DEFAULT = 25;
-	private static int PADDING_LABEL = 25;
 	private static int TICK_SIZE = 4;
 	// Painting related members
 	private Canvas canvas = null;
@@ -80,6 +84,15 @@ public class Timeline extends Composite {
 	
 	private TimelineData data_store = null;
 		
+	/**
+	 * Public constructor
+	 * @param parent (Composite) parent component
+	 * @param domain_size (int) the domain size of the data
+	 * @param range_size (int) the range size of the data
+	 * @param width (int) the width of the view
+	 * @param height (int) the height of the view
+	 * @param data (TimelineData) the data for the view
+	 */
 	public Timeline(Composite parent, int domain_size, int range_size, int width, int height, TimelineData data) {
 		super(parent, SWT.BORDER);
 		this.setLayout(new FillLayout());
@@ -99,6 +112,9 @@ public class Timeline extends Composite {
 	}
 	
 	
+	/**
+	 * Initialize the view
+	 */
 	private void initialize() {				
 		this.timeline_image = new Image(Display.getCurrent(), timelineSize.x, timelineSize.y);
 		
@@ -165,6 +181,7 @@ public class Timeline extends Composite {
 		this.canvas.addMouseListener(new MouseListener() {
 			
 			Menu popupMenu = null;
+			@SuppressWarnings("unused")
 			@Override
 			public void mouseDown(MouseEvent e) {
 				popupMenu = new Menu(getShell(), SWT.POP_UP);
@@ -182,7 +199,6 @@ public class Timeline extends Composite {
 						
 						@Override
 						public void widgetDefaultSelected(SelectionEvent e) {
-							// TODO Auto-generated method stub
 							
 						}
 					});
@@ -212,7 +228,6 @@ public class Timeline extends Composite {
 						
 						@Override
 						public void widgetDefaultSelected(SelectionEvent e) {
-							// TODO Auto-generated method stub
 							
 						}
 					});
@@ -227,7 +242,6 @@ public class Timeline extends Composite {
 						
 						@Override
 						public void widgetDefaultSelected(SelectionEvent e) {
-							// TODO Auto-generated method stub
 							
 						}
 					});
@@ -245,7 +259,6 @@ public class Timeline extends Composite {
 						
 						@Override
 						public void widgetDefaultSelected(SelectionEvent e) {
-							// TODO Auto-generated method stub
 							
 						}
 					});
@@ -260,7 +273,6 @@ public class Timeline extends Composite {
 						
 						@Override
 						public void widgetDefaultSelected(SelectionEvent e) {
-							// TODO Auto-generated method stub
 							
 						}
 					});
@@ -309,6 +321,11 @@ public class Timeline extends Composite {
 		});
 	}
 	
+	/**
+	 * Paint the view
+	 * @param e (PaintEvent) event that causes the paint method to fire
+	 */
+	@SuppressWarnings({ "static-access", "unused" })
 	private void paint(PaintEvent e) {		
 		if (this.shouldRedrawTimeline) {
 			GC gc = new GC(this.timeline_image);
@@ -402,6 +419,10 @@ public class Timeline extends Composite {
 		e.gc.drawImage(this.timeline_image, offset.x, offset.y);
 	}
 	
+	/**
+	 * Scroll the view vertically
+	 * @param selection (int) the amount to scroll
+	 */
 	public void scrollVertical(int selection) {
 		int destY = -selection - offset.y;
 		this.canvas.scroll(0, destY, 0, 0, timelineSize.x, timelineSize.y, false);
@@ -409,6 +430,10 @@ public class Timeline extends Composite {
 		this.vBar.setSelection(selection);
 	}
 	
+	/**
+	 * Scroll the view horizontally
+	 * @param selection (int) the amount to scroll
+	 */
 	public void scrollHorizontal(int selection) {
 		int destX = -selection - offset.x;
 		this.canvas.scroll(destX, 0, 0, 0, timelineSize.x, timelineSize.y, false);
@@ -416,27 +441,52 @@ public class Timeline extends Composite {
 		this.hBar.setSelection(selection);
 	}
 	
+	/**
+	 * refresh the view
+	 */
 	public void refresh() {
 		this.shouldRedrawTimeline = true;
 		this.canvas.redraw();
 	}
 	
+	/**
+	 * get the height of the view
+	 * @return (int) height
+	 */
 	public int getHeightOfCanvas() {
 		return this.timelineSize.y;
 	}
 	
+	/**
+	 * get the width of the view
+	 * @return (int) width
+	 */
 	public int getWidthOfCanvas() {
 		return this.timelineSize.x;
 	}
 	
+	/**
+	 * get the size of the data range
+	 * @return (int) range size
+	 */
 	public int getTimelineRangeSize() {
 		return this.range_size;
 	}
 	
+	/**
+	 * get the size of the data domain
+	 * @return (int) domain size
+	 */
 	public int getTimelineDomainSize() {
 		return this.markers;
 	}
 	
+	/**
+	 * check whether there is a change at the selection point
+	 * @param x (int) x coordinate
+	 * @param y (int) y coordinate
+	 * @return (boolean) true if there is a change at the given point
+	 */
 	private boolean hasChangeAtPoint(int x, int y) {
 		for (TimelinePoint point : this.data_store.getTimelinePoints()) {
 			if (Math.abs(point.getTimelinePoint().x - x) < 10) {
@@ -449,6 +499,12 @@ public class Timeline extends Composite {
 		return false;
 	}
 	
+	/**
+	 * Show the info for a given change at a certain point
+	 * @param x (int) x coordinate
+	 * @param y (int) y coordinate
+	 */
+	@SuppressWarnings("deprecation")
 	private void showChangeInfoForPoint(int x, int y) {
 		String entID = null;
 		String cDate = null;
@@ -503,6 +559,11 @@ public class Timeline extends Composite {
 		dialog.open();
 	}
 	
+	/**
+	 * show the dependents relations for a change at a given point
+	 * @param x (int) x coordinate
+	 * @param y (int) y coordinate
+	 */
 	private void showDependentRelation(int x, int y) {
 		String cDate = null;
 		String entID = null;
@@ -528,12 +589,20 @@ public class Timeline extends Composite {
 		this.canvas.redraw();
 	}
 	
+	/**
+	 * hide the dependents relations
+	 */
 	private void hideDependentRelation() {
 		this.shouldShowDependents = false;
 		this.shouldRedrawTimeline = true;
 		this.canvas.redraw();
 	}
 	
+	/**
+	 * show the dependencies relations for a change at a given point
+	 * @param x (int) x coordinate
+	 * @param y (int) y coordinate
+	 */
 	private void showDepenciesRelation(int x, int y) {
 		String cDate = null;
 		String entID = null;
@@ -559,12 +628,20 @@ public class Timeline extends Composite {
 		this.canvas.redraw();
 	}
 	
+	/**
+	 * hide the dependencies relations
+	 */
 	private void hideDependenciesRelation() {
 		this.shouldShowDependecies = false;
 		this.shouldRedrawTimeline = true;
 		this.canvas.redraw();
 	}
 	
+	/**
+	 * show the relations dialog for a change at a given point
+	 * @param x (int) x coordinate
+	 * @param y (int) y coordinate
+	 */
 	private void showRelationDialog(int x, int y) {
 		String entID = null;
 		String cDate = null;
@@ -599,6 +676,11 @@ public class Timeline extends Composite {
 		depdialog.open();
 	}
 	
+	/**
+	 * show a selected entity in the Change Graph
+	 * @param x (int) x coordinate
+	 * @param y (int) y coordinate
+	 */
 	private void showInGraph(int x, int y) {
 		String entityName = null;
 		
@@ -623,6 +705,7 @@ public class Timeline extends Composite {
 			view = (ChangeGraph) page.showView(ChangeGraph.ID, entityName, IWorkbenchPage.VIEW_CREATE);
 			view.setFocusEntity(entityName);
 		} catch (PartInitException e1) {
+			@SuppressWarnings("unused")
 			MessageDialog dialog = new MessageDialog(parent.getShell(), 
 					 								 "Error!",
 					 								 null,
