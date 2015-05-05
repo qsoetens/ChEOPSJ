@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+
+   <extension
+         point="org.eclipse.ui.views">
+      <category
+            name="ChEOPSJ Visualization"
+            id="be.ac.ua.ansymo.cheopsj.visualizer">
+      </category>
+      <view
+            name="ChangeGraph"
+            icon="icons/cheops.gif"
+            category="be.ac.ua.ansymo.cheopsj.visualizer"
+            class="be.ac.ua.ansymo.cheopsj.visualizer.views.graph.ChangeGraph"
+            id="be.ac.ua.ansymo.cheopsj.visualizer.views.ChangeGraph">
+      </view>
+      <view
+            category="be.ac.ua.ansymo.cheopsj.visualizer"
+            class="be.ac.ua.ansymo.cheopsj.visualizer.views.summary.ChangeSummary"
+            icon="icons/summary_small.png"
+            id="be.ac.ua.ansymo.cheopsj.visualizer.views.ChangeSummary"
+            name="ChangeSummary">
+      </view>
+      <view
+            category="be.ac.ua.ansymo.cheopsj.visualizer"
+            class="be.ac.ua.ansymo.cheopsj.visualizer.views.table.ChangeTable"
+            icon="icons/table_small.png"
+            id="be.ac.ua.ansymo.cheopsj.visualizer.views.table.ChangeTable"
+            name="ChangeTable"
+            restorable="true">
+      </view>
+      <view
+            category="be.ac.ua.ansymo.cheopsj.visualizer.views.ChangeTimeline"
+            class="be.ac.ua.ansymo.cheopsj.visualizer.views.timeline.ChangeTimeline"
+            id="be.ac.ua.ansymo.cheopsj.visualizer.views.ChangeTimeline"
+            name="ChangeTimeline"
+            restorable="true">
+      </view>
+   </extension>
+   <extension
+         point="org.eclipse.ui.perspectiveExtensions">
+      <perspectiveExtension
+            targetID="org.eclipse.jdt.ui.JavaPerspective">
+         <view
+               ratio="0.5"
+               relative="org.eclipse.ui.views.ProblemView"
+               relationship="right"
+               id="be.ac.ua.ansymo.cheopsj.visualizer.views.ChangeGraph">
+         </view>
+         <view
+               id="be.ac.ua.ansymo.cheopsj.visualizer.views.ChangeSummary"
+               minimized="false"
+               relationship="right"
+               relative="org.eclipse.ui.views.ProblemView">
+         </view>
+         <view
+               id="be.ac.ua.ansymo.cheopsj.visualizer.views.ChangeTable"
+               ratio="0.5"
+               relationship="right"
+               relative="org.eclipse.ui.views.ProblemView">
+         </view>
+         <view
+               id="be.ac.ua.ansymo.cheopsj.visualizer.views.ChangeTimeline"
+               ratio="0.5"
+               relationship="right"
+               relative="org.eclipse.ui.views.ProblemView">
+         </view>
+      </perspectiveExtension>
+   </extension>
+   <extension
+         point="org.eclipse.help.contexts">
+      <contexts
+            file="contexts.xml">
+      </contexts>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            description="Open the ChEOPSJ Change Graph if it is not visible"
+            id="be.ac.ua.ansymo.cheopsj.commands.opengraph"
+            name="Open Change Graph">
+      </command>
+      <command
+            description="Open the ChEOPSJ Change Summary if it is not visible"
+            id="be.ac.ua.ansymo.cheopsj.commands.opensummary"
+            name="Open Change Summary">
+      </command>
+      <command
+            description="Open the ChEOPSJ Change Table if it is not visible"
+            id="be.ac.ua.ansymo.cheopsj.commands.opentable"
+            name="Open Change Table">
+      </command>
+      <command
+            description="Open the ChEOPSJ Change Timeline if it is not visible"
+            id="be.ac.ua.ansymo.cheopsj.commands.opentimeline"
+            name="Open Timeline">
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.handlers">
+      <handler
+            class="be.ac.ua.ansymo.cheopsj.visualizer.handlers.OpenChangeGraphHandler"
+            commandId="be.ac.ua.ansymo.cheopsj.commands.opengraph">
+      </handler>
+      <handler
+            class="be.ac.ua.ansymo.cheopsj.visualizer.handlers.OpenChangeSummaryHandler"
+            commandId="be.ac.ua.ansymo.cheopsj.commands.opensummary">
+      </handler>
+      <handler
+            class="be.ac.ua.ansymo.cheopsj.visualizer.handlers.OpenChangeTableHandler"
+            commandId="be.ac.ua.ansymo.cheopsj.commands.opentable">
+      </handler>
+      <handler
+            class="be.ac.ua.ansymo.cheopsj.visualizer.handlers.OpenChangeTimelineHandler"
+            commandId="be.ac.ua.ansymo.cheopsj.commands.opentimeline">
+      </handler>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            locationURI="toolbar:org.eclipse.ui.main.toolbar?after=additions">
+         <toolbar
+               id="be.ac.ua.ansymo.cheopsj.toolbars.main">
+            <command
+                  commandId="be.ac.ua.ansymo.cheopsj.commands.opensummary"
+                  icon="icons/summary.png"
+                  id="be.ac.ua.ansymo.cheopsj.toolbars.openChangeSummary"
+                  style="push"
+                  tooltip="Open the ChEOPSJ Change Summary">
+            </command>
+            <command
+                  commandId="be.ac.ua.ansymo.cheopsj.commands.opentable"
+                  icon="icons/table.png"
+                  id="be.ac.ua.ansymo.cheopsj.toolbars.openChangeTable"
+                  style="push"
+                  tooltip="Open the ChEOPSJ Change Table">
+            </command>
+         </toolbar>
+      </menuContribution>
+   </extension>
+
+</plugin>

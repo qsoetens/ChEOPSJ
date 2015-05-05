@@ -180,7 +180,7 @@ public class ModelManager implements Serializable{
 	// /////////////////////////////////////////////////////////////////////////
 
 	public void saveModel() {
-		// CheopsjLog.logInfo("Saving Model");
+	/*	// CheopsjLog.logInfo("Saving Model");
 		File file = getModelFile();
 		FileOutputStream fos = null;
 		ObjectOutputStream out = null;
@@ -202,11 +202,11 @@ public class ModelManager implements Serializable{
 			// CheopsjLog.logInfo("Model Saved");
 		} catch (IOException ex) {
 			// CheopsjLog.logError(ex);
-		}
+		}*/
 	}
 
 	public void loadModel() {
-		// CheopsjLog.logInfo("Loading Model");
+/*		// CheopsjLog.logInfo("Loading Model");
 		File file = getModelFile();
 		if(file.exists()){
 
@@ -226,7 +226,7 @@ public class ModelManager implements Serializable{
 			getModelManagerListeners().fireChangesAdded(
 					getModelManagerChange().getChanges().toArray(
 							new IChange[getModelManagerChange().getChanges().size()]));
-		}
+		}*/
 	}
 
 	@SuppressWarnings("unchecked")
@@ -255,10 +255,8 @@ public class ModelManager implements Serializable{
 
 	private File getModelFile() {
 		//TODO don't store changes in the workspace, but store them per project.
-		//return Activator.getDefault().getStateLocation().append("changemodel.ser").toFile();
-		
-		return new File("/Users/quinten/Desktop/EXPERIMENT/changemodel.ser");
-		
+		return Activator.getDefault().getStateLocation().append("changemodel.ser").toFile();
+				
 	}
 
 	public Map<String, FamixPackage> getFamixPackagesMap() {
