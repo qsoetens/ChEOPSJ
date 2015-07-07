@@ -15,7 +15,8 @@ Require-Bundle: org.eclipse.ui,
  be.ac.ua.ansymo.cheopsj.changerecorders,
  org.junit,
  org.evolizer.changedistiller;bundle-version="1.0.0",
- org.tmatesoft.svnkit;bundle-version="1.8.9"
+ org.tmatesoft.svnkit;bundle-version="1.7.12",
+ org.tmatesoft.svnkit
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ClassPath: lib/svnkit.jar,

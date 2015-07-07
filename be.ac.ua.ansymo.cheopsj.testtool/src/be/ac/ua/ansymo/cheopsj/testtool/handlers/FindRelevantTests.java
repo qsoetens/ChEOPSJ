@@ -34,20 +34,20 @@ public class FindRelevantTests extends AbstractHandler {
 
 		List<?> selectedChanges = selection.toList();
 
-		RelevantTestFinder.findTests(selectedChanges);
-		RelevantTestFinder.printRelevantTests();
+//		RelevantTestFinder.findTests(selectedChanges);
+//		RelevantTestFinder.printRelevantTests();
 //		RelevantTestFinder.runTests();
 		
-		/*
+		
 		try {
 			PITRelevantTestFinder.findTests(selectedChanges);
-			//PITRelevantTestFinder.printToAntPITBuildConfiguration();
+			PITRelevantTestFinder.printToAntPITBuildConfiguration();
 			//PITRelevantTestFinder.printToMavenPITBuildConfiguration();
 			//PITRelevantTestFinder.printToMavenJunitBuildConfiguration();
 			PITRelevantTestFinder.printRelevantTests();
 		} catch (IOException e) {
 
-		}*/
+		}
 
 		return null;
 	}

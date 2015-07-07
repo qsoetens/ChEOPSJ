@@ -144,8 +144,8 @@ public class RelevantTestFinder {
 
 			if (methodAddition.getChangeSubject() instanceof FamixMethod) {
 				String methodName = ((FamixMethod) methodAddition.getChangeSubject()).getUniqueName();				
-				//if (methodName.contains("test")) {
-				if(((FamixMethod)methodAddition.getChangeSubject()).isTest()){
+				if (methodName.contains("test")) {
+				//if(((FamixMethod)methodAddition.getChangeSubject()).isTest()){
 					if(!methodsAnalysed.contains(methodName)){
 						methodsAnalysed.add(methodName);
 						

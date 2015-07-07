@@ -225,11 +225,11 @@ public class PITRelevantTestFinder {
 	//XXX Fix
 	public static void printToAntPITBuildConfiguration() throws IOException{
 		for (String sourceClass : relevantTests.keySet()) {
-			if(!sourceClass.endsWith("Test")){
+			if(sourceClass!= null && sourceClass.endsWith("Test")){
 				FileWriter fstream = new FileWriter("/Users/quinten/Desktop/builds/build_"+sourceClass+".xml");
 				BufferedWriter out = new BufferedWriter(fstream);
 
-				printStuffInFile(out, "/Users/quinten/Desktop/CHEOPSWorkspace/be.ac.ua.ansymo.cheopsj.testtool/stuffBeforeAnt.txt");
+				printStuffInFile(out, "/Users/quinten/git/ChEOPSJ/be.ac.ua.ansymo.cheopsj.testtool/stuffBeforeAnt.txt");
 
 
 				out.write("<pitest classPath=\"mutation.path\"" + '\n');
@@ -253,7 +253,7 @@ public class PITRelevantTestFinder {
 				out.write("sourceDir=\"src\""+ '\n'); 
 				out.write("excludedClasses=\"net.sourceforge.cruisecontrol.util.StdoutBufferTest,net.sourceforge.cruisecontrol.bootstrappers.ExecBootstrapperTest,net.sourceforge.cruisecontrol.builders.ExecBuilderTest,net.sourceforge.cruisecontrol.MainTest\"/>"+ '\n');
 
-				printStuffInFile(out, "/Users/quinten/Desktop/CHEOPSWorkspace/be.ac.ua.ansymo.cheopsj.testtool/stuffAfterAnt.txt");
+				printStuffInFile(out, "/Users/quinten/git/ChEOPSJ/be.ac.ua.ansymo.cheopsj.testtool/stuffAfterAnt.txt");
 				out.close();
 			}
 		}
